@@ -43,6 +43,10 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
 .field textarea{resize:vertical;min-height:90px}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 
+.consent-row{display:flex;align-items:flex-start;gap:.6rem;margin-top:.9rem}
+.consent-row input[type=checkbox]{width:18px;height:18px;margin-top:.15rem;accent-color:var(--red);flex-shrink:0;cursor:pointer}
+.consent-row label{font-size:.82rem;color:var(--text2);line-height:1.45;cursor:pointer}
+
 .section-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:.15rem}
 .section-sub{font-size:.8rem;color:var(--dim);margin-bottom:1.1rem}
 
@@ -118,6 +122,18 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
         </div>
       </div>
       <div class="field"><label>Venture name <span class="required">*</span></label><input type="text" id="venture_name" required placeholder="e.g. VeriCV"></div>
+      <div class="field-row">
+        <div class="field"><label>Email <span class="required">*</span></label><input type="email" id="email" required placeholder="you@example.com"></div>
+        <div class="field"><label>WhatsApp number <span class="required">*</span></label><input type="tel" id="whatsapp_number" required placeholder="+1 647 709 6479"></div>
+      </div>
+      <div class="consent-row">
+        <input type="checkbox" id="email_consent">
+        <label for="email_consent">I'm okay receiving emails from HELIX (updates, resources, occasional check-ins).</label>
+      </div>
+      <div class="consent-row">
+        <input type="checkbox" id="whatsapp_consent">
+        <label for="whatsapp_consent">I'm okay being added to the HELIX WhatsApp group using this number.</label>
+      </div>
     </div>
 
     <div class="card">
@@ -152,6 +168,13 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
         <div class="section-sub">Be specific — what would you actually do differently at that level?</div>
         <div class="field">
           <textarea id="venture_impact" required placeholder="e.g. If I could get to Level 5, I could automate my weekly investor updates and spend that time on customer interviews instead..."></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="consent-row">
+          <input type="checkbox" id="ai_content_optin">
+          <label for="ai_content_optin">I'd like to receive emails, posts, and tools from HELIX to help me improve my AI adoption level.</label>
         </div>
       </div>
 
@@ -349,9 +372,14 @@ document.getElementById('survey-form').addEventListener('submit', async (e)=>{
   const student_name=document.getElementById('student_name').value.trim();
   const cohort=document.getElementById('cohort').value;
   const venture_name=document.getElementById('venture_name').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const whatsapp_number=document.getElementById('whatsapp_number').value.trim();
+  const email_consent=document.getElementById('email_consent').checked;
+  const whatsapp_consent=document.getElementById('whatsapp_consent').checked;
+  const ai_content_optin=document.getElementById('ai_content_optin').checked;
   const venture_impact=document.getElementById('venture_impact').value.trim();
 
-  if(!student_name||!cohort||!venture_name||!venture_impact){statusEl.textContent='Please fill in all fields.';statusEl.className='status error';return}
+  if(!student_name||!cohort||!venture_name||!email||!whatsapp_number||!venture_impact){statusEl.textContent='Please fill in all required fields.';statusEl.className='status error';return}
   if(selections.current.size===0){statusEl.textContent='Please check at least one task in "What have you actually done with AI?".';statusEl.className='status error';return}
   if(selections.desired.size===0){statusEl.textContent='Please check at least one task in "What do you want to be doing in 3 months?".';statusEl.className='status error';return}
 
@@ -360,7 +388,7 @@ document.getElementById('survey-form').addEventListener('submit', async (e)=>{
   const current_level=computeLevel(current_tasks);
   const desired_level=computeLevel(desired_tasks);
 
-  const payload={student_name,cohort,venture_name,current_level,desired_level,current_tasks,desired_tasks,venture_impact};
+  const payload={student_name,cohort,venture_name,email,whatsapp_number,email_consent,whatsapp_consent,ai_content_optin,current_level,desired_level,current_tasks,desired_tasks,venture_impact};
 
   btn.disabled=true;statusEl.textContent='Submitting…';statusEl.className='status';
   try{
@@ -373,6 +401,8 @@ document.getElementById('survey-form').addEventListener('submit', async (e)=>{
     const subject=encodeURIComponent('HELIX AI Adoption Survey — '+student_name);
     const body=encodeURIComponent(
       'Name: '+student_name+'\nCohort: '+cohort+'\nVenture: '+venture_name+
+      '\nEmail: '+email+'\nWhatsApp: '+whatsapp_number+
+      '\nEmail consent: '+email_consent+'\nWhatsApp group consent: '+whatsapp_consent+'\nAI-improvement content opt-in: '+ai_content_optin+
       '\nCurrent level (computed): '+current_level+'\nTasks already done:\n'+taskText(current_tasks,'current')+
       '\n\nDesired level (computed): '+desired_level+'\nTasks wanted in 3 months:\n'+taskText(desired_tasks,'desired')+
       '\n\nHow it would help: '+venture_impact

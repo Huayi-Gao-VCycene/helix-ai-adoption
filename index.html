@@ -59,6 +59,7 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
 }
 .task-item.selected .task-check{background:var(--red);border-color:var(--red)}
 .task-text{font-size:.8rem;color:var(--text2);line-height:1.4}
+.task-emoji{margin-right:.15rem}
 .task-count{font-size:.78rem;color:var(--dim);font-weight:600;margin-bottom:.85rem}
 .task-count.has-selection{color:var(--red)}
 
@@ -170,50 +171,54 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
 
 <script>
 /* 31 tasks, tiered 5/5/5/5/3/3/3/2 across the 8 levels. Level is never
-   shown to the student — it's only used afterward to compute a score. */
+   shown to the student — it's only used afterward to compute a score.
+   Same 31 real-world actions in both sections, but phrased differently —
+   past-tense "I've done this" vs. forward-looking "I want to do this" —
+   so the two checklists don't read as a copy-pasted duplicate. */
 const TASKS = [
   // Level 1 — Chatbot (5)
-  {id:'t1',level:1,text:"Asked ChatGPT/Claude/Gemini to write a first draft of an email, then copied it into my own inbox to send."},
-  {id:'t2',level:1,text:"Pasted my resume, pitch, or a document into a chatbot and asked for feedback."},
-  {id:'t3',level:1,text:"Asked an AI chatbot to explain something I didn't understand (a legal term, a financial ratio, a technical concept)."},
-  {id:'t4',level:1,text:"Used a chatbot to brainstorm a list of ideas (names, taglines, topics) and picked my favorites manually."},
-  {id:'t5',level:1,text:"Copy-pasted data or text into a chatbot and asked it to summarize or reformat it."},
+  {id:'t1',level:1,emoji:'📧',current:"Asked ChatGPT/Claude/Gemini to write a first draft of an email, then copied it into my own inbox to send.",desired:"Ask an AI chatbot to draft emails for me that I can quickly copy and send."},
+  {id:'t2',level:1,emoji:'📄',current:"Pasted my resume, pitch, or a document into a chatbot and asked for feedback.",desired:"Get feedback on my resume, pitch, or documents by pasting them into a chatbot."},
+  {id:'t3',level:1,emoji:'💡',current:"Asked an AI chatbot to explain something I didn't understand (a legal term, a financial ratio, a technical concept).",desired:"Ask an AI chatbot to explain things I don't understand — legal terms, financial ratios, technical concepts."},
+  {id:'t4',level:1,emoji:'🧠',current:"Used a chatbot to brainstorm a list of ideas (names, taglines, topics) and picked my favorites manually.",desired:"Use a chatbot to brainstorm lists of ideas (names, taglines, topics) and pick my favorites."},
+  {id:'t5',level:1,emoji:'✂️',current:"Copy-pasted data or text into a chatbot and asked it to summarize or reformat it.",desired:"Copy-paste data or text into a chatbot to get it summarized or reformatted."},
   // Level 2 — Copilot (5)
-  {id:'t6',level:2,text:"Used AI suggestions built into a tool I was already working in (Notion AI, Google Docs, Excel Copilot) instead of switching to a separate chatbot tab."},
-  {id:'t7',level:2,text:"Used an AI-powered code editor (Cursor, GitHub Copilot) to help write or fix code while building my product."},
-  {id:'t8',level:2,text:"Used AI grammar or rewrite suggestions directly inside an email or document as I typed."},
-  {id:'t9',level:2,text:"Used an AI feature inside a design tool (Canva Magic, Figma AI) to generate or edit a graphic in place."},
-  {id:'t10',level:2,text:"Used an AI summarizer built into an app (Slack, Gmail, Notion) to catch up on a thread without leaving it."},
+  {id:'t6',level:2,emoji:'🧩',current:"Used AI suggestions built into a tool I was already working in (Notion AI, Google Docs, Excel Copilot) instead of switching to a separate chatbot tab.",desired:"Use AI suggestions built into the tools I already work in, instead of switching to a separate chatbot tab."},
+  {id:'t7',level:2,emoji:'👨‍💻',current:"Used an AI-powered code editor (Cursor, GitHub Copilot) to help write or fix code while building my product.",desired:"Use an AI-powered code editor (Cursor, GitHub Copilot) to help write and fix code as I build my product."},
+  {id:'t8',level:2,emoji:'✍️',current:"Used AI grammar or rewrite suggestions directly inside an email or document as I typed.",desired:"Get AI grammar or rewrite suggestions directly inside my emails and documents as I type."},
+  {id:'t9',level:2,emoji:'🎨',current:"Used an AI feature inside a design tool (Canva Magic, Figma AI) to generate or edit a graphic in place.",desired:"Use an AI feature inside a design tool (Canva Magic, Figma AI) to generate or edit graphics in place."},
+  {id:'t10',level:2,emoji:'🧵',current:"Used an AI summarizer built into an app (Slack, Gmail, Notion) to catch up on a thread without leaving it.",desired:"Use an AI summarizer built into an app (Slack, Gmail, Notion) to catch up on threads without leaving them."},
   // Level 3 — Agent (5)
-  {id:'t11',level:3,text:"Asked an AI to research a topic across multiple sources and compile the findings into one document for me."},
-  {id:'t12',level:3,text:"Had an AI tool work through a multi-step task step by step, checking in with me for approval before each step."},
-  {id:'t13',level:3,text:"Used an AI tool that could browse the web or search my files on my behalf to answer a question."},
-  {id:'t14',level:3,text:"Asked an AI to compare several options (competitors, vendors, pricing models) and build a structured comparison."},
-  {id:'t15',level:3,text:"Used an AI coding assistant that could read across multiple files in my project to make a change, not just one file."},
+  {id:'t11',level:3,emoji:'🔎',current:"Asked an AI to research a topic across multiple sources and compile the findings into one document for me.",desired:"Have an AI research a topic across multiple sources and compile the findings into one document for me."},
+  {id:'t12',level:3,emoji:'✅',current:"Had an AI tool work through a multi-step task step by step, checking in with me for approval before each step.",desired:"Have an AI tool work through multi-step tasks step by step, checking in with me for approval along the way."},
+  {id:'t13',level:3,emoji:'🌐',current:"Used an AI tool that could browse the web or search my files on my behalf to answer a question.",desired:"Use an AI tool that can browse the web or search my files on my behalf to answer questions."},
+  {id:'t14',level:3,emoji:'⚖️',current:"Asked an AI to compare several options (competitors, vendors, pricing models) and build a structured comparison.",desired:"Have an AI compare several options (competitors, vendors, pricing models) and build a structured comparison for me."},
+  {id:'t15',level:3,emoji:'🗂️',current:"Used an AI coding assistant that could read across multiple files in my project to make a change, not just one file.",desired:"Use an AI coding assistant that can read across multiple files in my project to make a change, not just one file."},
   // Level 4 — Autopilot (5)
-  {id:'t16',level:4,text:"Gave an AI a task and let it work through all the steps on its own without checking in, then reviewed the finished result."},
-  {id:'t17',level:4,text:"Had an AI build a first draft of something substantial on its own (a landing page, a pitch deck, a full document) with minimal guidance."},
-  {id:'t18',level:4,text:"Let an AI coding tool build and test a feature end-to-end without approving each step, then just reviewed the final code."},
-  {id:'t19',level:4,text:"Trusted an AI tool to make several related decisions in a row (design, structure, content together) without checking in first."},
-  {id:'t20',level:4,text:"Used an AI tool to fully handle a task I would normally have delegated to a freelancer or contractor, start to finish."},
+  {id:'t16',level:4,emoji:'🎯',current:"Gave an AI a task and let it work through all the steps on its own without checking in, then reviewed the finished result.",desired:"Give an AI a task and let it work through all the steps on its own, then just review the finished result."},
+  {id:'t17',level:4,emoji:'🏗️',current:"Had an AI build a first draft of something substantial on its own (a landing page, a pitch deck, a full document) with minimal guidance.",desired:"Have an AI build a first draft of something substantial on its own (a landing page, a pitch deck, a full document) with minimal guidance."},
+  {id:'t18',level:4,emoji:'🧪',current:"Let an AI coding tool build and test a feature end-to-end without approving each step, then just reviewed the final code.",desired:"Let an AI coding tool build and test a feature end-to-end without approving each step, then just review the final code."},
+  {id:'t19',level:4,emoji:'🤝',current:"Trusted an AI tool to make several related decisions in a row (design, structure, content together) without checking in first.",desired:"Trust an AI tool to make several related decisions in a row (design, structure, content together) without checking in first."},
+  {id:'t20',level:4,emoji:'📦',current:"Used an AI tool to fully handle a task I would normally have delegated to a freelancer or contractor, start to finish.",desired:"Use an AI tool to fully handle a task I'd normally delegate to a freelancer or contractor, start to finish."},
   // Level 5 — Workflows (3)
-  {id:'t21',level:5,text:"Set up a repeatable process where AI drafts something on a schedule (a weekly update, a content piece) that I just review and approve."},
-  {id:'t22',level:5,text:"Built a system where AI output automatically gets checked against a set of rules or a quality checklist before I see it."},
-  {id:'t23',level:5,text:"Created a template or pipeline where the same AI-assisted process runs the same way every time, instead of starting from scratch."},
+  {id:'t21',level:5,emoji:'🔁',current:"Set up a repeatable process where AI drafts something on a schedule (a weekly update, a content piece) that I just review and approve.",desired:"Set up a repeatable process where AI drafts something on a schedule (a weekly update, a content piece) that I just review and approve."},
+  {id:'t22',level:5,emoji:'🛡️',current:"Built a system where AI output automatically gets checked against a set of rules or a quality checklist before I see it.",desired:"Build a system where AI output automatically gets checked against a set of rules or a quality checklist before I see it."},
+  {id:'t23',level:5,emoji:'🧱',current:"Created a template or pipeline where the same AI-assisted process runs the same way every time, instead of starting from scratch.",desired:"Create a template or pipeline where the same AI-assisted process runs the same way every time, instead of starting from scratch."},
   // Level 6 — Assistant (3)
-  {id:'t24',level:6,text:"Have an AI tool that monitors something for me (my inbox, a metric, my calendar) and alerts me without me having to ask it to check."},
-  {id:'t25',level:6,text:"Set up an AI tool that handles a recurring task on its own on a schedule, without me prompting it each time."},
-  {id:'t26',level:6,text:"Receive an automatically generated briefing or summary from an AI tool that I didn't have to request that day."},
+  {id:'t24',level:6,emoji:'🔔',current:"Have an AI tool that monitors something for me (my inbox, a metric, my calendar) and alerts me without me having to ask it to check.",desired:"Have an AI tool monitor something for me (my inbox, a metric, my calendar) and alert me without me having to ask it to check."},
+  {id:'t25',level:6,emoji:'⏰',current:"Set up an AI tool that handles a recurring task on its own on a schedule, without me prompting it each time.",desired:"Set up an AI tool that handles a recurring task on its own on a schedule, without me prompting it each time."},
+  {id:'t26',level:6,emoji:'📰',current:"Receive an automatically generated briefing or summary from an AI tool that I didn't have to request that day.",desired:"Receive an automatically generated briefing or summary from an AI tool without having to request it that day."},
   // Level 7 — Multi-agent (3)
-  {id:'t27',level:7,text:"Have more than one AI agent running at the same time, each responsible for a different part of my venture."},
-  {id:'t28',level:7,text:"Set up separate AI agents with distinct roles or responsibilities that operate independently of each other."},
-  {id:'t29',level:7,text:"Had two or more AI agents working on related tasks at the same time without me having to manage each one individually."},
+  {id:'t27',level:7,emoji:'👥',current:"Have more than one AI agent running at the same time, each responsible for a different part of my venture.",desired:"Have more than one AI agent running at the same time, each responsible for a different part of my venture."},
+  {id:'t28',level:7,emoji:'🧭',current:"Set up separate AI agents with distinct roles or responsibilities that operate independently of each other.",desired:"Set up separate AI agents with distinct roles or responsibilities that operate independently of each other."},
+  {id:'t29',level:7,emoji:'🔗',current:"Had two or more AI agents working on related tasks at the same time without me having to manage each one individually.",desired:"Have two or more AI agents working on related tasks at the same time without me having to manage each one individually."},
   // Level 8 — Orchestrator (2)
-  {id:'t30',level:8,text:"Used a \"manager\" AI that assigns work to other AI agents and checks their progress, rather than me directing each one myself."},
-  {id:'t31',level:8,text:"Set a high-level goal for an AI system and let it break that goal into tasks, delegate them, and report back — without me planning the steps."},
+  {id:'t30',level:8,emoji:'🎼',current:"Used a \"manager\" AI that assigns work to other AI agents and checks their progress, rather than me directing each one myself.",desired:"Use a \"manager\" AI that assigns work to other AI agents and checks their progress, rather than me directing each one myself."},
+  {id:'t31',level:8,emoji:'🚀',current:"Set a high-level goal for an AI system and let it break that goal into tasks, delegate them, and report back — without me planning the steps.",desired:"Set a high-level goal for an AI system and let it break that goal into tasks, delegate them, and report back — without me planning the steps."},
 ];
 
-/* shuffle once per page load so the list never reads as ordered by level */
+/* shuffle so the list never reads as ordered by level — each section gets
+   its own independent shuffle so they don't even line up positionally */
 function shuffled(arr){
   const a=arr.slice();
   for(let i=a.length-1;i>0;i--){
@@ -222,16 +227,16 @@ function shuffled(arr){
   }
   return a;
 }
-const TASK_ORDER=shuffled(TASKS);
+const TASK_ORDER={current:shuffled(TASKS),desired:shuffled(TASKS)};
 
 const selections={current:new Set(),desired:new Set()};
 
 function renderChecklist(containerId, groupName){
   const el=document.getElementById(containerId);
-  el.innerHTML=TASK_ORDER.map(t=>`
+  el.innerHTML=TASK_ORDER[groupName].map(t=>`
     <div class="task-item" data-group="${groupName}" data-id="${t.id}">
       <div class="task-check">✓</div>
-      <div class="task-text">${t.text}</div>
+      <div class="task-text"><span class="task-emoji">${t.emoji}</span> ${t[groupName]}</div>
     </div>
   `).join('');
   el.querySelectorAll('.task-item').forEach(item=>{
@@ -319,7 +324,7 @@ document.getElementById('assess-current-btn').addEventListener('click', ()=>{
   renderAssessment('current-assessment-card', Array.from(selections.current), 'current');
   document.getElementById('current-assessment-card').classList.remove('hidden-section');
   document.getElementById('desired-card').classList.remove('hidden-section');
-  document.getElementById('desired-card').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('current-assessment-card').scrollIntoView({behavior:'smooth',block:'center'});
 });
 
 document.getElementById('assess-desired-btn').addEventListener('click', ()=>{
@@ -329,7 +334,7 @@ document.getElementById('assess-desired-btn').addEventListener('click', ()=>{
   renderAssessment('desired-assessment-card', Array.from(selections.desired), 'desired');
   document.getElementById('desired-assessment-card').classList.remove('hidden-section');
   document.getElementById('final-section').classList.remove('hidden-section');
-  document.getElementById('final-section').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('desired-assessment-card').scrollIntoView({behavior:'smooth',block:'center'});
 });
 
 const SB_URL='https://vsdsegpdnlgrfjawqcbe.supabase.co';
@@ -364,12 +369,12 @@ document.getElementById('survey-form').addEventListener('submit', async (e)=>{
     document.getElementById('survey-form').style.display='none';
     document.getElementById('success').style.display='block';
   }catch(err){
-    const taskText=ids=>ids.map(id=>'- '+TASKS.find(t=>t.id===id).text).join('\n');
+    const taskText=(ids,field)=>ids.map(id=>'- '+TASKS.find(t=>t.id===id)[field]).join('\n');
     const subject=encodeURIComponent('HELIX AI Adoption Survey — '+student_name);
     const body=encodeURIComponent(
       'Name: '+student_name+'\nCohort: '+cohort+'\nVenture: '+venture_name+
-      '\nCurrent level (computed): '+current_level+'\nTasks already done:\n'+taskText(current_tasks)+
-      '\n\nDesired level (computed): '+desired_level+'\nTasks wanted in 3 months:\n'+taskText(desired_tasks)+
+      '\nCurrent level (computed): '+current_level+'\nTasks already done:\n'+taskText(current_tasks,'current')+
+      '\n\nDesired level (computed): '+desired_level+'\nTasks wanted in 3 months:\n'+taskText(desired_tasks,'desired')+
       '\n\nHow it would help: '+venture_impact
     );
     statusEl.innerHTML='Submission failed — <a href="mailto:huayi@virgohome.io?subject='+subject+'&body='+body+'">click here to email your response instead</a>.';

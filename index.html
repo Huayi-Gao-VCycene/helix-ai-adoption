@@ -62,7 +62,7 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
 .task-count{font-size:.78rem;color:var(--dim);font-weight:600;margin-bottom:.85rem}
 .task-count.has-selection{color:var(--red)}
 
-.submit-row{display:flex;align-items:center;gap:1rem;margin-top:.5rem}
+.submit-row{display:flex;align-items:center;gap:1rem;margin-top:1.1rem}
 .btn-submit{
   background:var(--red);color:#fff;font-weight:700;font-size:.92rem;border:none;border-radius:9px;
   padding:.8rem 1.6rem;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:background .15s,transform .1s;
@@ -73,6 +73,15 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
 .status{font-size:.82rem;color:var(--dim)}
 .status.error{color:var(--red)}
 .status a{color:var(--red);font-weight:600}
+
+.hidden-section{display:none}
+
+.assess-headline{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.15rem;margin-bottom:.3rem}
+.assess-headline .lvl{color:var(--red)}
+.assess-blurb{font-size:.83rem;color:var(--text2);margin-bottom:1.25rem}
+.assess-chart{width:100%;overflow-x:auto}
+.bar-label{font-size:.68rem;fill:var(--dim)}
+.bar-count{font-size:.7rem;fill:var(--text2);font-weight:700}
 
 .success{display:none;text-align:center;padding:3rem 1.5rem}
 .success .icon{font-size:2.6rem;margin-bottom:.75rem}
@@ -115,26 +124,40 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
       <div class="section-sub">Check every task below that you've genuinely done in your venture — as many or as few as apply.</div>
       <div class="task-count" id="current-count">0 selected</div>
       <div class="task-grid" id="current-grid"></div>
+      <div class="submit-row">
+        <button type="button" class="btn-submit" id="assess-current-btn">See my current level →</button>
+        <span class="status" id="current-status"></span>
+      </div>
     </div>
 
-    <div class="card">
+    <div class="card hidden-section" id="current-assessment-card"></div>
+
+    <div class="card hidden-section" id="desired-card">
       <div class="section-title">What do you want to be doing in 3 months?</div>
       <div class="section-sub">Check every task you'd like to be doing with AI within the next 3 months — as many as apply, whether or not you checked it above.</div>
       <div class="task-count" id="desired-count">0 selected</div>
       <div class="task-grid" id="desired-grid"></div>
-    </div>
-
-    <div class="card">
-      <div class="section-title">How would that help your venture?</div>
-      <div class="section-sub">Be specific — what would you actually do differently at that level?</div>
-      <div class="field">
-        <textarea id="venture_impact" required placeholder="e.g. If I could get to Level 5, I could automate my weekly investor updates and spend that time on customer interviews instead..."></textarea>
+      <div class="submit-row">
+        <button type="button" class="btn-submit" id="assess-desired-btn">See my desired level →</button>
+        <span class="status" id="desired-status"></span>
       </div>
     </div>
 
-    <div class="submit-row">
-      <button type="submit" class="btn-submit" id="submit-btn">Submit survey →</button>
-      <span class="status" id="status"></span>
+    <div class="card hidden-section" id="desired-assessment-card"></div>
+
+    <div class="hidden-section" id="final-section">
+      <div class="card">
+        <div class="section-title">How would that help your venture?</div>
+        <div class="section-sub">Be specific — what would you actually do differently at that level?</div>
+        <div class="field">
+          <textarea id="venture_impact" required placeholder="e.g. If I could get to Level 5, I could automate my weekly investor updates and spend that time on customer interviews instead..."></textarea>
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="btn-submit" id="submit-btn">Submit survey →</button>
+        <span class="status" id="status"></span>
+      </div>
     </div>
   </form>
 
@@ -235,6 +258,79 @@ function computeLevel(taskIds){
   });
   return max;
 }
+
+const LEVEL_TOTALS={1:5,2:5,3:5,4:5,5:3,6:3,7:3,8:2};
+const LEVEL_META=[null,
+  {name:'Chatbot',blurb:'You mostly work with AI in a separate tab — ask a question, then copy the answer elsewhere.'},
+  {name:'Copilot',blurb:'AI is embedded in tools you already use, helping you in real time without switching tabs.'},
+  {name:'Agent',blurb:'You hand AI multi-step tasks and it works through them, checking in with you along the way.'},
+  {name:'Autopilot',blurb:'You let AI complete whole tasks independently, then you review the finished result.'},
+  {name:'Workflows',blurb:'You\'ve built repeatable systems around AI with planning and quality checks baked in.'},
+  {name:'Assistant',blurb:'AI proactively monitors and handles recurring things without you having to prompt it.'},
+  {name:'Multi-agent',blurb:'You run several AI agents in parallel, each with its own distinct role.'},
+  {name:'Orchestrator',blurb:'A manager AI coordinates your other agents — you mostly just set the goals.'},
+];
+
+function countByLevel(taskIds){
+  const counts={1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0};
+  taskIds.forEach(id=>{
+    const t=TASKS.find(x=>x.id===id);
+    if(t)counts[t.level]++;
+  });
+  return counts;
+}
+
+function renderAssessment(containerId, taskIds, mode){
+  const counts=countByLevel(taskIds);
+  const level=computeLevel(taskIds);
+  const meta=LEVEL_META[level];
+  const lead=mode==='desired'?"You'd be aiming for":"You're currently around";
+  const barCaption=mode==='desired'?'you want to be doing in 3 months.':'you checked.';
+
+  const barW=58, gap=14, chartH=110, baseY=126, startX=14;
+  let bars='';
+  for(let n=1;n<=8;n++){
+    const total=LEVEL_TOTALS[n];
+    const checked=counts[n];
+    const pct=total?checked/total:0;
+    const h=checked>0?Math.max(pct*chartH,8):2;
+    const x=startX+(n-1)*(barW+gap);
+    const y=baseY-h;
+    const isLevel=n===level;
+    bars+=`
+      <text x="${x+barW/2}" y="${y-8}" text-anchor="middle" class="bar-count">${checked}/${total}</text>
+      <rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="5" fill="${isLevel?'#E52222':'#FBD5D5'}"/>
+      <text x="${x+barW/2}" y="${baseY+18}" text-anchor="middle" class="bar-label">L${n}</text>
+    `;
+  }
+  const chartWidth=startX*2+8*barW+7*gap;
+
+  document.getElementById(containerId).innerHTML=`
+    <div class="assess-headline">${lead} <span class="lvl">Level ${level} — ${meta.name}</span></div>
+    <div class="assess-blurb">${meta.blurb} Bars show how many of the tasks at each level ${barCaption}</div>
+    <div class="assess-chart"><svg width="${chartWidth}" height="150" viewBox="0 0 ${chartWidth} 150">${bars}</svg></div>
+  `;
+}
+
+document.getElementById('assess-current-btn').addEventListener('click', ()=>{
+  const statusEl=document.getElementById('current-status');
+  if(selections.current.size===0){statusEl.textContent='Check at least one task first.';statusEl.className='status error';return}
+  statusEl.textContent='';statusEl.className='status';
+  renderAssessment('current-assessment-card', Array.from(selections.current), 'current');
+  document.getElementById('current-assessment-card').classList.remove('hidden-section');
+  document.getElementById('desired-card').classList.remove('hidden-section');
+  document.getElementById('desired-card').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+document.getElementById('assess-desired-btn').addEventListener('click', ()=>{
+  const statusEl=document.getElementById('desired-status');
+  if(selections.desired.size===0){statusEl.textContent='Check at least one task first.';statusEl.className='status error';return}
+  statusEl.textContent='';statusEl.className='status';
+  renderAssessment('desired-assessment-card', Array.from(selections.desired), 'desired');
+  document.getElementById('desired-assessment-card').classList.remove('hidden-section');
+  document.getElementById('final-section').classList.remove('hidden-section');
+  document.getElementById('final-section').scrollIntoView({behavior:'smooth',block:'start'});
+});
 
 const SB_URL='https://vsdsegpdnlgrfjawqcbe.supabase.co';
 const SB_KEY='sb_publishable_mejS-fdPBBy9gDYHu_4I7w_tB_DzNYr';

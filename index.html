@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HELIX AI Adoption Survey</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#E52222; --red-dark:#C41C1C; --red-light:#FFF1F1;
+  --bg:#F7F8FA; --surface:#FFFFFF; --surface2:#F0F2F5; --border:#E4E7EC; --border2:#D0D5DD;
+  --text:#101828; --text2:#344054; --dim:#667085;
+  --green:#12B76A; --green-light:#ECFDF3;
+  --shadow-sm:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.06);
+  --shadow-md:0 4px 8px rgba(16,24,40,.08),0 2px 4px rgba(16,24,40,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:.92rem;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+.header{margin-bottom:2rem}
+.logo{display:flex;align-items:center;gap:.55rem;margin-bottom:1.25rem}
+.logo .mark{width:34px;height:34px;background:var(--red);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.95rem;color:#fff}
+.logo .word{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:-.02em}
+.logo .word span{color:var(--red)}
+h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;letter-spacing:-.03em;line-height:1.15;margin-bottom:.75rem}
+.h1-highlight{color:var(--red)}
+.intro{color:var(--text2);font-size:.95rem;line-height:1.65;margin-bottom:.75rem}
+.intro-list{color:var(--text2);font-size:.9rem;line-height:1.8;margin:.75rem 0 1rem 1.1rem}
+.source{font-size:.78rem;color:var(--dim)}
+.source a{color:var(--red);text-decoration:none;font-weight:600}
+.source a:hover{text-decoration:underline}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-sm);padding:1.75rem;margin-bottom:1.5rem}
+.field{margin-bottom:1.25rem}
+.field label{display:block;font-size:.82rem;font-weight:700;color:var(--text2);margin-bottom:.4rem}
+.field input[type=text],.field select,.field textarea{
+  width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;
+  padding:.65rem .9rem;color:var(--text);font-size:.88rem;outline:none;font-family:'Inter',sans-serif;
+  transition:border-color .15s,box-shadow .15s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(229,34,34,.1)}
+.field textarea{resize:vertical;min-height:90px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+.section-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:.15rem}
+.section-sub{font-size:.8rem;color:var(--dim);margin-bottom:1.1rem}
+
+.level-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.level-card{
+  border:1.5px solid var(--border2);border-radius:10px;padding:.85rem .95rem;cursor:pointer;
+  transition:all .15s;display:flex;gap:.65rem;align-items:flex-start;
+}
+.level-card:hover{border-color:var(--red);background:var(--red-light)}
+.level-card.selected{border-color:var(--red);background:var(--red-light);box-shadow:0 0 0 1px var(--red)}
+.level-emoji{font-size:1.3rem;flex-shrink:0;line-height:1.3}
+.level-body{flex:1}
+.level-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:.15rem}
+.level-name .num{color:var(--dim);font-weight:600;margin-right:.3rem}
+.level-desc{font-size:.76rem;color:var(--dim);line-height:1.45}
+
+.submit-row{display:flex;align-items:center;gap:1rem;margin-top:.5rem}
+.btn-submit{
+  background:var(--red);color:#fff;font-weight:700;font-size:.92rem;border:none;border-radius:9px;
+  padding:.8rem 1.6rem;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:background .15s,transform .1s;
+  box-shadow:0 2px 8px rgba(229,34,34,.25);
+}
+.btn-submit:hover{background:var(--red-dark);transform:translateY(-1px)}
+.btn-submit:disabled{opacity:.6;cursor:default;transform:none}
+.status{font-size:.82rem;color:var(--dim)}
+.status.error{color:var(--red)}
+.status a{color:var(--red);font-weight:600}
+
+.success{display:none;text-align:center;padding:3rem 1.5rem}
+.success .icon{font-size:2.6rem;margin-bottom:.75rem}
+.success h2{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.4rem;margin-bottom:.5rem}
+.success p{color:var(--text2);font-size:.9rem}
+
+.required{color:var(--red)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="header">
+    <div class="logo"><div class="mark">H</div><div class="word">Helix<span>OS</span></div></div>
+    <h1>Where are you with <span class="h1-highlight">AI</span> right now?</h1>
+    <p class="intro">This short survey helps HELIX understand how founders in the Launch Cohort and EWIL programs are actually using AI today, where you'd like to be, and what that would unlock for your venture.</p>
+    <p class="intro">It's based on Every's <strong>Eight Levels of AI Adoption</strong> framework — from opening a chatbot in a separate tab, all the way to orchestrating a team of AI agents that work for you.</p>
+    <p class="source">Framework reference: <a href="https://every.to/guides/the-eight-levels-of-ai-adoption" target="_blank" rel="noopener">every.to/guides/the-eight-levels-of-ai-adoption</a></p>
+  </div>
+
+  <form id="survey-form">
+    <div class="card">
+      <div class="section-title">About you</div>
+      <div class="section-sub">Takes ~3 minutes.</div>
+      <div class="field-row">
+        <div class="field"><label>Name <span class="required">*</span></label><input type="text" id="student_name" required></div>
+        <div class="field"><label>Cohort <span class="required">*</span></label>
+          <select id="cohort" required>
+            <option value="" disabled selected>Select one</option>
+            <option value="launch">Launch Cohort</option>
+            <option value="ewil">EWIL</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Venture name <span class="required">*</span></label><input type="text" id="venture_name" required placeholder="e.g. VeriCV"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Your current level</div>
+      <div class="section-sub">Which best describes how you use AI in your venture today?</div>
+      <div class="level-grid" id="current-grid"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Your desired level</div>
+      <div class="section-sub">Where would you like to be? (Can be the same as today, or several steps ahead.)</div>
+      <div class="level-grid" id="desired-grid"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">How would that help your venture?</div>
+      <div class="section-sub">Be specific — what would you actually do differently at that level?</div>
+      <div class="field">
+        <textarea id="venture_impact" required placeholder="e.g. If I could get to Level 5, I could automate my weekly investor updates and spend that time on customer interviews instead..."></textarea>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button type="submit" class="btn-submit" id="submit-btn">Submit survey →</button>
+      <span class="status" id="status"></span>
+    </div>
+  </form>
+
+  <div class="success" id="success">
+    <div class="icon">✅</div>
+    <h2>Thanks — response recorded</h2>
+    <p>Huayi will use this to shape upcoming EWIL/Launch sessions and 1:1 coaching.</p>
+  </div>
+</div>
+
+<script>
+const LEVELS = [
+  {n:1,name:'Chatbot',emoji:'💬',desc:'You open ChatGPT/Claude/Gemini in a separate tab, ask a question, and copy the answer into your own doc or email.'},
+  {n:2,name:'Copilot',emoji:'🧑‍✈️',desc:'AI is built into a tool you already use — like Cursor while coding, or Claude inside Google Docs/Excel — helping you in real time.'},
+  {n:3,name:'Agent',emoji:'🕵️',desc:'You describe a multi-step task and the AI works through it, checking in with you before each step.'},
+  {n:4,name:'Autopilot',emoji:'🚗',desc:'You hand off a multi-step task and let the AI complete the whole thing on its own — like a first-draft landing page — then you review it.'},
+  {n:5,name:'Workflows',emoji:'⚙️',desc:'You\'ve set up a repeatable system with built-in checks — e.g. AI drafts your weekly update, runs a quality check, then queues it for review.'},
+  {n:6,name:'Assistant',emoji:'🔔',desc:'AI works in the background without you prompting it — monitoring your inbox or a metric — and proactively surfaces what needs attention.'},
+  {n:7,name:'Multi-agent',emoji:'👥',desc:'You have several AI agents running at once, each with its own job, working in parallel on different parts of your venture.'},
+  {n:8,name:'Orchestrator',emoji:'🎼',desc:'A "manager" AI coordinates your other AI agents — assigning work, checking progress, reporting back — so you focus on setting goals.'},
+];
+
+let currentLevel=null, desiredLevel=null;
+
+function renderGrid(containerId, groupName){
+  const el=document.getElementById(containerId);
+  el.innerHTML=LEVELS.map(l=>`
+    <div class="level-card" data-group="${groupName}" data-n="${l.n}">
+      <div class="level-emoji">${l.emoji}</div>
+      <div class="level-body">
+        <div class="level-name"><span class="num">${l.n}</span>${l.name}</div>
+        <div class="level-desc">${l.desc}</div>
+      </div>
+    </div>
+  `).join('');
+  el.querySelectorAll('.level-card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      el.querySelectorAll('.level-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected');
+      const n=parseInt(card.dataset.n,10);
+      if(groupName==='current')currentLevel=n; else desiredLevel=n;
+    });
+  });
+}
+renderGrid('current-grid','current');
+renderGrid('desired-grid','desired');
+
+const SB_URL='https://vsdsegpdnlgrfjawqcbe.supabase.co';
+const SB_KEY='sb_publishable_mejS-fdPBBy9gDYHu_4I7w_tB_DzNYr';
+const SB_HEADERS={'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'};
+
+document.getElementById('survey-form').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const statusEl=document.getElementById('status');
+  const btn=document.getElementById('submit-btn');
+
+  const student_name=document.getElementById('student_name').value.trim();
+  const cohort=document.getElementById('cohort').value;
+  const venture_name=document.getElementById('venture_name').value.trim();
+  const venture_impact=document.getElementById('venture_impact').value.trim();
+
+  if(!student_name||!cohort||!venture_name||!venture_impact){statusEl.textContent='Please fill in all fields.';statusEl.className='status error';return}
+  if(!currentLevel){statusEl.textContent='Please select your current level.';statusEl.className='status error';return}
+  if(!desiredLevel){statusEl.textContent='Please select your desired level.';statusEl.className='status error';return}
+
+  const payload={student_name,cohort,venture_name,current_level:currentLevel,desired_level:desiredLevel,venture_impact};
+
+  btn.disabled=true;statusEl.textContent='Submitting…';statusEl.className='status';
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/helix_adoption_responses',{method:'POST',headers:SB_HEADERS,body:JSON.stringify(payload)});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    document.getElementById('survey-form').style.display='none';
+    document.getElementById('success').style.display='block';
+  }catch(err){
+    const subject=encodeURIComponent('HELIX AI Adoption Survey — '+student_name);
+    const body=encodeURIComponent(
+      'Name: '+student_name+'\nCohort: '+cohort+'\nVenture: '+venture_name+
+      '\nCurrent level: '+currentLevel+'\nDesired level: '+desiredLevel+
+      '\nHow it would help: '+venture_impact
+    );
+    statusEl.innerHTML='Submission failed — <a href="mailto:huayi@virgohome.io?subject='+subject+'&body='+body+'">click here to email your response instead</a>.';
+    statusEl.className='status error';
+    btn.disabled=false;
+  }
+});
+</script>
+</body>
+</html>

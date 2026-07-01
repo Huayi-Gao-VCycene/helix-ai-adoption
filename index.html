@@ -46,18 +46,21 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
 .section-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:.15rem}
 .section-sub{font-size:.8rem;color:var(--dim);margin-bottom:1.1rem}
 
-.level-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
-.level-card{
-  border:1.5px solid var(--border2);border-radius:10px;padding:.85rem .95rem;cursor:pointer;
-  transition:all .15s;display:flex;gap:.65rem;align-items:flex-start;
+.task-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.task-item{
+  border:1.5px solid var(--border2);border-radius:9px;padding:.6rem .8rem;cursor:pointer;
+  transition:all .15s;display:flex;gap:.6rem;align-items:flex-start;
 }
-.level-card:hover{border-color:var(--red);background:var(--red-light)}
-.level-card.selected{border-color:var(--red);background:var(--red-light);box-shadow:0 0 0 1px var(--red)}
-.level-emoji{font-size:1.3rem;flex-shrink:0;line-height:1.3}
-.level-body{flex:1}
-.level-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:.15rem}
-.level-name .num{color:var(--dim);font-weight:600;margin-right:.3rem}
-.level-desc{font-size:.76rem;color:var(--dim);line-height:1.45}
+.task-item:hover{border-color:var(--red);background:var(--red-light)}
+.task-item.selected{border-color:var(--red);background:var(--red-light)}
+.task-check{
+  width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);flex-shrink:0;margin-top:.1rem;
+  display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;transition:all .15s;
+}
+.task-item.selected .task-check{background:var(--red);border-color:var(--red)}
+.task-text{font-size:.8rem;color:var(--text2);line-height:1.4}
+.task-count{font-size:.78rem;color:var(--dim);font-weight:600;margin-bottom:.85rem}
+.task-count.has-selection{color:var(--red)}
 
 .submit-row{display:flex;align-items:center;gap:1rem;margin-top:.5rem}
 .btn-submit{
@@ -86,7 +89,7 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
     <div class="logo"><div class="mark">H</div><div class="word">Helix<span>OS</span></div></div>
     <h1>Where are you with <span class="h1-highlight">AI</span> right now?</h1>
     <p class="intro">This short survey helps HELIX understand how founders in the Launch Cohort and EWIL programs are actually using AI today, where you'd like to be, and what that would unlock for your venture.</p>
-    <p class="intro">It's based on Every's <strong>Eight Levels of AI Adoption</strong> framework — from opening a chatbot in a separate tab, all the way to orchestrating a team of AI agents that work for you.</p>
+    <p class="intro">Rather than asking you to self-rate on a scale, just check off the concrete things you've actually done — and the things you want to be doing in 3 months. We'll work out where that puts you based on Every's <strong>Eight Levels of AI Adoption</strong> framework.</p>
     <p class="source">Framework reference: <a href="https://every.to/guides/the-eight-levels-of-ai-adoption" target="_blank" rel="noopener">every.to/guides/the-eight-levels-of-ai-adoption</a></p>
   </div>
 
@@ -108,15 +111,17 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
     </div>
 
     <div class="card">
-      <div class="section-title">Your current level</div>
-      <div class="section-sub">Which best describes how you use AI in your venture today?</div>
-      <div class="level-grid" id="current-grid"></div>
+      <div class="section-title">What have you actually done with AI?</div>
+      <div class="section-sub">Check every task below that you've genuinely done in your venture — as many or as few as apply.</div>
+      <div class="task-count" id="current-count">0 selected</div>
+      <div class="task-grid" id="current-grid"></div>
     </div>
 
     <div class="card">
-      <div class="section-title">Your desired level</div>
-      <div class="section-sub">Where would you like to be? (Can be the same as today, or several steps ahead.)</div>
-      <div class="level-grid" id="desired-grid"></div>
+      <div class="section-title">What do you want to be doing in 3 months?</div>
+      <div class="section-sub">Check every task you'd like to be doing with AI within the next 3 months — as many as apply, whether or not you checked it above.</div>
+      <div class="task-count" id="desired-count">0 selected</div>
+      <div class="task-grid" id="desired-grid"></div>
     </div>
 
     <div class="card">
@@ -141,41 +146,95 @@ h1{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.9rem;lette
 </div>
 
 <script>
-const LEVELS = [
-  {n:1,name:'Chatbot',emoji:'💬',desc:'You open ChatGPT/Claude/Gemini in a separate tab, ask a question, and copy the answer into your own doc or email.'},
-  {n:2,name:'Copilot',emoji:'🧑‍✈️',desc:'AI is built into a tool you already use — like Cursor while coding, or Claude inside Google Docs/Excel — helping you in real time.'},
-  {n:3,name:'Agent',emoji:'🕵️',desc:'You describe a multi-step task and the AI works through it, checking in with you before each step.'},
-  {n:4,name:'Autopilot',emoji:'🚗',desc:'You hand off a multi-step task and let the AI complete the whole thing on its own — like a first-draft landing page — then you review it.'},
-  {n:5,name:'Workflows',emoji:'⚙️',desc:'You\'ve set up a repeatable system with built-in checks — e.g. AI drafts your weekly update, runs a quality check, then queues it for review.'},
-  {n:6,name:'Assistant',emoji:'🔔',desc:'AI works in the background without you prompting it — monitoring your inbox or a metric — and proactively surfaces what needs attention.'},
-  {n:7,name:'Multi-agent',emoji:'👥',desc:'You have several AI agents running at once, each with its own job, working in parallel on different parts of your venture.'},
-  {n:8,name:'Orchestrator',emoji:'🎼',desc:'A "manager" AI coordinates your other AI agents — assigning work, checking progress, reporting back — so you focus on setting goals.'},
+/* 31 tasks, tiered 5/5/5/5/3/3/3/2 across the 8 levels. Level is never
+   shown to the student — it's only used afterward to compute a score. */
+const TASKS = [
+  // Level 1 — Chatbot (5)
+  {id:'t1',level:1,text:"Asked ChatGPT/Claude/Gemini to write a first draft of an email, then copied it into my own inbox to send."},
+  {id:'t2',level:1,text:"Pasted my resume, pitch, or a document into a chatbot and asked for feedback."},
+  {id:'t3',level:1,text:"Asked an AI chatbot to explain something I didn't understand (a legal term, a financial ratio, a technical concept)."},
+  {id:'t4',level:1,text:"Used a chatbot to brainstorm a list of ideas (names, taglines, topics) and picked my favorites manually."},
+  {id:'t5',level:1,text:"Copy-pasted data or text into a chatbot and asked it to summarize or reformat it."},
+  // Level 2 — Copilot (5)
+  {id:'t6',level:2,text:"Used AI suggestions built into a tool I was already working in (Notion AI, Google Docs, Excel Copilot) instead of switching to a separate chatbot tab."},
+  {id:'t7',level:2,text:"Used an AI-powered code editor (Cursor, GitHub Copilot) to help write or fix code while building my product."},
+  {id:'t8',level:2,text:"Used AI grammar or rewrite suggestions directly inside an email or document as I typed."},
+  {id:'t9',level:2,text:"Used an AI feature inside a design tool (Canva Magic, Figma AI) to generate or edit a graphic in place."},
+  {id:'t10',level:2,text:"Used an AI summarizer built into an app (Slack, Gmail, Notion) to catch up on a thread without leaving it."},
+  // Level 3 — Agent (5)
+  {id:'t11',level:3,text:"Asked an AI to research a topic across multiple sources and compile the findings into one document for me."},
+  {id:'t12',level:3,text:"Had an AI tool work through a multi-step task step by step, checking in with me for approval before each step."},
+  {id:'t13',level:3,text:"Used an AI tool that could browse the web or search my files on my behalf to answer a question."},
+  {id:'t14',level:3,text:"Asked an AI to compare several options (competitors, vendors, pricing models) and build a structured comparison."},
+  {id:'t15',level:3,text:"Used an AI coding assistant that could read across multiple files in my project to make a change, not just one file."},
+  // Level 4 — Autopilot (5)
+  {id:'t16',level:4,text:"Gave an AI a task and let it work through all the steps on its own without checking in, then reviewed the finished result."},
+  {id:'t17',level:4,text:"Had an AI build a first draft of something substantial on its own (a landing page, a pitch deck, a full document) with minimal guidance."},
+  {id:'t18',level:4,text:"Let an AI coding tool build and test a feature end-to-end without approving each step, then just reviewed the final code."},
+  {id:'t19',level:4,text:"Trusted an AI tool to make several related decisions in a row (design, structure, content together) without checking in first."},
+  {id:'t20',level:4,text:"Used an AI tool to fully handle a task I would normally have delegated to a freelancer or contractor, start to finish."},
+  // Level 5 — Workflows (3)
+  {id:'t21',level:5,text:"Set up a repeatable process where AI drafts something on a schedule (a weekly update, a content piece) that I just review and approve."},
+  {id:'t22',level:5,text:"Built a system where AI output automatically gets checked against a set of rules or a quality checklist before I see it."},
+  {id:'t23',level:5,text:"Created a template or pipeline where the same AI-assisted process runs the same way every time, instead of starting from scratch."},
+  // Level 6 — Assistant (3)
+  {id:'t24',level:6,text:"Have an AI tool that monitors something for me (my inbox, a metric, my calendar) and alerts me without me having to ask it to check."},
+  {id:'t25',level:6,text:"Set up an AI tool that handles a recurring task on its own on a schedule, without me prompting it each time."},
+  {id:'t26',level:6,text:"Receive an automatically generated briefing or summary from an AI tool that I didn't have to request that day."},
+  // Level 7 — Multi-agent (3)
+  {id:'t27',level:7,text:"Have more than one AI agent running at the same time, each responsible for a different part of my venture."},
+  {id:'t28',level:7,text:"Set up separate AI agents with distinct roles or responsibilities that operate independently of each other."},
+  {id:'t29',level:7,text:"Had two or more AI agents working on related tasks at the same time without me having to manage each one individually."},
+  // Level 8 — Orchestrator (2)
+  {id:'t30',level:8,text:"Used a \"manager\" AI that assigns work to other AI agents and checks their progress, rather than me directing each one myself."},
+  {id:'t31',level:8,text:"Set a high-level goal for an AI system and let it break that goal into tasks, delegate them, and report back — without me planning the steps."},
 ];
 
-let currentLevel=null, desiredLevel=null;
+/* shuffle once per page load so the list never reads as ordered by level */
+function shuffled(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+const TASK_ORDER=shuffled(TASKS);
 
-function renderGrid(containerId, groupName){
+const selections={current:new Set(),desired:new Set()};
+
+function renderChecklist(containerId, groupName){
   const el=document.getElementById(containerId);
-  el.innerHTML=LEVELS.map(l=>`
-    <div class="level-card" data-group="${groupName}" data-n="${l.n}">
-      <div class="level-emoji">${l.emoji}</div>
-      <div class="level-body">
-        <div class="level-name"><span class="num">${l.n}</span>${l.name}</div>
-        <div class="level-desc">${l.desc}</div>
-      </div>
+  el.innerHTML=TASK_ORDER.map(t=>`
+    <div class="task-item" data-group="${groupName}" data-id="${t.id}">
+      <div class="task-check">✓</div>
+      <div class="task-text">${t.text}</div>
     </div>
   `).join('');
-  el.querySelectorAll('.level-card').forEach(card=>{
-    card.addEventListener('click',()=>{
-      el.querySelectorAll('.level-card').forEach(c=>c.classList.remove('selected'));
-      card.classList.add('selected');
-      const n=parseInt(card.dataset.n,10);
-      if(groupName==='current')currentLevel=n; else desiredLevel=n;
+  el.querySelectorAll('.task-item').forEach(item=>{
+    item.addEventListener('click',()=>{
+      const id=item.dataset.id;
+      const set=selections[groupName];
+      if(set.has(id)){set.delete(id);item.classList.remove('selected')}
+      else{set.add(id);item.classList.add('selected')}
+      const countEl=document.getElementById(groupName+'-count');
+      countEl.textContent=set.size+' selected';
+      countEl.classList.toggle('has-selection',set.size>0);
     });
   });
 }
-renderGrid('current-grid','current');
-renderGrid('desired-grid','desired');
+renderChecklist('current-grid','current');
+renderChecklist('desired-grid','desired');
+
+/* score = level of the highest-level task checked; null if nothing checked */
+function computeLevel(taskIds){
+  let max=null;
+  taskIds.forEach(id=>{
+    const t=TASKS.find(x=>x.id===id);
+    if(t&&(max===null||t.level>max))max=t.level;
+  });
+  return max;
+}
 
 const SB_URL='https://vsdsegpdnlgrfjawqcbe.supabase.co';
 const SB_KEY='sb_publishable_mejS-fdPBBy9gDYHu_4I7w_tB_DzNYr';
@@ -192,10 +251,15 @@ document.getElementById('survey-form').addEventListener('submit', async (e)=>{
   const venture_impact=document.getElementById('venture_impact').value.trim();
 
   if(!student_name||!cohort||!venture_name||!venture_impact){statusEl.textContent='Please fill in all fields.';statusEl.className='status error';return}
-  if(!currentLevel){statusEl.textContent='Please select your current level.';statusEl.className='status error';return}
-  if(!desiredLevel){statusEl.textContent='Please select your desired level.';statusEl.className='status error';return}
+  if(selections.current.size===0){statusEl.textContent='Please check at least one task in "What have you actually done with AI?".';statusEl.className='status error';return}
+  if(selections.desired.size===0){statusEl.textContent='Please check at least one task in "What do you want to be doing in 3 months?".';statusEl.className='status error';return}
 
-  const payload={student_name,cohort,venture_name,current_level:currentLevel,desired_level:desiredLevel,venture_impact};
+  const current_tasks=Array.from(selections.current);
+  const desired_tasks=Array.from(selections.desired);
+  const current_level=computeLevel(current_tasks);
+  const desired_level=computeLevel(desired_tasks);
+
+  const payload={student_name,cohort,venture_name,current_level,desired_level,current_tasks,desired_tasks,venture_impact};
 
   btn.disabled=true;statusEl.textContent='Submitting…';statusEl.className='status';
   try{
@@ -204,11 +268,13 @@ document.getElementById('survey-form').addEventListener('submit', async (e)=>{
     document.getElementById('survey-form').style.display='none';
     document.getElementById('success').style.display='block';
   }catch(err){
+    const taskText=ids=>ids.map(id=>'- '+TASKS.find(t=>t.id===id).text).join('\n');
     const subject=encodeURIComponent('HELIX AI Adoption Survey — '+student_name);
     const body=encodeURIComponent(
       'Name: '+student_name+'\nCohort: '+cohort+'\nVenture: '+venture_name+
-      '\nCurrent level: '+currentLevel+'\nDesired level: '+desiredLevel+
-      '\nHow it would help: '+venture_impact
+      '\nCurrent level (computed): '+current_level+'\nTasks already done:\n'+taskText(current_tasks)+
+      '\n\nDesired level (computed): '+desired_level+'\nTasks wanted in 3 months:\n'+taskText(desired_tasks)+
+      '\n\nHow it would help: '+venture_impact
     );
     statusEl.innerHTML='Submission failed — <a href="mailto:huayi@virgohome.io?subject='+subject+'&body='+body+'">click here to email your response instead</a>.';
     statusEl.className='status error';

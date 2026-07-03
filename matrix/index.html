@@ -100,6 +100,19 @@ body{
 .ws-a:focus{border-color:var(--green-dim)}
 .ws-a::placeholder{color:var(--text-dim);opacity:.6}
 
+.memo-box{border:1px solid var(--border-bright);background:var(--panel);border-radius:4px;padding:1rem;margin-bottom:1.25rem}
+.memo-sub{color:var(--text-dim);font-size:.78rem;line-height:1.6;margin-bottom:.85rem}
+.memo-email{
+  width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:4px;
+  color:var(--text);font-family:inherit;font-size:.85rem;padding:.7rem .85rem;
+  outline:none;margin-bottom:.85rem;
+}
+.memo-email:focus{border-color:var(--green-dim)}
+.memo-email::placeholder{color:var(--text-dim);opacity:.6}
+.memo-status{color:var(--text-dim);font-size:.78rem;margin-top:.75rem;min-height:1.2em}
+.memo-status.ok{color:var(--green-soft)}
+.memo-status.err{color:var(--amber)}
+
 footer{text-align:center;color:var(--text-dim);font-size:.68rem;padding:1rem 0;opacity:.6}
 </style>
 </head>
@@ -141,7 +154,16 @@ footer{text-align:center;color:var(--text-dim);font-size:.68rem;padding:1rem 0;o
     <div class="screen" id="s-worksheet">
       <div class="ws-title" id="ws-title">Apply it now</div>
       <div id="ws-items"></div>
-      <button class="btn" id="restart-btn">New Situation</button>
+
+      <div class="memo-box">
+        <div class="prompt-label">&gt; save this as a memo<span class="caret"></span></div>
+        <div class="memo-sub">Get this skill, lesson, and your worksheet answers emailed to you so you can pull it up again later.</div>
+        <input type="email" class="memo-email" id="memo-email-input" placeholder="you@example.com" maxlength="320">
+        <button class="btn" id="save-memo-btn">Email Me This Memo</button>
+        <div class="memo-status" id="memo-status"></div>
+      </div>
+
+      <button class="btn btn-ghost" id="restart-btn">New Situation</button>
     </div>
 
   </div>
@@ -268,6 +290,7 @@ async function startDownload(situation){
       return;
     }
     currentResult = result;
+    currentResult.situation = situation;
     setTimeout(() => renderLesson(result), 500);
   } catch (err){
     clearInterval(stepTimer);
@@ -310,11 +333,74 @@ function escapeHtml(s){
   return d.innerHTML;
 }
 
+/* ---------- save memo ---------- */
+const memoEmailInput = document.getElementById('memo-email-input');
+const saveMemoBtn = document.getElementById('save-memo-btn');
+const memoStatus = document.getElementById('memo-status');
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+saveMemoBtn.addEventListener('click', async () => {
+  if (!currentResult) return;
+  const email = memoEmailInput.value.trim();
+  if (!EMAIL_RE.test(email)){
+    memoStatus.textContent = 'ERROR: enter a valid email to save this memo.';
+    memoStatus.className = 'memo-status err';
+    return;
+  }
+
+  const worksheet = currentResult.worksheet.map((item, i) => ({
+    question: item.question,
+    answer: (document.querySelector('.ws-a[data-idx="' + i + '"]') || {}).value || '',
+  }));
+
+  saveMemoBtn.disabled = true;
+  saveMemoBtn.textContent = 'Saving...';
+  memoStatus.textContent = '';
+  memoStatus.className = 'memo-status';
+
+  try {
+    const res = await fetch(SUPABASE_URL + '/functions/v1/matrix-save-memo', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'apikey': SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        situation: currentResult.situation,
+        framework_number: currentResult.framework_number,
+        framework_name: currentResult.framework_name,
+        why_this_one: currentResult.why_this_one,
+        lesson: currentResult.lesson,
+        worksheet,
+      }),
+    });
+    const result = await res.json();
+    if (!res.ok || result.error){
+      memoStatus.textContent = 'ERROR: ' + (result.error || 'could not save your memo.');
+      memoStatus.className = 'memo-status err';
+    } else {
+      memoStatus.textContent = 'Memo sent to ' + email + '.';
+      memoStatus.className = 'memo-status ok';
+    }
+  } catch (err){
+    memoStatus.textContent = 'ERROR: connection lost. Try again.';
+    memoStatus.className = 'memo-status err';
+  }
+
+  saveMemoBtn.disabled = false;
+  saveMemoBtn.textContent = 'Email Me This Memo';
+});
+
 /* ---------- restart ---------- */
 document.getElementById('restart-btn').addEventListener('click', () => {
   currentResult = null;
   situationInput.value = '';
   promptError.textContent = '';
+  memoEmailInput.value = '';
+  memoStatus.textContent = '';
+  memoStatus.className = 'memo-status';
   showScreen('s-prompt');
 });
 </script>

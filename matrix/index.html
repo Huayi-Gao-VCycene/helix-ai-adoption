@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>HelixOS Matrix</title>
+<style>
+@font-face{
+  font-family:'Share Tech Mono';
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url(data:font/woff2;base64,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) format('woff2');
+}
+:root{
+  --bg:#050806; --panel:#0a0f0b; --panel2:#0d140f;
+  --green:#00ff41; --green-dim:#0f9b30; --green-soft:#5ee88a;
+  --text:#c8f5d4; --text-dim:#5b8a68;
+  --border:#124021; --border-bright:#1f6b35;
+  --amber:#ffb703;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Share Tech Mono',ui-monospace,'Courier New',monospace;
+  font-size:15px;line-height:1.5;
+  min-height:100vh;overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+::selection{background:var(--green-dim);color:#000}
+
+#rain-bg{position:fixed;inset:0;z-index:0;opacity:.22;pointer-events:none}
+#rain-fg{position:fixed;inset:0;z-index:0;opacity:.55;pointer-events:none;display:none}
+
+.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+.wrap{max-width:520px;margin:0 auto;width:100%;padding:1.5rem 1.25rem 3rem;flex:1;display:flex;flex-direction:column}
+
+.topbar{display:flex;align-items:center;gap:.5rem;padding:.9rem 0 1.75rem;flex-shrink:0}
+.topbar .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.topbar .logo{font-weight:700;letter-spacing:.15em;font-size:.85rem;color:var(--green)}
+.topbar .logo span{color:var(--text-dim)}
+
+.screen{display:none;flex:1;flex-direction:column}
+.screen.active{display:flex}
+
+/* ---- PROMPT SCREEN ---- */
+#s-prompt .headline{font-size:1.35rem;line-height:1.35;color:var(--green-soft);margin-bottom:.6rem;text-wrap:balance}
+#s-prompt .headline b{color:var(--green);font-weight:700}
+#s-prompt .sub{color:var(--text-dim);font-size:.82rem;line-height:1.6;margin-bottom:2rem}
+.prompt-box{border:1px solid var(--border-bright);background:var(--panel);border-radius:4px;padding:1rem;margin-bottom:1rem}
+.prompt-label{color:var(--green);font-size:.8rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.caret{display:inline-block;width:8px;height:14px;background:var(--green);animation:blink 1s steps(1) infinite;vertical-align:middle}
+@keyframes blink{50%{opacity:0}}
+#situation-input{
+  width:100%;background:transparent;border:none;outline:none;resize:none;
+  color:var(--text);font-family:inherit;font-size:.92rem;line-height:1.6;min-height:110px;
+}
+#situation-input::placeholder{color:var(--text-dim)}
+.examples{color:var(--text-dim);font-size:.72rem;line-height:1.8;margin-bottom:1.75rem}
+.examples b{color:var(--green-dim)}
+
+.btn{
+  display:block;width:100%;background:transparent;border:1.5px solid var(--green);color:var(--green);
+  font-family:inherit;font-size:.92rem;font-weight:700;letter-spacing:.06em;padding:.85rem 1rem;
+  border-radius:4px;cursor:pointer;text-align:center;text-transform:uppercase;transition:all .15s;
+}
+.btn:hover{background:var(--green);color:#000;box-shadow:0 0 20px rgba(0,255,65,.4)}
+.btn:disabled{opacity:.4;cursor:default;background:transparent;color:var(--green)}
+.btn-ghost{border-color:var(--border-bright);color:var(--text-dim);margin-top:.75rem}
+.btn-ghost:hover{background:transparent;box-shadow:none;border-color:var(--green-dim);color:var(--green-soft)}
+.error-line{color:var(--amber);font-size:.78rem;margin-top:.75rem;min-height:1.2em}
+
+/* ---- DOWNLOAD SCREEN ---- */
+#s-download{align-items:center;justify-content:center;text-align:center}
+.dl-title{color:var(--text-dim);font-size:.72rem;letter-spacing:.15em;margin-bottom:1.5rem}
+.dl-log{width:100%;max-width:400px;text-align:left;font-size:.78rem;line-height:2;color:var(--green-dim);min-height:180px;background:rgba(5,8,6,.72);border-radius:4px;padding:1rem 1.1rem}
+.dl-log .done{color:var(--green-soft)}
+.dl-log .active{color:var(--green)}
+.dl-bar-wrap{width:100%;max-width:400px;height:6px;background:var(--panel2);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-top:1rem}
+.dl-bar{height:100%;width:0%;background:var(--green);box-shadow:0 0 10px var(--green);transition:width .3s}
+
+/* ---- LESSON SCREEN ---- */
+.lesson-tag{color:var(--text-dim);font-size:.72rem;letter-spacing:.1em;margin-bottom:.4rem}
+.lesson-name{color:var(--green);font-size:1.3rem;font-weight:700;margin-bottom:.6rem;text-wrap:balance}
+.lesson-why{color:var(--green-soft);font-size:.85rem;line-height:1.6;padding:.85rem 1rem;background:var(--panel);border-left:3px solid var(--green);border-radius:0 4px 4px 0;margin-bottom:1.5rem}
+.lesson-body{color:var(--text);font-size:.88rem;line-height:1.85;margin-bottom:2rem;white-space:pre-line}
+
+/* ---- WORKSHEET SCREEN ---- */
+.ws-title{color:var(--green);font-size:1.05rem;font-weight:700;margin-bottom:1.25rem}
+.ws-item{margin-bottom:1.25rem}
+.ws-q{color:var(--green-soft);font-size:.85rem;line-height:1.5;margin-bottom:.5rem}
+.ws-q::before{content:'> ';color:var(--green-dim)}
+.ws-a{
+  width:100%;background:var(--panel);border:1px solid var(--border);border-radius:4px;
+  color:var(--text);font-family:inherit;font-size:.85rem;line-height:1.6;padding:.7rem .85rem;
+  min-height:64px;resize:vertical;outline:none;
+}
+.ws-a:focus{border-color:var(--green-dim)}
+.ws-a::placeholder{color:var(--text-dim);opacity:.6}
+
+footer{text-align:center;color:var(--text-dim);font-size:.68rem;padding:1rem 0;opacity:.6}
+</style>
+</head>
+<body>
+
+<canvas id="rain-bg"></canvas>
+<canvas id="rain-fg"></canvas>
+
+<div class="app">
+  <div class="wrap">
+    <div class="topbar"><div class="dot"></div><div class="logo">HELIX<span>OS</span> // MATRIX</div></div>
+
+    <div class="screen active" id="s-prompt">
+      <div class="headline">What are you <b>stuck on</b> right now?</div>
+      <div class="sub">No modules. No curriculum. Describe the real problem in front of you and get a 15-minute skill install built for exactly this — pulled live from a 49-framework library and generated by Claude for your situation.</div>
+      <div class="prompt-box">
+        <div class="prompt-label">&gt; describe your situation<span class="caret"></span></div>
+        <textarea id="situation-input" placeholder="e.g. my co-founder and I disagree on pricing and it's turning into a real fight" maxlength="800"></textarea>
+      </div>
+      <div class="examples"><b>try:</b> "investor wants a cap table I don't have" · "I keep missing my own deadlines" · "nobody's responding to my cold emails"</div>
+      <button class="btn" id="submit-btn">Initiate Download</button>
+      <div class="error-line" id="prompt-error"></div>
+    </div>
+
+    <div class="screen" id="s-download">
+      <div class="dl-title">HELIXOS MATRIX // SKILL ACQUISITION</div>
+      <div class="dl-log" id="dl-log"></div>
+      <div class="dl-bar-wrap"><div class="dl-bar" id="dl-bar"></div></div>
+    </div>
+
+    <div class="screen" id="s-lesson">
+      <div class="lesson-tag" id="lesson-tag">FRAMEWORK MATCHED</div>
+      <div class="lesson-name" id="lesson-name"></div>
+      <div class="lesson-why" id="lesson-why"></div>
+      <div class="lesson-body" id="lesson-body"></div>
+      <button class="btn" id="to-worksheet-btn">Open Worksheet →</button>
+    </div>
+
+    <div class="screen" id="s-worksheet">
+      <div class="ws-title" id="ws-title">Apply it now</div>
+      <div id="ws-items"></div>
+      <button class="btn" id="restart-btn">New Situation</button>
+    </div>
+
+  </div>
+  <footer>HELIX OS MATRIX · Seneca HELIX · powered by Claude</footer>
+</div>
+
+<script>
+/* ---------- background matrix rain (subtle, persistent) ---------- */
+function startRain(canvasId, opts){
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  let w, h, cols, drops;
+  const chars = '01アイウエオカキクケコサシスセソタチツテト';
+  const fontSize = opts.fontSize || 14;
+
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    cols = Math.floor(w / fontSize);
+    drops = new Array(cols).fill(0).map(() => Math.random() * -100);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw(){
+    ctx.fillStyle = opts.fade || 'rgba(5,8,6,0.08)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = opts.color || '#00ff41';
+    ctx.font = fontSize + 'px monospace';
+    for (let i = 0; i < cols; i++){
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > h && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+  }
+  const interval = setInterval(draw, opts.speed || 60);
+  return () => clearInterval(interval);
+}
+startRain('rain-bg', { color: '#0f9b30', fade: 'rgba(5,8,6,0.06)', speed: 90, fontSize: 15 });
+
+/* ---------- state ---------- */
+let currentResult = null;
+let fgRainStop = null;
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ---------- prompt screen ---------- */
+const situationInput = document.getElementById('situation-input');
+const submitBtn = document.getElementById('submit-btn');
+const promptError = document.getElementById('prompt-error');
+
+submitBtn.addEventListener('click', () => {
+  const situation = situationInput.value.trim();
+  if (!situation){
+    promptError.textContent = 'ERROR: situation required to initiate download.';
+    return;
+  }
+  promptError.textContent = '';
+  startDownload(situation);
+});
+
+/* ---------- download screen ---------- */
+const SUPABASE_URL = 'https://vsdsegpdnlgrfjawqcbe.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_mejS-fdPBBy9gDYHu_4I7w_tB_DzNYr';
+
+const DL_STEPS = [
+  'ANALYZING SITUATION...',
+  'SCANNING FRAMEWORK LIBRARY [49 ENTRIES]...',
+  'MATCHING BEST-FIT MODEL...',
+  'COMPRESSING TO 15-MIN PAYLOAD...',
+  'FINALIZING SKILL DOWNLOAD...',
+];
+
+async function startDownload(situation){
+  showScreen('s-download');
+  const logEl = document.getElementById('dl-log');
+  const barEl = document.getElementById('dl-bar');
+  logEl.innerHTML = '';
+  barEl.style.width = '0%';
+
+  document.getElementById('rain-fg').style.display = 'block';
+  fgRainStop = startRain('rain-fg', { color: '#00ff41', fade: 'rgba(5,8,6,0.04)', speed: 35, fontSize: 16 });
+
+  let stepIndex = 0;
+  const lines = [];
+  function renderLog(){
+    logEl.innerHTML = lines.map((l, i) =>
+      '<div class="' + (i < stepIndex ? 'done' : (i === stepIndex ? 'active' : '')) + '">' + l + '</div>'
+    ).join('');
+  }
+  DL_STEPS.forEach(s => lines.push('&gt; ' + s));
+  renderLog();
+
+  const stepTimer = setInterval(() => {
+    if (stepIndex < DL_STEPS.length - 1){
+      stepIndex++;
+      renderLog();
+      barEl.style.width = Math.min(92, (stepIndex / DL_STEPS.length) * 100) + '%';
+    }
+  }, 900);
+
+  const minDelay = new Promise(r => setTimeout(r, DL_STEPS.length * 900 + 300));
+  const fetchPromise = fetch(SUPABASE_URL + '/functions/v1/matrix-download', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+      'apikey': SUPABASE_ANON_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ situation }),
+  }).then(r => r.json());
+
+  try {
+    const [, result] = await Promise.all([minDelay, fetchPromise]);
+    clearInterval(stepTimer);
+    barEl.style.width = '100%';
+
+    if (result.error){
+      showDownloadError(result.error);
+      return;
+    }
+    currentResult = result;
+    setTimeout(() => renderLesson(result), 500);
+  } catch (err){
+    clearInterval(stepTimer);
+    showDownloadError('CONNECTION LOST. Try again.');
+  }
+}
+
+function showDownloadError(msg){
+  if (fgRainStop) fgRainStop();
+  document.getElementById('rain-fg').style.display = 'none';
+  showScreen('s-prompt');
+  promptError.textContent = 'ERROR: ' + msg;
+}
+
+/* ---------- lesson screen ---------- */
+function renderLesson(result){
+  if (fgRainStop) fgRainStop();
+  document.getElementById('rain-fg').style.display = 'none';
+
+  document.getElementById('lesson-tag').textContent = 'SKILL #' + result.framework_number + ' INSTALLED';
+  document.getElementById('lesson-name').textContent = result.framework_name;
+  document.getElementById('lesson-why').textContent = result.why_this_one;
+  document.getElementById('lesson-body').textContent = result.lesson;
+  showScreen('s-lesson');
+}
+
+document.getElementById('to-worksheet-btn').addEventListener('click', () => {
+  if (!currentResult) return;
+  const itemsEl = document.getElementById('ws-items');
+  itemsEl.innerHTML = currentResult.worksheet.map((item, i) =>
+    '<div class="ws-item"><div class="ws-q">' + escapeHtml(item.question) + '</div>' +
+    '<textarea class="ws-a" placeholder="' + escapeHtml(item.placeholder || '') + '" data-idx="' + i + '"></textarea></div>'
+  ).join('');
+  showScreen('s-worksheet');
+});
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+/* ---------- restart ---------- */
+document.getElementById('restart-btn').addEventListener('click', () => {
+  currentResult = null;
+  situationInput.value = '';
+  promptError.textContent = '';
+  showScreen('s-prompt');
+});
+</script>
+</body>
+</html>

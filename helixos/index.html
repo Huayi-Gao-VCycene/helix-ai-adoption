@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HelixOS — Powered by Seneca HELIX</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#E52222; --red-dark:#C41C1C; --red-light:#FFF1F1; --red-mid:#FDDEDE;
+  --bg:#F7F8FA; --surface:#FFFFFF; --surface2:#F0F2F5; --border:#E4E7EC; --border2:#D0D5DD;
+  --text:#101828; --text2:#344054; --dim:#667085; --ph:#98A2B3;
+  --blue:#2563EB; --blue-light:#EFF6FF;
+  --purple:#7C3AED; --purple-light:#F5F3FF;
+  --green:#12B76A; --green-light:#ECFDF3;
+  --yellow:#F79009; --yellow-light:#FFFAEB;
+  --orange:#EA580C; --orange-light:#FFF7ED;
+  --teal:#0D9488; --teal-light:#F0FDFA;
+  --shadow-xs:0 1px 2px rgba(16,24,40,.04);
+  --shadow-sm:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.06);
+  --shadow-md:0 4px 8px rgba(16,24,40,.08),0 2px 4px rgba(16,24,40,.06);
+  --shadow-lg:0 12px 24px rgba(16,24,40,.10),0 4px 8px rgba(16,24,40,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:.9rem;line-height:1.65;overflow:hidden;height:100vh}
+.screen{position:absolute;inset:0;display:none;opacity:0;transition:opacity .3s}
+.screen.active{display:flex;opacity:1}
+
+/* ── TOPBAR ── */
+.topbar{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;flex-shrink:0;box-shadow:var(--shadow-xs)}
+.tb-logo{display:flex;align-items:center;gap:.45rem;margin-right:.5rem}
+.tb-logo .lm{width:28px;height:28px;background:var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.75rem;color:#fff}
+.tb-logo .lt{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.95rem;letter-spacing:-.02em}
+.tb-logo .lt span{color:var(--red)}
+.tb-nav{display:flex;gap:.15rem}
+.tb-btn{padding:.35rem .8rem;border-radius:6px;font-size:.8rem;font-weight:500;color:var(--dim);border:none;background:none;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
+.tb-btn:hover{background:var(--surface2);color:var(--text)}
+.tb-btn.active{background:var(--red-light);color:var(--red);font-weight:600}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:.85rem}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--red),#FF6B6B);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;color:#fff;flex-shrink:0}
+.tb-name{font-size:.83rem;font-weight:600;color:var(--text2)}
+.tb-cohort{font-size:.72rem;font-weight:600;letter-spacing:.03em;background:var(--red-light);color:var(--red);border-radius:4px;padding:.15rem .5rem}
+
+/* ── SHARED SIDEBAR ── */
+.sidebar{width:230px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.venture-pill{margin:.85rem .75rem;background:linear-gradient(135deg,var(--red),#FF4444);border-radius:10px;padding:1rem;color:#fff}
+.vp-label{font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.8;margin-bottom:.3rem}
+.vp-name{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:.15rem}
+.vp-tag{font-size:.73rem;opacity:.85;line-height:1.4}
+.vp-stage{display:inline-block;margin-top:.6rem;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);font-size:.65rem;font-weight:700;letter-spacing:.04em;border-radius:4px;padding:.15rem .45rem}
+.sb-section{padding:0 .6rem .75rem}
+.sb-label{font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ph);padding:.5rem .45rem .3rem}
+.sb-item{display:flex;align-items:center;gap:.55rem;padding:.42rem .55rem;border-radius:7px;font-size:.82rem;font-weight:500;color:var(--dim);cursor:pointer;transition:all .15s;margin-bottom:.05rem}
+.sb-item:hover{background:var(--surface2);color:var(--text)}
+.sb-item.active{background:var(--red-light);color:var(--red)}
+.sb-item .si-badge{margin-left:auto;background:var(--red);color:#fff;font-size:.6rem;font-weight:700;border-radius:10px;padding:.1rem .4rem;min-width:18px;text-align:center}
+.sb-item .si-icon{font-size:.9rem;flex-shrink:0;width:16px;text-align:center}
+
+/* ── BTN ── */
+.btn-primary{background:var(--red);color:#fff;font-weight:700;font-size:.88rem;border:none;border-radius:8px;padding:.65rem 1.1rem;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:background .15s,transform .1s;box-shadow:0 2px 8px rgba(229,34,34,.25)}
+.btn-primary:hover{background:var(--red-dark);transform:translateY(-1px)}
+.btn-sm{font-size:.75rem;padding:.4rem .8rem;border-radius:6px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;font-weight:500;transition:all .15s;font-family:'Inter',sans-serif}
+.btn-sm:hover{border-color:var(--red);color:var(--red)}
+
+/* ─────────────────────────────────────────
+   SCREEN: LOGIN
+───────────────────────────────────────── */
+#s-login{background:linear-gradient(145deg,#fff 0%,#FFF5F5 50%,#fff 100%);align-items:center;justify-content:center}
+.login-split{display:flex;align-items:center;gap:5rem;max-width:900px;width:100%;padding:2rem}
+.login-brand{flex:1;display:flex;flex-direction:column;gap:1.25rem}
+.helix-logo{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem}
+.helix-logo .logo-mark{width:40px;height:40px;background:var(--red);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;box-shadow:0 4px 12px rgba(229,34,34,.3)}
+.helix-logo .logo-text{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:-.03em}
+.helix-logo .logo-text span{color:var(--red)}
+.login-headline{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:2.4rem;line-height:1.15;letter-spacing:-.03em}
+.login-headline .highlight{color:var(--red)}
+.login-tagline{color:var(--dim);font-size:.92rem;max-width:360px;line-height:1.6}
+.login-badges{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
+.login-badge{display:flex;align-items:center;gap:.35rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:.3rem .75rem;font-size:.73rem;color:var(--text2);box-shadow:var(--shadow-xs)}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dot-red{background:var(--red)} .dot-green{background:var(--green)} .dot-blue{background:var(--blue)}
+.login-card{width:340px;flex-shrink:0;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--shadow-lg)}
+.card-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.2rem}
+.card-sub{font-size:.78rem;color:var(--dim);margin-bottom:1.25rem}
+.field-group{display:flex;flex-direction:column;gap:.85rem;margin-bottom:1.25rem}
+.field label{display:block;font-size:.75rem;font-weight:600;color:var(--text2);margin-bottom:.35rem}
+.field input{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:.6rem .9rem;color:var(--text);font-size:.88rem;outline:none;transition:border-color .15s,box-shadow .15s;font-family:'Inter',sans-serif;box-shadow:var(--shadow-xs)}
+.field input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(229,34,34,.1)}
+.btn-login{width:100%;background:var(--red);color:#fff;font-weight:700;font-size:.9rem;border:none;border-radius:8px;padding:.75rem;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:background .15s,transform .1s;box-shadow:0 2px 8px rgba(229,34,34,.3)}
+.btn-login:hover{background:var(--red-dark);transform:translateY(-1px)}
+.card-footer{margin-top:1rem;text-align:center;font-size:.73rem;color:var(--dim)}
+.card-footer strong{color:var(--red)}
+
+/* ─────────────────────────────────────────
+   SCREEN: DASHBOARD
+───────────────────────────────────────── */
+#s-dash{flex-direction:column}
+.dash-body{flex:1;display:flex;overflow:hidden}
+.dash-main{flex:1;overflow-y:auto;padding:1.75rem 2rem}
+.dash-welcome{background:linear-gradient(135deg,var(--red),#FF6B6B);border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:1.5rem;color:#fff;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 16px rgba(229,34,34,.25)}
+.dw-greeting{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.02em;margin-bottom:.2rem}
+.dw-sub{font-size:.82rem;opacity:.9}
+.dw-rocket{font-size:2.8rem}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.85rem;margin-bottom:1.5rem}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.1rem;box-shadow:var(--shadow-xs)}
+.stat-val{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+.stat-label{font-size:.72rem;color:var(--dim);margin-top:.1rem}
+.val-red{color:var(--red)} .val-green{color:var(--green)} .val-yellow{color:var(--yellow)}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem}
+.section-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.9rem}
+.section-link{font-size:.78rem;color:var(--red);font-weight:600;cursor:pointer}
+.section-link:hover{opacity:.75}
+.domain-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin-bottom:1.5rem}
+.domain-card{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:1rem .85rem;cursor:pointer;transition:all .2s;text-align:center;box-shadow:var(--shadow-xs)}
+.domain-card:hover{border-color:var(--red);box-shadow:0 4px 12px rgba(229,34,34,.12);transform:translateY(-2px)}
+.dc-icon{font-size:1.5rem;margin-bottom:.45rem}
+.dc-name{font-family:'Space Grotesk',sans-serif;font-size:.76rem;font-weight:700;margin-bottom:.15rem}
+.dc-agents{font-size:.68rem;color:var(--dim)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-xs);overflow:hidden}
+.task-item{display:flex;align-items:flex-start;gap:.75rem;padding:.85rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.task-item:last-child{border-bottom:none}
+.task-item:hover{background:var(--surface2)}
+.task-status{width:20px;height:20px;border-radius:50%;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:.65rem}
+.ts-done{background:var(--green-light);color:var(--green)}
+.ts-run{background:var(--yellow-light);color:var(--yellow);animation:spin 2s linear infinite}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.task-body{flex:1}
+.task-title{font-size:.82rem;font-weight:600;margin-bottom:.15rem}
+.task-meta{font-size:.71rem;color:var(--dim)}
+.task-chevron{color:var(--ph);font-size:.85rem;margin-top:1px}
+.cpi{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.cpi:last-child{border-bottom:none}
+.cpi:hover{background:var(--surface2)}
+.cpi-icon{width:34px;height:34px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem;background:var(--surface2)}
+.cpi-title{font-size:.82rem;font-weight:600;margin-bottom:.1rem}
+.cpi-preview{font-size:.72rem;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.cpi-time{margin-left:auto;font-size:.7rem;color:var(--ph);flex-shrink:0}
+
+/* ─────────────────────────────────────────
+   SCREEN: CHAT
+───────────────────────────────────────── */
+#s-chat{flex-direction:column}
+.chat-layout{flex:1;display:flex;overflow:hidden}
+.chat-sidebar{width:248px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.cs-header{padding:.9rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cs-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.88rem}
+.cs-new{background:var(--red);color:#fff;border:none;border-radius:6px;font-size:.73rem;font-weight:700;padding:.28rem .65rem;cursor:pointer;font-family:'Space Grotesk',sans-serif}
+.cs-new:hover{background:var(--red-dark)}
+.conv-list{padding:.5rem .5rem 0;flex:1;overflow-y:auto}
+.conv-label{font-size:.65rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ph);padding:.4rem .4rem .3rem}
+.conv-item{display:flex;align-items:flex-start;gap:.55rem;padding:.55rem .5rem;border-radius:7px;cursor:pointer;transition:background .15s;margin-bottom:.05rem}
+.conv-item:hover{background:var(--surface2)}
+.conv-item.active{background:var(--red-light)}
+.conv-emoji{font-size:.9rem;flex-shrink:0;margin-top:2px}
+.conv-text{flex:1;overflow:hidden}
+.conv-title{font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv-item.active .conv-title{color:var(--red)}
+.conv-prev{font-size:.71rem;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.chat-header{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.25rem;gap:.75rem;flex-shrink:0;box-shadow:var(--shadow-xs)}
+.ch-back{background:none;border:none;color:var(--dim);cursor:pointer;font-size:.82rem;padding:.3rem .5rem;border-radius:6px;transition:all .15s}
+.ch-back:hover{background:var(--surface2);color:var(--text)}
+.ch-agent{background:var(--blue-light);border:1px solid rgba(37,99,235,.2);color:var(--blue);font-size:.73rem;font-weight:600;border-radius:5px;padding:.2rem .55rem}
+.ch-venture{font-size:.78rem;color:var(--dim)}
+.ch-status{margin-left:auto;display:flex;align-items:center;gap:.4rem;font-size:.73rem;color:var(--green);font-weight:600}
+.ch-status::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0}
+.messages{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1.1rem}
+.msg{display:flex;gap:.85rem;max-width:840px}
+.msg.user{flex-direction:row-reverse;margin-left:auto}
+.msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700}
+.msg.user .msg-avatar{background:linear-gradient(135deg,var(--red),#FF6B6B);color:#fff;box-shadow:0 2px 8px rgba(229,34,34,.25)}
+.msg.ai .msg-avatar{background:var(--surface);border:1.5px solid var(--border);font-size:1rem;box-shadow:var(--shadow-xs)}
+.msg-bubble{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.15rem;line-height:1.7;font-size:.87rem;box-shadow:var(--shadow-xs)}
+.msg.user .msg-bubble{background:var(--red-light);border-color:rgba(229,34,34,.15);color:var(--text2)}
+.msg-bubble strong{color:var(--text);font-weight:600}
+.msg-bubble h4{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.88rem;margin:.8rem 0 .4rem;color:var(--red)}
+.msg-bubble h4:first-child{margin-top:0}
+.msg-bubble ul{padding-left:1.2rem;margin:.4rem 0}
+.msg-bubble li{margin-bottom:.25rem;color:var(--text2)}
+.msg-bubble code{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:.1rem .35rem;font-family:'Space Mono',monospace;font-size:.79rem}
+.msg-bubble .blk{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem;margin:.55rem 0;font-size:.83rem;color:var(--text2)}
+.msg-bubble .blk-title{font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:.4rem}
+.agent-label{font-size:.68rem;font-weight:700;color:var(--red);margin-bottom:.4rem;display:flex;align-items:center;gap:.35rem}
+.agent-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0}
+.chat-input-area{padding:1rem 1.25rem 1.1rem;border-top:1px solid var(--border);background:var(--surface)}
+.demo-strip{display:flex;gap:.5rem;margin-bottom:.65rem;flex-wrap:wrap}
+.demo-chip{background:var(--surface2);border:1.5px solid var(--border);border-radius:20px;padding:.28rem .75rem;font-size:.73rem;font-weight:500;color:var(--dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.demo-chip:hover{border-color:var(--red);color:var(--red);background:var(--red-light)}
+.demo-chip.active{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:600}
+.chat-input-row{display:flex;align-items:flex-end;gap:.75rem;background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;padding:.55rem .85rem;transition:border-color .15s,box-shadow .15s;box-shadow:var(--shadow-xs)}
+.chat-input-row:focus-within{border-color:var(--red);box-shadow:0 0 0 3px rgba(229,34,34,.08)}
+.chat-input-row textarea{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:'Inter',sans-serif;font-size:.87rem;resize:none;min-height:22px;max-height:120px;line-height:1.5;padding:.1rem 0}
+.chat-input-row textarea::placeholder{color:var(--ph)}
+.send-btn{background:var(--red);border:none;border-radius:7px;padding:.45rem .7rem;cursor:pointer;flex-shrink:0;transition:background .15s;display:flex;align-items:center;box-shadow:0 2px 6px rgba(229,34,34,.25)}
+.send-btn:hover{background:var(--red-dark)}
+
+/* ─────────────────────────────────────────
+   SCREEN: TASKS
+───────────────────────────────────────── */
+#s-tasks{flex-direction:column}
+.tasks-body{flex:1;display:flex;overflow:hidden}
+.tasks-main{flex:1;overflow-y:auto;padding:1.5rem 2rem}
+
+/* filter row */
+.filter-row{display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.filter-row .fr-label{font-size:.75rem;font-weight:600;color:var(--dim);margin-right:.25rem;flex-shrink:0}
+.fr-chip{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:.28rem .75rem;font-size:.75rem;font-weight:500;color:var(--dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.fr-chip:hover{border-color:var(--red);color:var(--red);background:var(--red-light)}
+.fr-chip.active{background:var(--red-light);border-color:var(--red);color:var(--red);font-weight:600}
+.fr-divider{width:1px;height:20px;background:var(--border);flex-shrink:0;margin:0 .25rem}
+
+/* view toggle (List / Skill Tree) */
+.view-toggle{display:flex;gap:.4rem;margin-bottom:1.5rem}
+.vt-btn{background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;padding:.4rem .9rem;font-size:.8rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;font-family:'Space Grotesk',sans-serif}
+.vt-btn:hover{border-color:var(--red);color:var(--red)}
+.vt-btn.active{background:var(--red);border-color:var(--red);color:#fff}
+
+/* stage section */
+.stage-section{margin-bottom:2rem}
+.stage-header{display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;margin-bottom:1rem;box-shadow:var(--shadow-xs)}
+.stage-info{flex:1}
+.stage-name{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.95rem;letter-spacing:-.01em;margin-bottom:.1rem}
+.stage-desc{font-size:.75rem;color:var(--dim)}
+.stage-badge{font-family:'Space Mono',monospace;font-size:.65rem;font-weight:700;letter-spacing:.04em;border-radius:4px;padding:.2rem .55rem;flex-shrink:0;background:var(--surface2);color:var(--text2)}
+
+/* task card grid */
+.task-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem}
+.task-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:1rem 1rem 1rem 1.15rem;box-shadow:var(--shadow-xs);
+  display:flex;flex-direction:column;gap:.65rem;
+  border-left-width:3px;position:relative;transition:box-shadow .15s;
+}
+.task-card:hover{box-shadow:var(--shadow-md)}
+.task-card.locked-card{opacity:.45;pointer-events:none}
+.task-card.done-card{border-left-color:var(--green)!important}
+.task-card.running-card{border-left-color:var(--yellow)!important}
+
+.tc-top{display:flex;align-items:center;justify-content:space-between}
+.tc-domain{display:flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:600;color:var(--dim)}
+.tc-domain .dd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.type-badge{font-size:.65rem;font-weight:700;letter-spacing:.02em;border-radius:4px;padding:.15rem .45rem;white-space:nowrap}
+.type-auto{background:var(--green-light);color:var(--green);border:1px solid rgba(18,183,106,.2)}
+.type-semi{background:var(--yellow-light);color:var(--yellow);border:1px solid rgba(247,144,9,.2)}
+.type-founder{background:var(--red-light);color:var(--red);border:1px solid rgba(229,34,34,.2)}
+
+.tc-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.88rem;color:var(--text);line-height:1.3}
+.tc-desc{font-size:.77rem;color:var(--dim);line-height:1.45}
+
+.tc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.1rem}
+.tc-time{font-size:.71rem;color:var(--ph);display:flex;align-items:center;gap:.25rem}
+
+.commission-btn{background:var(--red);color:#fff;border:none;border-radius:6px;padding:.32rem .8rem;font-size:.75rem;font-weight:700;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:background .15s,transform .1s;box-shadow:0 1px 4px rgba(229,34,34,.2)}
+.commission-btn:hover{background:var(--red-dark);transform:translateY(-1px)}
+.status-running{display:flex;align-items:center;gap:.35rem;font-size:.73rem;font-weight:600;color:var(--yellow)}
+.status-running::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--yellow);flex-shrink:0;animation:pulse 1.5s infinite}
+.status-done{display:flex;align-items:center;gap:.35rem;font-size:.73rem;font-weight:600;color:var(--green)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* skill tree view */
+.skill-tree-wrap{display:flex;flex-direction:column;gap:1.5rem}
+.tree-svg-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-xs);padding:1.5rem;display:flex;justify-content:center}
+.tree-node{cursor:pointer}
+.tree-node:hover circle{filter:brightness(1.08)}
+.tree-detail-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-xs);padding:1.25rem;min-height:200px}
+.tree-detail-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;color:var(--ph);font-size:.85rem;text-align:center;gap:.5rem}
+.tree-detail-heading{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;color:var(--dim);margin-bottom:1rem}
+
+/* ─────────────────────────────────────────
+   SCREEN: VENTURES (Company Wiki)
+───────────────────────────────────────── */
+#s-ventures{flex-direction:column}
+.ventures-body,.business-tree-body{flex:1;display:flex;overflow:hidden}
+
+/* ─────────────────────────────────────────
+   SCREEN: BUSINESS
+───────────────────────────────────────── */
+#s-business{flex-direction:column}
+
+/* Ventures left sidebar (folder tree) — shared with Business tab */
+.ventures-sidebar{
+  width:220px;background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;flex-shrink:0;
+}
+.vs-header{padding:.9rem 1rem;border-bottom:1px solid var(--border)}
+.vs-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:.15rem}
+.vs-sub{font-size:.7rem;color:var(--dim)}
+.vs-search{margin:.65rem .75rem;position:relative}
+.vs-search input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:.4rem .75rem .4rem 1.9rem;font-size:.78rem;outline:none;color:var(--text);transition:border-color .15s;font-family:'Inter',sans-serif}
+.vs-search input:focus{border-color:var(--red)}
+.vs-search::before{content:'🔍';position:absolute;left:.55rem;top:50%;transform:translateY(-50%);font-size:.7rem}
+.vs-tree{padding:.25rem .5rem;flex:1;overflow-y:auto}
+.vt-category{margin-bottom:.3rem}
+.vt-cat-header,.bt-cat-header{
+  display:flex;align-items:center;gap:.5rem;padding:.45rem .55rem;border-radius:7px;
+  cursor:pointer;transition:background .15s;user-select:none;
+}
+.vt-cat-header:hover,.bt-cat-header:hover{background:var(--surface2)}
+.vt-cat-header.active,.bt-cat-header.active{background:var(--red-light)}
+.vt-cat-icon{font-size:.9rem;flex-shrink:0}
+.vt-cat-name{flex:1;font-size:.81rem;font-weight:600;color:var(--text)}
+.vt-cat-header.active .vt-cat-name,.bt-cat-header.active .vt-cat-name{color:var(--red)}
+.vt-cat-count{font-size:.65rem;color:var(--ph);background:var(--surface2);border-radius:10px;padding:.05rem .4rem}
+.vt-files{padding-left:1.5rem;margin-top:.1rem}
+.vt-file{
+  display:flex;align-items:center;gap:.45rem;padding:.35rem .5rem;
+  border-radius:6px;cursor:pointer;transition:background .15s;margin-bottom:.05rem;
+}
+.vt-file:hover{background:var(--surface2)}
+.vt-file.active{background:var(--red-light)}
+.vt-file-icon{font-size:.8rem;flex-shrink:0}
+.vt-file-name{font-size:.78rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vt-file.active .vt-file-name{color:var(--red);font-weight:600}
+
+/* Ventures main — shared with Business tab */
+.ventures-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.ventures-content{flex:1;overflow-y:auto;padding:1.5rem 2rem}
+
+/* Business tab */
+.business-body{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.business-stats{padding:1.25rem 2rem 0}
+.business-stats .stats-row{margin-bottom:0}
+
+.venture-hero{
+  background:linear-gradient(135deg,var(--red),#FF6B6B);
+  border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:1.5rem;color:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 16px rgba(229,34,34,.25);
+}
+.vh-name{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.6rem;letter-spacing:-.03em;margin-bottom:.25rem}
+.vh-tag{font-size:.85rem;opacity:.9;margin-bottom:.75rem}
+.vh-badges{display:flex;gap:.5rem;flex-wrap:wrap}
+.vh-badge{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:4px;font-size:.7rem;font-weight:700;letter-spacing:.03em;padding:.2rem .55rem}
+.vh-right{text-align:right;flex-shrink:0}
+.vh-emoji{font-size:2.5rem;margin-bottom:.35rem}
+.vh-stats{font-size:.75rem;opacity:.85}
+
+/* file grid */
+.category-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;
+  padding-bottom:.75rem;border-bottom:1px solid var(--border);
+}
+.cat-title{display:flex;align-items:center;gap:.6rem}
+.cat-icon{font-size:1.1rem}
+.cat-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem}
+.cat-count{font-size:.75rem;color:var(--dim);font-weight:400}
+.file-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-bottom:1.75rem}
+.file-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:1rem;box-shadow:var(--shadow-xs);cursor:pointer;transition:all .2s;
+}
+.file-card:hover{box-shadow:var(--shadow-md);border-color:var(--red);transform:translateY(-1px)}
+.fc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.6rem}
+.fc-icon{font-size:1.5rem}
+.fc-source{font-size:.65rem;font-weight:700;letter-spacing:.04em;border-radius:4px;padding:.12rem .4rem}
+.fc-source.ai{background:var(--green-light);color:var(--green)}
+.fc-source.upload{background:var(--blue-light);color:var(--blue)}
+.fc-source.auto{background:var(--purple-light);color:var(--purple)}
+.fc-source.signed{background:var(--green-light);color:var(--green)}
+.fc-source.talks{background:var(--yellow-light);color:var(--yellow)}
+.fc-source.prospecting{background:var(--blue-light);color:var(--blue)}
+.fc-value{font-size:.68rem;color:var(--text2);font-weight:600}
+.fc-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.83rem;margin-bottom:.2rem;color:var(--text);line-height:1.3}
+.fc-desc{font-size:.73rem;color:var(--dim);line-height:1.4;margin-bottom:.7rem}
+.fc-footer{display:flex;align-items:center;justify-content:space-between}
+.fc-date{font-size:.68rem;color:var(--ph)}
+.fc-actions{display:flex;gap:.4rem}
+.fc-action{background:none;border:1px solid var(--border);border-radius:5px;padding:.2rem .5rem;font-size:.68rem;color:var(--dim);cursor:pointer;transition:all .15s}
+.fc-action:hover{border-color:var(--red);color:var(--red)}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════
+     LOGIN
+═══════════════════════════════ -->
+<div class="screen active" id="s-login">
+  <div class="login-split">
+    <div class="login-brand">
+      <div class="helix-logo">
+        <div class="logo-mark">H</div>
+        <div class="logo-text">Helix<span>OS</span></div>
+      </div>
+      <div class="login-headline">Your AI team,<br><span class="highlight">ready to launch.</span></div>
+      <div class="login-tagline">HelixOS gives every Seneca HELIX founder a full AI team — product manager, sales director, legal counsel, CFO — available 24/7 through a single chat window.</div>
+      <div class="login-badges">
+        <div class="login-badge"><div class="dot dot-red"></div>Built for Seneca HELIX founders</div>
+        <div class="login-badge"><div class="dot dot-green"></div>No Claude subscription needed</div>
+        <div class="login-badge"><div class="dot dot-blue"></div>5 AI domains · 30+ specialists</div>
+      </div>
+    </div>
+    <div class="login-card">
+      <div class="card-title">Welcome back 👋</div>
+      <div class="card-sub">Sign in to your HelixOS workspace</div>
+      <div class="field-group">
+        <div class="field"><label>Email</label><input type="email" value="anderson.cai@vcrispy.io"></div>
+        <div class="field"><label>Password</label><input type="password" value="••••••••"></div>
+      </div>
+      <button class="btn-login" onclick="showScreen('s-dash')">Sign in to HelixOS →</button>
+      <div class="card-footer">Powered by <strong>Seneca HELIX</strong> · Invite-only access</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     DASHBOARD
+═══════════════════════════════ -->
+<div class="screen" id="s-dash">
+  <div class="topbar">
+    <div class="tb-logo"><div class="lm">H</div><div class="lt">Helix<span>OS</span></div></div>
+    <div class="tb-nav">
+      <button class="tb-btn active" onclick="showScreen('s-dash')">Dashboard</button>
+      <button class="tb-btn" onclick="showScreen('s-chat')">Chat</button>
+      <button class="tb-btn" onclick="showScreen('s-tasks')">Tasks</button>
+      <button class="tb-btn" onclick="showScreen('s-ventures')">Ventures</button>
+      <button class="tb-btn" onclick="showScreen('s-business')">Business</button>
+    </div>
+    <div class="tb-right">
+      <div class="tb-cohort">Helix Launch Cohort</div>
+      <div class="avatar">AC</div>
+      <div class="tb-name">Anderson Cai</div>
+    </div>
+  </div>
+  <div class="dash-body">
+    <div class="sidebar">
+      <div class="venture-pill">
+        <div class="vp-label">Active Venture</div>
+        <div class="vp-name">VeriCV</div>
+        <div class="vp-tag">GitHub signal for smarter developer hiring</div>
+        <div class="vp-stage">Pre-Revenue · Discovery</div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">Workspace</div>
+        <div class="sb-item active"><span class="si-icon">⊞</span> Dashboard</div>
+        <div class="sb-item" onclick="showScreen('s-chat')"><span class="si-icon">💬</span> Chat <span class="si-badge">3</span></div>
+        <div class="sb-item" onclick="showScreen('s-tasks')"><span class="si-icon">📋</span> Tasks <span class="si-badge">2</span></div>
+        <div class="sb-item" onclick="showScreen('s-ventures')"><span class="si-icon">🏛️</span> Ventures</div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">AI Teams</div>
+        <div class="sb-item" onclick="showChat('product')"><span class="si-icon">🏗️</span> Product & Dev</div>
+        <div class="sb-item" onclick="showChat('validation')"><span class="si-icon">🔬</span> Validation</div>
+        <div class="sb-item" onclick="showChat('marketing')"><span class="si-icon">📣</span> Marketing</div>
+        <div class="sb-item" onclick="showChat('email')"><span class="si-icon">📧</span> Email & Ads</div>
+        <div class="sb-item" onclick="showChat('legal')"><span class="si-icon">⚖️</span> Legal & Finance</div>
+      </div>
+    </div>
+    <div class="dash-main">
+      <div class="dash-welcome">
+        <div>
+          <div class="dw-greeting">Good morning, Anderson 👋</div>
+          <div class="dw-sub">VeriCV · Discovery stage · Your AI team is ready. What are we building today?</div>
+        </div>
+        <div class="dw-rocket">🚀</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat"><div class="stat-val val-red">7</div><div class="stat-label">Chats this week</div></div>
+        <div class="stat"><div class="stat-val val-yellow">2</div><div class="stat-label">Tasks running</div></div>
+        <div class="stat"><div class="stat-val val-green">3</div><div class="stat-label">Interviews done</div></div>
+        <div class="stat"><div class="stat-val">Fri</div><div class="stat-label">Next check-in with Ed</div></div>
+      </div>
+      <div class="section-header">
+        <div class="section-title">Your AI Team — Five Domains</div>
+        <div class="section-link" onclick="showScreen('s-tasks')">View all tasks →</div>
+      </div>
+      <div class="domain-grid">
+        <div class="domain-card" onclick="showChat('product')"><div class="dc-icon">🏗️</div><div class="dc-name">Product & Dev</div><div class="dc-agents">CPO · PM · UX</div></div>
+        <div class="domain-card" onclick="showChat('validation')"><div class="dc-icon">🔬</div><div class="dc-name">Validation</div><div class="dc-agents">Strategist · Researcher</div></div>
+        <div class="domain-card" onclick="showChat('marketing')"><div class="dc-icon">📣</div><div class="dc-name">Marketing</div><div class="dc-agents">CMO · Growth · Content</div></div>
+        <div class="domain-card" onclick="showChat('email')"><div class="dc-icon">📧</div><div class="dc-name">Email & Ads</div><div class="dc-agents">Outbound · Campaigns</div></div>
+        <div class="domain-card" onclick="showChat('legal')"><div class="dc-icon">⚖️</div><div class="dc-name">Legal & Finance</div><div class="dc-agents">Counsel · CFO</div></div>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="section-header"><div class="section-title">Task Inbox</div><div class="section-link" onclick="showScreen('s-tasks')">View all →</div></div>
+          <div class="card">
+            <div class="task-item"><div class="task-status ts-done">✓</div><div class="task-body"><div class="task-title">Competitive landscape analysis — GitHub dev tools</div><div class="task-meta">Completed 2h ago · Strategic Advisor</div></div><div class="task-chevron">›</div></div>
+            <div class="task-item"><div class="task-status ts-run">⟳</div><div class="task-body"><div class="task-title">3 cold email variants for HR manager outreach</div><div class="task-meta">Running · Outbound Strategist · ~4 min</div></div><div class="task-chevron">›</div></div>
+            <div class="task-item"><div class="task-status ts-done">✓</div><div class="task-body"><div class="task-title">Customer interview guide — HR managers</div><div class="task-meta">Completed yesterday · UX Researcher</div></div><div class="task-chevron">›</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-header"><div class="section-title">Recent Chats</div><div class="section-link" onclick="showScreen('s-chat')">Open chat →</div></div>
+          <div class="card">
+            <div class="cpi" onclick="showChat('product')"><div class="cpi-icon">🏗️</div><div style="flex:1;overflow:hidden"><div class="cpi-title">Discovery interview prep</div><div class="cpi-preview">10 questions for HR managers about dev hiring...</div></div><div class="cpi-time">2h ago</div></div>
+            <div class="cpi" onclick="showChat('marketing')"><div class="cpi-icon">📣</div><div style="flex:1;overflow:hidden"><div class="cpi-title">LinkedIn positioning for VeriCV</div><div class="cpi-preview">Your hook: "GitHub is the résumé HR can't fake."</div></div><div class="cpi-time">Yesterday</div></div>
+            <div class="cpi" onclick="showChat('legal')"><div class="cpi-icon">⚖️</div><div style="flex:1;overflow:hidden"><div class="cpi-title">Incorporation — Canada</div><div class="cpi-preview">Ontario Corp vs. Federal: for most SaaS startups...</div></div><div class="cpi-time">3 days ago</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     CHAT
+═══════════════════════════════ -->
+<div class="screen" id="s-chat">
+  <div class="topbar">
+    <div class="tb-logo"><div class="lm">H</div><div class="lt">Helix<span>OS</span></div></div>
+    <div class="tb-nav">
+      <button class="tb-btn" onclick="showScreen('s-dash')">Dashboard</button>
+      <button class="tb-btn active">Chat</button>
+      <button class="tb-btn" onclick="showScreen('s-tasks')">Tasks</button>
+      <button class="tb-btn" onclick="showScreen('s-ventures')">Ventures</button>
+      <button class="tb-btn" onclick="showScreen('s-business')">Business</button>
+    </div>
+    <div class="tb-right">
+      <div class="tb-cohort">Helix Launch Cohort</div>
+      <div class="avatar">AC</div>
+      <div class="tb-name">Anderson Cai</div>
+    </div>
+  </div>
+  <div class="chat-layout">
+    <div class="chat-sidebar">
+      <div class="cs-header"><div class="cs-title">Conversations</div><button class="cs-new">+ New</button></div>
+      <div class="conv-list">
+        <div class="conv-label">Today</div>
+        <div class="conv-item active" onclick="loadConv('product')"><div class="conv-emoji">🏗️</div><div class="conv-text"><div class="conv-title">Discovery interview prep</div><div class="conv-prev">10 questions for HR managers...</div></div></div>
+        <div class="conv-item" onclick="loadConv('validation')"><div class="conv-emoji">🔬</div><div class="conv-text"><div class="conv-title">Validate the GitHub angle</div><div class="conv-prev">TAM for dev hiring analytics...</div></div></div>
+        <div class="conv-label">This week</div>
+        <div class="conv-item" onclick="loadConv('marketing')"><div class="conv-emoji">📣</div><div class="conv-text"><div class="conv-title">LinkedIn positioning</div><div class="conv-prev">Your hook: "GitHub is the résumé..."</div></div></div>
+        <div class="conv-item" onclick="loadConv('email')"><div class="conv-emoji">📧</div><div class="conv-text"><div class="conv-title">Cold email sequence</div><div class="conv-prev">3 variants for HR at tech cos...</div></div></div>
+        <div class="conv-item" onclick="loadConv('legal')"><div class="conv-emoji">⚖️</div><div class="conv-text"><div class="conv-title">Incorporation — Canada</div><div class="conv-prev">Ontario Corp vs. Federal...</div></div></div>
+      </div>
+    </div>
+    <div class="chat-main">
+      <div class="chat-header">
+        <button class="ch-back" onclick="showScreen('s-dash')">← Dashboard</button>
+        <span class="ch-agent" id="agent-label">Product Manager</span>
+        <span class="ch-venture">VeriCV · Helix Launch</span>
+        <span class="ch-status">AI team online</span>
+      </div>
+      <div class="messages" id="messages"></div>
+      <div class="chat-input-area">
+        <div class="demo-strip">
+          <div class="demo-chip active" onclick="loadConv('product')">🏗️ Interview prep</div>
+          <div class="demo-chip" onclick="loadConv('validation')">🔬 Market size</div>
+          <div class="demo-chip" onclick="loadConv('marketing')">📣 LinkedIn strategy</div>
+          <div class="demo-chip" onclick="loadConv('email')">📧 Cold emails</div>
+          <div class="demo-chip" onclick="loadConv('legal')">⚖️ Incorporation</div>
+        </div>
+        <div class="chat-input-row">
+          <textarea id="chat-input" placeholder="Ask your AI team anything about your venture…" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendDemo()}"></textarea>
+          <button class="send-btn" onclick="sendDemo()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     TASKS
+═══════════════════════════════ -->
+<div class="screen" id="s-tasks">
+  <div class="topbar">
+    <div class="tb-logo"><div class="lm">H</div><div class="lt">Helix<span>OS</span></div></div>
+    <div class="tb-nav">
+      <button class="tb-btn" onclick="showScreen('s-dash')">Dashboard</button>
+      <button class="tb-btn" onclick="showScreen('s-chat')">Chat</button>
+      <button class="tb-btn active">Tasks</button>
+      <button class="tb-btn" onclick="showScreen('s-ventures')">Ventures</button>
+      <button class="tb-btn" onclick="showScreen('s-business')">Business</button>
+    </div>
+    <div class="tb-right">
+      <div class="tb-cohort">Helix Launch Cohort</div>
+      <div class="avatar">AC</div>
+      <div class="tb-name">Anderson Cai</div>
+    </div>
+  </div>
+  <div class="tasks-body">
+    <div class="sidebar">
+      <div class="venture-pill">
+        <div class="vp-label">Active Venture</div>
+        <div class="vp-name">VeriCV</div>
+        <div class="vp-tag">GitHub signal for smarter developer hiring</div>
+        <div class="vp-stage">Pre-Revenue · Discovery</div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">Stage Progress</div>
+        <div class="sb-item active"><span class="si-icon">🔎</span> Discovery <span class="si-badge" id="sb-s1-count">0/15</span></div>
+        <div class="sb-item"><span class="si-icon">🧪</span> Validation <span class="si-badge" id="sb-s2-count">0/14</span></div>
+        <div class="sb-item"><span class="si-icon">🛠️</span> MVP Build <span class="si-badge" id="sb-s3-count">0/12</span></div>
+        <div class="sb-item"><span class="si-icon">🚀</span> Launch <span class="si-badge" id="sb-s4-count">0/8</span></div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-label">Task Legend</div>
+        <div style="padding:.3rem .55rem"><span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--green);margin-bottom:.3rem"><span style="width:8px;height:8px;border-radius:2px;background:var(--green-light);border:1px solid var(--green);flex-shrink:0"></span>🤖 Fully Automatic</span></div>
+        <div style="padding:.3rem .55rem"><span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--yellow);margin-bottom:.3rem"><span style="width:8px;height:8px;border-radius:2px;background:var(--yellow-light);border:1px solid var(--yellow);flex-shrink:0"></span>⚡ Semi-Automatic</span></div>
+        <div style="padding:.3rem .55rem"><span style="display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--red)"><span style="width:8px;height:8px;border-radius:2px;background:var(--red-light);border:1px solid var(--red);flex-shrink:0"></span>👤 Founder-Led</span></div>
+      </div>
+    </div>
+    <div class="tasks-main" id="tasks-main">
+      <!-- Rendered by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     VENTURES (Company Wiki)
+═══════════════════════════════ -->
+<div class="screen" id="s-ventures">
+  <div class="topbar">
+    <div class="tb-logo"><div class="lm">H</div><div class="lt">Helix<span>OS</span></div></div>
+    <div class="tb-nav">
+      <button class="tb-btn" onclick="showScreen('s-dash')">Dashboard</button>
+      <button class="tb-btn" onclick="showScreen('s-chat')">Chat</button>
+      <button class="tb-btn" onclick="showScreen('s-tasks')">Tasks</button>
+      <button class="tb-btn active">Ventures</button>
+      <button class="tb-btn" onclick="showScreen('s-business')">Business</button>
+    </div>
+    <div class="tb-right">
+      <div class="tb-cohort">Helix Launch Cohort</div>
+      <div class="avatar">AC</div>
+      <div class="tb-name">Anderson Cai</div>
+    </div>
+  </div>
+  <div class="ventures-body">
+    <!-- Folder tree sidebar -->
+    <div class="ventures-sidebar">
+      <div class="vs-header">
+        <div class="vs-title">VeriCV Wiki</div>
+        <div class="vs-sub">Company knowledge vault</div>
+      </div>
+      <div class="vs-search"><input type="text" placeholder="Search documents..."></div>
+      <div class="vs-tree">
+
+        <div class="vt-category">
+          <div class="vt-cat-header active" onclick="showVentureCategory('contracts')">
+            <div class="vt-cat-icon">📄</div>
+            <div class="vt-cat-name">Contracts</div>
+            <div class="vt-cat-count">3</div>
+          </div>
+          <div class="vt-files" id="tree-contracts">
+            <div class="vt-file active"><div class="vt-file-icon">📝</div><div class="vt-file-name">NDA Template</div></div>
+            <div class="vt-file"><div class="vt-file-icon">📝</div><div class="vt-file-name">SaaS Terms of Service</div></div>
+            <div class="vt-file"><div class="vt-file-icon">📝</div><div class="vt-file-name">Advisor Agreement</div></div>
+          </div>
+        </div>
+
+        <div class="vt-category">
+          <div class="vt-cat-header" onclick="showVentureCategory('property')">
+            <div class="vt-cat-icon">🏢</div>
+            <div class="vt-cat-name">Business Property</div>
+            <div class="vt-cat-count">4</div>
+          </div>
+        </div>
+
+        <div class="vt-category">
+          <div class="vt-cat-header" onclick="showVentureCategory('ip')">
+            <div class="vt-cat-icon">💡</div>
+            <div class="vt-cat-name">Intellectual Property</div>
+            <div class="vt-cat-count">3</div>
+          </div>
+        </div>
+
+        <div class="vt-category">
+          <div class="vt-cat-header" onclick="showVentureCategory('workproduct')">
+            <div class="vt-cat-icon">📚</div>
+            <div class="vt-cat-name">Work Product</div>
+            <div class="vt-cat-count">8</div>
+          </div>
+        </div>
+
+      </div><!-- vs-tree -->
+    </div><!-- ventures-sidebar -->
+
+    <!-- Main content -->
+    <div class="ventures-main">
+      <div class="ventures-content" id="ventures-content">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     BUSINESS
+═══════════════════════════════ -->
+<div class="screen" id="s-business">
+  <div class="topbar">
+    <div class="tb-logo"><div class="lm">H</div><div class="lt">Helix<span>OS</span></div></div>
+    <div class="tb-nav">
+      <button class="tb-btn" onclick="showScreen('s-dash')">Dashboard</button>
+      <button class="tb-btn" onclick="showScreen('s-chat')">Chat</button>
+      <button class="tb-btn" onclick="showScreen('s-tasks')">Tasks</button>
+      <button class="tb-btn" onclick="showScreen('s-ventures')">Ventures</button>
+      <button class="tb-btn active">Business</button>
+    </div>
+    <div class="tb-right">
+      <div class="tb-cohort">Helix Launch Cohort</div>
+      <div class="avatar">AC</div>
+      <div class="tb-name">Anderson Cai</div>
+    </div>
+  </div>
+  <div class="business-body">
+    <div class="business-stats">
+      <div class="stats-row">
+        <div class="stat"><div class="stat-val val-red">3</div><div class="stat-label">Active pipeline deals</div></div>
+        <div class="stat"><div class="stat-val val-green">$1,398</div><div class="stat-label">Projected MRR (pipeline)</div></div>
+        <div class="stat"><div class="stat-val val-yellow">1</div><div class="stat-label">LOI signed</div></div>
+        <div class="stat"><div class="stat-val">Q3 '26</div><div class="stat-label">Target first dollar</div></div>
+      </div>
+    </div>
+    <div class="business-tree-body">
+      <!-- Folder tree sidebar -->
+      <div class="ventures-sidebar">
+        <div class="vs-header">
+          <div class="vs-title">VeriCV Business</div>
+          <div class="vs-sub">Revenue pipeline &amp; commitments</div>
+        </div>
+        <div class="vs-tree">
+
+          <div class="vt-category">
+            <div class="bt-cat-header active" onclick="showBusinessCategory('partners')">
+              <div class="vt-cat-icon">🤝</div>
+              <div class="vt-cat-name">Design Partners</div>
+              <div class="vt-cat-count">3</div>
+            </div>
+          </div>
+
+          <div class="vt-category">
+            <div class="bt-cat-header" onclick="showBusinessCategory('pricing')">
+              <div class="vt-cat-icon">💰</div>
+              <div class="vt-cat-name">Pricing &amp; Offers</div>
+              <div class="vt-cat-count">3</div>
+            </div>
+          </div>
+
+          <div class="vt-category">
+            <div class="bt-cat-header" onclick="showBusinessCategory('pipeline')">
+              <div class="vt-cat-icon">📈</div>
+              <div class="vt-cat-name">Revenue Pipeline</div>
+              <div class="vt-cat-count">3</div>
+            </div>
+          </div>
+
+          <div class="vt-category">
+            <div class="bt-cat-header" onclick="showBusinessCategory('partnerships')">
+              <div class="vt-cat-icon">🔗</div>
+              <div class="vt-cat-name">Partnerships</div>
+              <div class="vt-cat-count">2</div>
+            </div>
+          </div>
+
+        </div><!-- vs-tree -->
+      </div><!-- ventures-sidebar -->
+
+      <!-- Main content -->
+      <div class="ventures-main">
+        <div class="ventures-content" id="business-content">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════ -->
+<script>
+
+/* ── CHAT DATA ── */
+const CONVS={
+  product:{agent:'Product Manager',emoji:'🏗️',messages:[
+    {role:'user',text:'I have my first customer discovery call tomorrow with an HR manager at a 200-person Toronto tech company. Can you help me prepare?'},
+    {role:'ai',agent:'Product Manager',text:`Absolutely — discovery calls are where great products are born. Here's a sharp interview guide tailored to VeriCV's hypothesis.<h4>Your Core Hypothesis to Test</h4>HR managers at mid-sized tech companies lose hours per week manually evaluating developer candidates — and existing tools (LinkedIn, résumés) don't tell them what developers actually build.<h4>10 Questions to Ask</h4><ul><li><strong>Walk me through your last technical hire.</strong> What did the process look like from first contact to offer?</li><li><strong>What do you trust most when evaluating a developer?</strong> Résumé? GitHub? Interview performance?</li><li><strong>How many hours per week does your team spend on technical screening?</strong></li><li><strong>Have you ever hired someone who looked great on paper but underperformed?</strong> What would you have wanted to know?</li><li><strong>Do you currently look at GitHub or open-source contributions?</strong> If so, how?</li><li><strong>What tools are you using for ATS/recruiting?</strong> (Greenhouse, Lever, Ashby?)</li><li><strong>If you could get a one-page signal report on any developer in 60 seconds, what would it show?</strong></li><li><strong>What's your biggest pain point in developer hiring right now?</strong></li><li><strong>Who else is involved in the technical evaluation decision?</strong></li><li><strong>If this existed and worked, what would you pay for it?</strong></li></ul><h4>Key Things to Listen For</h4><ul><li>Do they mention <em>time lost</em> to screening? (validates the pain)</li><li>Do they already look at GitHub? (confirms the channel is trusted)</li><li>What's their willingness to pay? Push for a number.</li></ul><div class="blk"><div class="blk-title">Coaching Note</div>Don't pitch — just listen. The goal is to hear them describe the problem in their own words. Those exact phrases become your marketing copy.</div>`}
+  ]},
+  validation:{agent:'Business Strategist',emoji:'🔬',messages:[
+    {role:'user',text:"How big is the market for VeriCV?"},
+    {role:'ai',agent:'Business Strategist',text:`Great instinct to validate market size before going deeper.<h4>TAM → SAM → SOM for VeriCV</h4><div class="blk"><div class="blk-title">TAM — Total Addressable Market</div>~$14B globally — the broader HR tech / talent intelligence market.</div><div class="blk"><div class="blk-title">SAM — Serviceable Addressable Market</div>~$2.1B — companies hiring developers in North America with 50–5,000 employees. Roughly 85,000 companies spending $400–$600/yr per hire.</div><div class="blk"><div class="blk-title">SOM — Your Realistic Year 1–2 Target</div>$3–8M ARR with 200–400 SMB tech companies at $800–$1,200/mo. Start with 10 paying design partners.</div><h4>Why the GitHub Angle Has a Moat</h4><ul><li>GitHub has 100M+ developers — the largest verified signal set on the internet</li><li>Existing ATS tools (Greenhouse, Lever, Ashby) don't parse GitHub natively</li><li><strong>VeriCV's wedge:</strong> Objective, auditable contribution data — not self-reported</li></ul>`}
+  ]},
+  marketing:{agent:'CMO',emoji:'📣',messages:[
+    {role:'user',text:"I need to build my LinkedIn presence for VeriCV. What should my positioning be?"},
+    {role:'ai',agent:'CMO',text:`LinkedIn is your most important distribution channel right now. Here's your positioning strategy.<h4>Your Core Narrative</h4>Your positioning: <strong>"GitHub is the résumé HR can't fake."</strong><h4>Content Pillars (3 posts per week)</h4><ul><li><strong>Data & Insight (1x/week):</strong> Share something counterintuitive. "73% of top open-source contributors list no side projects on their LinkedIn."</li><li><strong>Story (1x/week):</strong> Tell a discovery interview story. "I spoke to an HR manager who spent 6 hours on a technical screen that GitHub could have answered in 60 seconds."</li><li><strong>POV (1x/week):</strong> Take a strong stand. "The coding interview is broken. Here's what actually predicts performance."</li></ul><div class="blk"><div class="blk-title">Headline</div>"Building VeriCV — GitHub signal for developer hiring | Seneca HELIX"</div>Start posting this week — before you have anything built. The audience you build now is your launch list.`}
+  ]},
+  email:{agent:'Outbound Strategist',emoji:'📧',messages:[
+    {role:'user',text:"Write me a cold email sequence for HR managers at Toronto tech companies."},
+    {role:'ai',agent:'Outbound Strategist',text:`Here are 3 cold email variants optimized for discovery calls.<h4>Variant A — The Data Hook</h4><div class="blk"><div class="blk-title">Subject: Quick question about how you screen developers</div>Hi [Name],<br><br>I'm a Seneca founder researching developer hiring at Toronto tech companies.<br><br>Quick question: when you evaluate a developer candidate, do you look at their GitHub profile? And if you do — how much do you trust what you see there?<br><br>I'm doing 20-minute research calls this week. No pitch — genuinely trying to understand the problem.<br><br>Worth a quick chat?<br><br>Anderson Cai | VeriCV</div><h4>Follow-up Sequence</h4><ul><li><strong>Day 3:</strong> "Just bumping this up — 10 minutes is enough."</li><li><strong>Day 7:</strong> "Last nudge — happy to make it async."</li><li><strong>Day 14:</strong> Archive. Move on.</li></ul>Target 10–15 sends per day. A 5–10% reply rate is a strong signal.`}
+  ]},
+  legal:{agent:'General Counsel',emoji:'⚖️',messages:[
+    {role:'user',text:"Do I need to incorporate before I start charging? Ontario vs. federal?"},
+    {role:'ai',agent:'General Counsel',text:`Short answer: incorporate before signing any contracts or taking significant revenue.<h4>Ontario vs. Federal (CBCA)</h4><div class="blk"><div class="blk-title">Ontario Corporation</div>• Cost: ~$300 online • Operates Ontario only by right</div><div class="blk"><div class="blk-title">Federal Corporation (CBCA) — Recommended for VeriCV</div>• Cost: ~$200 online • Operates all provinces by right • Best for tech startups planning to raise money or scale nationally</div><h4>Practical Steps</h4><ul><li>Go to <code>corporationscanada.ca</code> — takes ~1 hour online</li><li>Issue founder shares at a nominal price (<code>$0.001/share</code>) immediately</li><li>Open a business bank account (Mercury for USD, TD or RBC for CAD)</li></ul><div class="blk"><div class="blk-title">Don't Skip This</div>Assign any IP (code, brand, name) from yourself to the corporation immediately after incorporating. Investors will check this.</div>`}
+  ]}
+};
+
+/* ── TASKS DATA ── */
+const DOMAIN_META={
+  product:{label:'Product & Dev',color:'#2563EB',icon:'🏗️'},
+  validation:{label:'Validation',color:'#7C3AED',icon:'🔬'},
+  marketing:{label:'Marketing',color:'#EA580C',icon:'📣'},
+  email:{label:'Email & Ads',color:'#16A34A',icon:'📧'},
+  legal:{label:'Legal & Finance',color:'#0D9488',icon:'⚖️'}
+};
+
+const TYPE_META={
+  auto:{label:'🤖 Fully Automatic',cls:'type-auto',desc:'AI handles end-to-end'},
+  semi:{label:'⚡ Semi-Automatic',cls:'type-semi',desc:'AI drafts, you review & approve'},
+  founder:{label:'👤 Founder-Led',cls:'type-founder',desc:'You lead, AI scaffolds & supports'}
+};
+
+const STAGES=[
+  {
+    id:'discovery',
+    name:'Stage 1 · Discovery',
+    desc:'Understand the problem, find your first customers, and build your initial toolkit',
+    tasks:[
+      // Product & Dev
+      {id:'d-p1',domain:'product',type:'auto',title:'Competitive landscape analysis',desc:'Top 5 competitors: features, pricing, positioning gaps — delivered as a ready-to-use comparison table',time:'~20 min',status:'done',parent:null},
+      {id:'d-p2',domain:'product',type:'semi',title:'Customer interview question bank',desc:'30 discovery questions ranked by insight value — you pick 10 for your first call',time:'~15 min',status:'done',parent:'d-p1'},
+      {id:'d-p3',domain:'product',type:'founder',title:'Problem statement refinement',desc:'AI drafts 3 problem statement versions — you choose one and sharpen your specific hypothesis',time:'~45 min',status:'idle',parent:'d-p1'},
+      // Validation
+      {id:'d-v1',domain:'validation',type:'auto',title:'TAM / SAM / SOM breakdown',desc:'Market sizing with verified sources and bottom-up calculation for VeriCV specifically',time:'~25 min',status:'done',parent:null},
+      {id:'d-v2',domain:'validation',type:'semi',title:'Customer persona research',desc:'3 draft personas from secondary research — you validate and add lived insight',time:'~30 min',status:'idle',parent:'d-v1'},
+      {id:'d-v3',domain:'validation',type:'founder',title:'Problem hypothesis canvas',desc:'AI provides the Jobs-to-be-Done structure — you fill in the specifics from your own convictions',time:'~60 min',status:'idle',parent:'d-v1'},
+      // Marketing
+      {id:'d-m1',domain:'marketing',type:'auto',title:'LinkedIn positioning strategy',desc:'Hook, 3 content pillars, 5 headline variants, and a 30-day posting calendar outline',time:'~20 min',status:'done',parent:null},
+      {id:'d-m2',domain:'marketing',type:'semi',title:'Value proposition canvas',desc:'AI drafts customer pains and gains — you validate and rewrite in your customers\' own language',time:'~35 min',status:'idle',parent:'d-m1'},
+      {id:'d-m3',domain:'marketing',type:'founder',title:'Brand name brainstorm',desc:'AI generates 30 name options — you filter to 5 favourites, AI checks domain availability and trademark conflicts',time:'~40 min',status:'idle',parent:'d-m1'},
+      // Email & Ads
+      {id:'d-e1',domain:'email',type:'auto',title:'3 cold email variants',desc:'A/B/C variations using different angles (data hook, pain point, referral) with subject line options',time:'~10 min',status:'running',parent:null},
+      {id:'d-e2',domain:'email',type:'auto',title:'Target company list — 50 ICPs',desc:'Apollo-criteria prospect list: 50–500 person Toronto tech companies actively hiring developers',time:'~15 min',status:'idle',parent:null},
+      {id:'d-e3',domain:'email',type:'semi',title:'LinkedIn outreach sequence',desc:'3-message connection → value → ask sequence — you approve tone and adjust for your voice',time:'~20 min',status:'idle',parent:'d-e2'},
+      // Legal & Finance
+      {id:'d-l1',domain:'legal',type:'auto',title:'Incorporation comparison guide',desc:'Ontario Corp vs. Federal vs. Delaware — costs, timelines, pros/cons for a Canadian SaaS startup',time:'~15 min',status:'idle',parent:null},
+      {id:'d-l2',domain:'legal',type:'auto',title:'Pre-seed financial model template',desc:'Revenue, burn, and runway model pre-filled with VeriCV-specific SaaS assumptions',time:'~20 min',status:'idle',parent:null},
+      {id:'d-l3',domain:'legal',type:'semi',title:'Founder equity split calculator',desc:'Vesting scenarios for 1–3 co-founders — you input assumptions, AI models the outcomes',time:'~25 min',status:'idle',parent:'d-l2'},
+    ]
+  },
+  {
+    id:'validation',
+    name:'Stage 2 · Validation',
+    desc:'Prove willingness to pay, synthesize customer insights, and build early momentum',
+    tasks:[
+      {id:'v-p1',domain:'product',type:'semi',title:'User story map from interview data',desc:'AI structures your interview transcripts into a priority user story map for V1',time:'~30 min',status:'locked',parent:'d-p2'},
+      {id:'v-p2',domain:'product',type:'founder',title:'MVP scope decision',desc:'AI presents 3 MVP sizes (small / medium / full) with tradeoffs — you choose and commit',time:'~45 min',status:'locked',parent:'d-p3'},
+      {id:'v-p3',domain:'product',type:'auto',title:'Wireframe brief for Figma',desc:'Text descriptions of each V1 screen for a designer or Lovable/v0 to implement',time:'~25 min',status:'locked',parent:'v-p1'},
+      {id:'v-v1',domain:'validation',type:'semi',title:'Customer interview synthesis',desc:'Paste transcripts from 5+ calls — AI extracts themes, quotes, and willingness-to-pay signals',time:'~20 min',status:'locked',parent:'d-v2'},
+      {id:'v-v2',domain:'validation',type:'auto',title:'Willingness-to-pay analysis',desc:'Pricing psychology research + recommended price points with rationale for VeriCV',time:'~30 min',status:'locked',parent:'d-v3'},
+      {id:'v-v3',domain:'validation',type:'founder',title:'PMF hypothesis refinement',desc:'AI structures the PMF scorecard — you rate each dimension based on your interview data',time:'~60 min',status:'locked',parent:'v-v1'},
+      {id:'v-m1',domain:'marketing',type:'auto',title:'10 LinkedIn posts scheduled',desc:'Full drafts for the next 30 days based on your positioning strategy and interview learnings',time:'~20 min',status:'locked',parent:'d-m3'},
+      {id:'v-m2',domain:'marketing',type:'semi',title:'Substack newsletter — Issue #1',desc:'AI drafts from your stated learnings — you edit, personalize, and publish',time:'~35 min',status:'locked',parent:'d-m2'},
+      {id:'v-m3',domain:'marketing',type:'auto',title:'SEO keyword research',desc:'50 keywords for developer hiring content with monthly search volume and competition scores',time:'~15 min',status:'locked',parent:'v-m1'},
+      {id:'v-e1',domain:'email',type:'auto',title:'Follow-up email sequence',desc:'3-touch sequence for non-responders with decreasing length and changing angle',time:'~10 min',status:'locked',parent:'d-e1'},
+      {id:'v-e2',domain:'email',type:'semi',title:'A/B test design and tracking plan',desc:'Define email variants and the metrics spreadsheet to track response rates per variant',time:'~20 min',status:'locked',parent:'d-e3'},
+      {id:'v-l1',domain:'legal',type:'auto',title:'Revenue model comparison',desc:'Subscription vs. per-hire vs. freemium — modelled out for VeriCV with break-even analysis',time:'~25 min',status:'locked',parent:'d-l1'},
+      {id:'v-l2',domain:'legal',type:'semi',title:'Term sheet template',desc:'Standard SAFE / convertible note terms adapted for Canadian early-stage startups',time:'~20 min',status:'locked',parent:'d-l3'},
+      {id:'v-l3',domain:'legal',type:'founder',title:'Financial model — first version',desc:'AI builds the template and pre-populates industry benchmarks — you fill your specific assumptions',time:'~90 min',status:'locked',parent:'v-l2'},
+    ]
+  },
+  {
+    id:'mvp',
+    name:'Stage 3 · MVP Build',
+    desc:'Ship the right thing fast — PRD, sprint, architecture, and launch prep',
+    tasks:[
+      {id:'b-p1',domain:'product',type:'semi',title:'PRD — V1 Product Requirements',desc:'Full product requirements document with acceptance criteria — AI drafts, you review',time:'~45 min',status:'locked',parent:'v-p1'},
+      {id:'b-p2',domain:'product',type:'auto',title:'Sprint backlog creation',desc:'10 user stories formatted as GitHub issues with estimates, ready to import',time:'~15 min',status:'locked',parent:'v-p3'},
+      {id:'b-p3',domain:'product',type:'founder',title:'Technical architecture decision',desc:'AI presents 3 stack options with tradeoffs — you decide on the architecture',time:'~60 min',status:'locked',parent:'v-p2'},
+      {id:'b-v1',domain:'validation',type:'semi',title:'Beta tester recruitment email',desc:'Outreach email for 20 beta users — from your interview pool, you personalize the send',time:'~10 min',status:'locked',parent:'v-v1'},
+      {id:'b-v2',domain:'validation',type:'auto',title:'Beta feedback survey',desc:'12-question survey with NPS, ease-of-use, and open-ended prompts — ready to send in Typeform',time:'~15 min',status:'locked',parent:'b-v1'},
+      {id:'b-m1',domain:'marketing',type:'auto',title:'Launch announcement blog post',desc:'500-word narrative post for your website — tells the VeriCV origin story and announces launch',time:'~20 min',status:'locked',parent:'v-m3'},
+      {id:'b-m2',domain:'marketing',type:'founder',title:'Product Hunt launch strategy',desc:'AI writes the launch guide — you make the community connections and time the launch',time:'~60 min',status:'locked',parent:'b-m1'},
+      {id:'b-e1',domain:'email',type:'auto',title:'Pre-launch + launch email sequence',desc:'4-email sequence: early access → launch day → follow-up → social proof request',time:'~15 min',status:'locked',parent:'v-e1'},
+      {id:'b-e2',domain:'email',type:'semi',title:'Landing page copy',desc:'Above-fold, features, social proof, and CTA — AI drafts from your value prop canvas',time:'~25 min',status:'locked',parent:'v-e2'},
+      {id:'b-l1',domain:'legal',type:'semi',title:'Customer contract template',desc:'SaaS terms of service + data processing agreement (DPA) — AI drafts, you review with counsel',time:'~30 min',status:'locked',parent:'v-l2'},
+      {id:'b-l2',domain:'legal',type:'auto',title:'Pricing page copy',desc:'3-tier pricing with recommended tier highlighted and feature comparison table',time:'~15 min',status:'locked',parent:'v-l1'},
+      {id:'b-l3',domain:'legal',type:'founder',title:'Seed round preparation checklist',desc:'AI provides the full diligence checklist — you work through each item and track completion',time:'~120 min',status:'locked',parent:'v-l3'},
+    ]
+  },
+  {
+    id:'launch',
+    name:'Stage 4 · Launch & Scale',
+    desc:'Go live, grow your first customers, and prepare to raise',
+    tasks:[
+      {id:'l-p1',domain:'product',type:'founder',title:'V1.1 roadmap — based on beta feedback',desc:'AI structures themes from beta feedback into a prioritized roadmap — you validate priorities',time:'~60 min',status:'locked',parent:'b-p1'},
+      {id:'l-p2',domain:'product',type:'auto',title:'Changelog and release notes template',desc:'Recurring template for customer-facing update announcements — professional and clear',time:'~10 min',status:'locked',parent:'b-p3'},
+      {id:'l-v1',domain:'validation',type:'auto',title:'Churn analysis framework',desc:'Metrics and interview questions to diagnose why customers leave — Amplitude + Typeform setup',time:'~20 min',status:'locked',parent:'b-v2'},
+      {id:'l-v2',domain:'validation',type:'semi',title:'Customer retention interview guide',desc:'12 questions for 1:1 retention calls — you run the calls, AI synthesizes insights',time:'~15 min',status:'locked',parent:'v-v3'},
+      {id:'l-m1',domain:'marketing',type:'semi',title:'First customer case study',desc:'AI interviews template + written case study draft — you get the customer quote',time:'~30 min',status:'locked',parent:'v-m2'},
+      {id:'l-m2',domain:'marketing',type:'founder',title:'Conference talk proposal',desc:'AI writes the abstract — you pitch to HR Tech or startup conference organizers',time:'~45 min',status:'locked',parent:'b-m2'},
+      {id:'l-e1',domain:'email',type:'auto',title:'Monthly investor update template',desc:'Recurring email template: wins, learnings, asks — keeps your investors and advisors engaged',time:'~10 min',status:'locked',parent:'b-e1'},
+      {id:'l-l1',domain:'legal',type:'semi',title:'Seed round dataroom checklist',desc:'Full diligence package checklist with AI-generated drafts for each document',time:'~90 min',status:'locked',parent:'b-l2'},
+    ]
+  }
+];
+
+/* task state */
+const ALL_TASKS=STAGES.flatMap(s=>s.tasks);
+const TASKS_BY_ID={};
+ALL_TASKS.forEach(t=>{ TASKS_BY_ID[t.id]=t });
+
+const taskState={};
+ALL_TASKS.forEach(t=>{ taskState[t.id]=t.status });
+
+/* a task's true status: done/running pass through, otherwise it's
+   available ('idle') once its prerequisite is done (or it has none),
+   else it's locked — computed fresh every render, never mutated */
+function effectiveStatus(task){
+  const s=taskState[task.id];
+  if(s==='done'||s==='running')return s;
+  if(!task.parent||taskState[task.parent]==='done')return 'idle';
+  return 'locked';
+}
+
+function stageDoneCount(stage){
+  return stage.tasks.filter(t=>taskState[t.id]==='done').length;
+}
+
+const COMPLETION_MS={auto:4000,semi:6500,founder:8000};
+
+/* schedule a running task to resolve to done, then re-render whatever's visible */
+function scheduleCompletion(taskId){
+  const task=TASKS_BY_ID[taskId];
+  const ms=COMPLETION_MS[task.type]||5000;
+  setTimeout(()=>{
+    taskState[taskId]='done';
+    renderTasksMain();
+  },ms);
+}
+
+/* ── TASKS RENDER ── */
+let activeFilter='all';
+let typeFilter='all';
+let tasksView='list';
+let selectedTreeTaskId=null;
+
+function setTasksView(v){ tasksView=v; renderTasksMain(); }
+
+function renderTasksMain(){
+  const container=document.getElementById('tasks-main');
+  if(!container)return;
+  container.innerHTML='';
+
+  const toggle=document.createElement('div');
+  toggle.className='view-toggle';
+  toggle.innerHTML=`
+    <button class="vt-btn ${tasksView==='list'?'active':''}" onclick="setTasksView('list')">📋 List</button>
+    <button class="vt-btn ${tasksView==='tree'?'active':''}" onclick="setTasksView('tree')">🌳 Skill Tree</button>
+  `;
+  container.appendChild(toggle);
+
+  if(tasksView==='tree') renderSkillTreeInto(container);
+  else renderTaskListInto(container);
+
+  // update sidebar stage counts
+  ['discovery','validation','mvp','launch'].forEach((id,i)=>{
+    const el=document.getElementById(`sb-s${i+1}-count`);
+    const stage=STAGES.find(s=>s.id===id);
+    if(el&&stage) el.textContent=`${stageDoneCount(stage)}/${stage.tasks.length}`;
+  });
+}
+
+function taskCardHTML(task){
+  const status=effectiveStatus(task);
+  const dm=DOMAIN_META[task.domain];
+  const tm=TYPE_META[task.type];
+  const isLocked=status==='locked';
+  const isDoneTask=status==='done';
+  const isRunning=status==='running';
+
+  let footerBtn='';
+  if(isLocked){
+    footerBtn=`<span style="font-size:.71rem;color:var(--ph)">🔒 Locked</span>`;
+  } else if(isDoneTask){
+    footerBtn=`<span class="status-done">✓ Completed</span>`;
+  } else if(isRunning){
+    footerBtn=`<span class="status-running">Running…</span>`;
+  } else {
+    footerBtn=`<button class="commission-btn" onclick="commissionTask('${task.id}')">Commission AI →</button>`;
+  }
+
+  return `
+    <div class="task-card ${isLocked?'locked-card':''} ${isDoneTask?'done-card':''} ${isRunning?'running-card':''}" style="border-left-color:${dm.color}">
+      <div class="tc-top">
+        <div class="tc-domain">
+          <div class="dd" style="background:${dm.color}"></div>
+          ${dm.label}
+        </div>
+        <span class="${tm.cls} type-badge">${tm.label}</span>
+      </div>
+      <div class="tc-title">${task.title}</div>
+      <div class="tc-desc">${task.desc}</div>
+      <div class="tc-footer">
+        <div class="tc-time">⏱ ${task.time}</div>
+        ${footerBtn}
+      </div>
+    </div>
+  `;
+}
+
+function renderTaskListInto(container){
+  const fr=document.createElement('div');
+  fr.className='filter-row';
+  fr.innerHTML=`
+    <span class="fr-label">Domain:</span>
+    <span class="fr-chip ${activeFilter==='all'?'active':''}" onclick="setFilter('all')">All</span>
+    <span class="fr-chip ${activeFilter==='product'?'active':''}" onclick="setFilter('product')">🏗️ Product</span>
+    <span class="fr-chip ${activeFilter==='validation'?'active':''}" onclick="setFilter('validation')">🔬 Validation</span>
+    <span class="fr-chip ${activeFilter==='marketing'?'active':''}" onclick="setFilter('marketing')">📣 Marketing</span>
+    <span class="fr-chip ${activeFilter==='email'?'active':''}" onclick="setFilter('email')">📧 Email</span>
+    <span class="fr-chip ${activeFilter==='legal'?'active':''}" onclick="setFilter('legal')">⚖️ Legal</span>
+    <div class="fr-divider"></div>
+    <span class="fr-label">Type:</span>
+    <span class="fr-chip ${typeFilter==='all'?'active':''}" onclick="setTypeFilter('all')">All</span>
+    <span class="fr-chip ${typeFilter==='auto'?'active':''}" onclick="setTypeFilter('auto')">🤖 Auto</span>
+    <span class="fr-chip ${typeFilter==='semi'?'active':''}" onclick="setTypeFilter('semi')">⚡ Semi</span>
+    <span class="fr-chip ${typeFilter==='founder'?'active':''}" onclick="setTypeFilter('founder')">👤 Founder-Led</span>
+  `;
+  container.appendChild(fr);
+
+  STAGES.forEach(stage=>{
+    const visibleTasks=stage.tasks.filter(t=>
+      (activeFilter==='all'||t.domain===activeFilter)&&
+      (typeFilter==='all'||t.type===typeFilter)
+    );
+    if(visibleTasks.length===0)return;
+
+    const section=document.createElement('div');
+    section.className='stage-section';
+    section.innerHTML=`
+      <div class="stage-header">
+        <div class="stage-info">
+          <div class="stage-name">${stage.name}</div>
+          <div class="stage-desc">${stage.desc}</div>
+        </div>
+        <div class="stage-badge">${stageDoneCount(stage)} / ${stage.tasks.length} done</div>
+      </div>
+    `;
+
+    const grid=document.createElement('div');
+    grid.className='task-grid';
+    grid.innerHTML=visibleTasks.map(taskCardHTML).join('');
+    section.appendChild(grid);
+    container.appendChild(section);
+  });
+}
+
+function setFilter(f){activeFilter=f;renderTasksMain()}
+function setTypeFilter(f){typeFilter=f;renderTasksMain()}
+
+function commissionTask(taskId){
+  taskState[taskId]='running';
+  renderTasksMain();
+  scheduleCompletion(taskId);
+}
+
+/* ── SKILL TREE ── */
+const TREE_RADIUS_STEP=125;
+const TREE_BASE_RADIUS=85;
+const TREE_MIN_CENTER=230;
+const DOMAIN_ANGLES={product:0,validation:72,marketing:144,email:216,legal:288};
+
+/* a domain's visible tasks (fog-of-war) with tree depth + radial slot,
+   independent of canvas size — used both to size the canvas and to lay it out */
+function getDomainTree(domainKey){
+  const tasks=ALL_TASKS.filter(t=>t.domain===domainKey);
+  const depth={};
+  function getDepth(t){
+    if(depth[t.id]!==undefined)return depth[t.id];
+    if(!t.parent)return depth[t.id]=0;
+    return depth[t.id]=getDepth(TASKS_BY_ID[t.parent])+1;
+  }
+  tasks.forEach(getDepth);
+
+  const visible=tasks.filter(t=>effectiveStatus(t)!=='locked');
+  const childrenOf={};
+  visible.forEach(t=>{ if(t.parent)(childrenOf[t.parent]=childrenOf[t.parent]||[]).push(t) });
+
+  let leafCounter=0;
+  const slot={};
+  function assign(t){
+    const kids=childrenOf[t.id]||[];
+    if(kids.length===0){ slot[t.id]=leafCounter++; return slot[t.id]; }
+    const childSlots=kids.map(assign);
+    slot[t.id]=childSlots.reduce((a,b)=>a+b,0)/childSlots.length;
+    return slot[t.id];
+  }
+  visible.filter(t=>!t.parent).forEach(assign);
+
+  return{visible,depth,slot,totalLeaves:Math.max(leafCounter,1)};
+}
+
+/* radial layout for one domain's visible tasks around a given canvas center */
+function layoutDomainTree(domainKey,center){
+  const{visible,depth,slot,totalLeaves}=getDomainTree(domainKey);
+  const baseAngle=DOMAIN_ANGLES[domainKey];
+  const wedge=56;
+
+  return visible.map(t=>{
+    const frac=totalLeaves<=1?0.5:slot[t.id]/(totalLeaves-1||1);
+    const angleDeg=baseAngle-wedge/2+frac*wedge;
+    const angleRad=(angleDeg-90)*Math.PI/180;
+    const radius=TREE_BASE_RADIUS+depth[t.id]*TREE_RADIUS_STEP;
+    return{
+      task:t,
+      x:center+radius*Math.cos(angleRad),
+      y:center+radius*Math.sin(angleRad),
+      r:depth[t.id]===0?38:30
+    };
+  });
+}
+
+function selectTreeTask(taskId){
+  selectedTreeTaskId=taskId;
+  renderTasksMain();
+}
+
+function renderSkillTreeInto(container){
+  const totalDone=ALL_TASKS.filter(t=>taskState[t.id]==='done').length;
+
+  // size the canvas to whatever's actually visible right now (fog-of-war
+  // keeps this small early on and lets it grow as the venture progresses)
+  let maxDepth=0;
+  Object.keys(DOMAIN_META).forEach(d=>{
+    const{visible,depth}=getDomainTree(d);
+    visible.forEach(t=>{ if(depth[t.id]>maxDepth)maxDepth=depth[t.id] });
+  });
+  const center=Math.max(TREE_MIN_CENTER,TREE_BASE_RADIUS+maxDepth*TREE_RADIUS_STEP+50);
+  const size=center*2+20;
+
+  const nodesByDomain={};
+  Object.keys(DOMAIN_META).forEach(d=>{ nodesByDomain[d]=layoutDomainTree(d,center) });
+  const allNodes=Object.values(nodesByDomain).flat();
+  const nodeById={};
+  allNodes.forEach(n=>{ nodeById[n.task.id]=n });
+
+  let edges='';
+  allNodes.forEach(n=>{
+    if(n.task.parent&&nodeById[n.task.parent]){
+      const p=nodeById[n.task.parent];
+      edges+=`<line x1="${p.x}" y1="${p.y}" x2="${n.x}" y2="${n.y}" stroke="#cbd5e1" stroke-width="3"/>`;
+    }
+  });
+
+  let nodes='';
+  allNodes.forEach(n=>{
+    const status=effectiveStatus(n.task);
+    const fill=status==='done'?'#22c55e':status==='running'?'#f59e0b':'#ffffff';
+    const stroke=status==='idle'?'#94a3b8':'#fff';
+    const dm=DOMAIN_META[n.task.domain];
+    nodes+=`
+      <g class="tree-node" onclick="selectTreeTask('${n.task.id}')">
+        <circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${fill}" stroke="${stroke}" stroke-width="3"/>
+        <text x="${n.x}" y="${n.y+n.r*0.32}" text-anchor="middle" font-size="${n.r*0.95}">${dm.icon}</text>
+      </g>
+    `;
+  });
+
+  const rings=[];
+  for(let i=0;i<=maxDepth;i++){
+    rings.push(`<circle cx="${center}" cy="${center}" r="${TREE_BASE_RADIUS+i*TREE_RADIUS_STEP-24}" fill="none" stroke="#eef1f5" stroke-width="3"/>`);
+  }
+
+  const selectedTask=selectedTreeTaskId?TASKS_BY_ID[selectedTreeTaskId]:null;
+  const panel=selectedTask?`
+    <div class="tree-detail-heading">${DOMAIN_META[selectedTask.domain].icon} ${DOMAIN_META[selectedTask.domain].label}</div>
+    ${taskCardHTML(selectedTask)}
+  `:`
+    <div class="tree-detail-empty">
+      <div style="font-size:1.6rem">🌳</div>
+      <div>Click a node to see task details<br>and commission your AI team.</div>
+    </div>
+  `;
+
+  const wrap=document.createElement('div');
+  wrap.className='skill-tree-wrap';
+  wrap.innerHTML=`
+    <div class="tree-svg-card">
+      <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+        ${rings.join('')}
+        ${edges}
+        <circle cx="${center}" cy="${center}" r="58" fill="#E52222"/>
+        <path d="M${center-18.6} ${center-23.5} L${center-1.2} ${center+10.6} L${center+1.2} ${center+10.6} L${center+18.6} ${center-23.5}" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="${center-18.6}" cy="${center-23.5}" r="4" fill="#fff"/>
+        <circle cx="${center-7.4}" cy="${center+5}" r="4" fill="#fff"/>
+        <circle cx="${center+18.6}" cy="${center-23.5}" r="4" fill="#fff"/>
+        <circle cx="${center+7.4}" cy="${center+5}" r="4" fill="#fff"/>
+        <text x="${center}" y="${center+34}" text-anchor="middle" font-size="13" fill="#fff" font-weight="600">${totalDone}/${ALL_TASKS.length} done</text>
+        ${nodes}
+      </svg>
+    </div>
+    <div class="tree-detail-panel">${panel}</div>
+  `;
+  container.appendChild(wrap);
+}
+
+/* ── VENTURES DATA ── */
+const VENTURE_CATEGORIES={
+  contracts:{
+    icon:'📄',name:'Contracts',desc:'Signed and template agreements',
+    files:[
+      {icon:'📝',name:'Mutual NDA Template',desc:'Standard mutual non-disclosure agreement for use with potential partners, advisors, and early employees.',date:'Jun 12, 2026',source:'ai'},
+      {icon:'📝',name:'SaaS Terms of Service',desc:'Customer-facing terms covering data use, SLA, payment terms, and liability limits for VeriCV subscriptions.',date:'Jun 18, 2026',source:'ai'},
+      {icon:'📝',name:'Advisor Agreement — Ed Buchanan',desc:'Equity-for-advice agreement with 0.25% SAFE note, 24-month term, standard IP assignment clause.',date:'Jun 20, 2026',source:'upload'},
+    ]
+  },
+  property:{
+    icon:'🏢',name:'Business Property',desc:'Incorporation, banking, domains, and registrations',
+    files:[
+      {icon:'🏛️',name:'Federal Incorporation Guide',desc:'Step-by-step walkthrough of incorporating VeriCV Inc. federally (CBCA) with cost breakdown and timeline.',date:'Jun 10, 2026',source:'ai'},
+      {icon:'🏦',name:'Mercury Business Account Setup',desc:'Banking setup guide: Mercury USD account + Wealthsimple CAD + Stripe Atlas corporate card for VeriCV.',date:'Jun 11, 2026',source:'ai'},
+      {icon:'🌐',name:'Domain Registration — vericv.io',desc:'GoDaddy registration confirmed. SSL active. DNS points to Vercel preview deployment.',date:'Jun 15, 2026',source:'upload'},
+      {icon:'📊',name:'Cap Table — Founding Shares',desc:'100,000 shares issued to Anderson Cai at $0.001/share. No other shareholders. Clean cap table.',date:'Jun 20, 2026',source:'upload'},
+    ]
+  },
+  ip:{
+    icon:'💡',name:'Intellectual Property',desc:'Trademarks, trade secrets, and IP assignments',
+    files:[
+      {icon:'⚙️',name:'GitHub Analysis Algorithm',desc:'Core VeriCV proprietary algorithm: commit pattern analysis, contribution quality scoring, and red-flag detection heuristics.',date:'Jun 5, 2026',source:'upload'},
+      {icon:'™️',name:'VeriCV Trademark Search Report',desc:'CIPO trademark availability check: "VeriCV" clear in Class 42 (Software) in Canada. USPTO search pending.',date:'Jun 22, 2026',source:'auto'},
+      {icon:'📋',name:'IP Assignment Agreement — Anderson Cai',desc:'All pre-incorporation IP (algorithm, code, brand assets) formally assigned from Anderson to VeriCV Inc.',date:'Jun 21, 2026',source:'upload'},
+    ]
+  },
+  workproduct:{
+    icon:'📚',name:'Work Product',desc:'AI-generated research, reports, and deliverables',
+    files:[
+      {icon:'📊',name:'Competitive Landscape Report',desc:'Analysis of Workleap, Kula, Dover, Ashby Assessments, and CodeSignal. Feature matrix, pricing, and VeriCV positioning gaps.',date:'Jun 28, 2026',source:'ai'},
+      {icon:'🎯',name:'TAM / SAM / SOM Analysis',desc:'$14B TAM → $2.1B SAM → $3-8M SOM with bottom-up model for VeriCV. Includes source citations.',date:'Jun 25, 2026',source:'ai'},
+      {icon:'❓',name:'Customer Interview Question Bank',desc:'30 discovery questions ranked by insight value. Sections: pain, process, tools, willingness-to-pay, referral dynamics.',date:'Jun 24, 2026',source:'ai'},
+      {icon:'📣',name:'LinkedIn Positioning Strategy',desc:'Hook: "GitHub is the résumé HR can\'t fake." Three content pillars, 5 headline variants, 30-day calendar.',date:'Jun 23, 2026',source:'ai'},
+      {icon:'🗺️',name:'Value Proposition Canvas',desc:'Customer jobs, pains, gains mapped against VeriCV\'s pain relievers and gain creators. Ready to validate in interviews.',date:'Jun 22, 2026',source:'semi'},
+      {icon:'🚀',name:'LinkedIn Positioning — 10 Post Drafts',desc:'Ready-to-publish posts for the next 30 days across the 3 content pillars. Each under 280 words.',date:'Jun 28, 2026',source:'ai'},
+      {icon:'📧',name:'Cold Email Variants A/B/C',desc:'Three cold email variations for HR manager outreach: data hook, pain point, and referral play. With subject lines.',date:'Jun 27, 2026',source:'ai'},
+      {icon:'💰',name:'Pre-Seed Financial Model Template',desc:'Revenue projections, burn rate, and 18-month runway model. Pre-filled with SaaS benchmarks for VeriCV.',date:'Jun 26, 2026',source:'ai'},
+    ]
+  }
+};
+
+const sourceLabels={ai:'🤖 AI Generated',upload:'📤 Uploaded',semi:'⚡ AI + Founder',auto:'⚙️ Auto-Generated'};
+
+let activeVentureCategory='contracts';
+
+function showVentureCategory(cat){
+  activeVentureCategory=cat;
+  // update tree active states
+  document.querySelectorAll('.vt-cat-header').forEach(el=>{
+    el.classList.remove('active');
+    if(el.getAttribute('onclick')===`showVentureCategory('${cat}')`){el.classList.add('active')}
+  });
+  renderVentures();
+}
+
+function renderVentures(){
+  const container=document.getElementById('ventures-content');
+  const cat=VENTURE_CATEGORIES[activeVentureCategory];
+  if(!cat){container.innerHTML='';return}
+
+  let html=`
+    <div class="venture-hero">
+      <div>
+        <div class="vh-name">VeriCV</div>
+        <div class="vh-tag">GitHub signal for smarter developer hiring</div>
+        <div class="vh-badges">
+          <span class="vh-badge">Pre-Revenue</span>
+          <span class="vh-badge">Discovery Stage</span>
+          <span class="vh-badge">Anderson Cai</span>
+          <span class="vh-badge">Seneca HELIX Launch</span>
+        </div>
+      </div>
+      <div class="vh-right">
+        <div class="vh-emoji">🏛️</div>
+        <div class="vh-stats">18 documents · 4 categories<br>Last updated today</div>
+      </div>
+    </div>
+    <div class="category-header">
+      <div class="cat-title">
+        <div class="cat-icon">${cat.icon}</div>
+        <div class="cat-name">${cat.name}</div>
+        <div class="cat-count">${cat.files.length} documents · ${cat.desc}</div>
+      </div>
+      <button class="btn-sm">+ Upload Document</button>
+    </div>
+    <div class="file-grid">
+  `;
+
+  cat.files.forEach(f=>{
+    const sl=sourceLabels[f.source]||'';
+    const sc=f.source==='upload'?'upload':f.source==='semi'?'auto':'ai';
+    html+=`
+      <div class="file-card">
+        <div class="fc-top">
+          <div class="fc-icon">${f.icon}</div>
+          <span class="fc-source ${sc}">${sl}</span>
+        </div>
+        <div class="fc-name">${f.name}</div>
+        <div class="fc-desc">${f.desc}</div>
+        <div class="fc-footer">
+          <div class="fc-date">📅 ${f.date}</div>
+          <div class="fc-actions">
+            <button class="fc-action">View</button>
+            <button class="fc-action">Share</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  html+='</div>';
+  container.innerHTML=html;
+}
+
+/* ── BUSINESS DATA ── */
+const BUSINESS_CATEGORIES={
+  partners:{
+    icon:'🤝',name:'Design Partners',desc:'Early customers piloting VeriCV',
+    files:[
+      {icon:'🏢',name:'Brightline HR — Pilot LOI',desc:'200-person Toronto tech co. Signed letter of intent for a 30-day free pilot during Q3 hiring season, converting to a paid plan if results validate.',date:'Jun 26, 2026',stage:'signed',value:'$400/mo'},
+      {icon:'🏢',name:'Northwind Labs — Verbal Commitment',desc:'80-person dev shop. HR lead verbally agreed to a paid pilot pending the V1 demo — no signature yet.',date:'Jun 24, 2026',stage:'talks',value:'$499/mo'},
+      {icon:'🏢',name:'Solace Robotics — Discovery Call Booked',desc:'Talent lead open to piloting if GitHub signal scoring proves accurate on 5 sample candidates.',date:'Jun 29, 2026',stage:'prospecting',value:'$499/mo'},
+    ]
+  },
+  pricing:{
+    icon:'💰',name:'Pricing & Offers',desc:'Drafted packages and rate cards',
+    files:[
+      {icon:'🎁',name:'Pilot Tier',desc:'Free 30-day pilot for the first 5 design partners, converting to $199/mo per seat after validation.',date:'Jun 20, 2026',stage:'active',value:'$0 → $199/mo'},
+      {icon:'📦',name:'Standard SaaS Tier',desc:'Up to 25 active candidate evaluations per month. Target tier for 50–500 person companies.',date:'Jun 20, 2026',stage:'active',value:'$499/mo'},
+      {icon:'🔢',name:'Per-Hire Add-on',desc:'Usage-based alternative pricing, floated in conversation with Northwind Labs.',date:'Jun 23, 2026',stage:'active',value:'$150/hire'},
+    ]
+  },
+  pipeline:{
+    icon:'📈',name:'Revenue Pipeline',desc:'Deals in progress, by stage',
+    files:[
+      {icon:'🏢',name:'Brightline HR',desc:'Pilot LOI signed. Converts to a paid plan after Q3 pilot results come in.',date:'Jun 26, 2026',stage:'signed',value:'$400/mo'},
+      {icon:'🏢',name:'Northwind Labs',desc:'Verbal commitment from the HR lead, awaiting the V1 demo to confirm.',date:'Jun 24, 2026',stage:'talks',value:'$499/mo'},
+      {icon:'🏢',name:'Solace Robotics',desc:'Discovery call booked; needs an accuracy proof on sample candidates first.',date:'Jun 29, 2026',stage:'prospecting',value:'$499/mo'},
+    ]
+  },
+  partnerships:{
+    icon:'🔗',name:'Partnerships',desc:'Channel and referral relationships',
+    files:[
+      {icon:'🎓',name:'Seneca HELIX Catalyst Fund',desc:'Non-dilutive funding and introduction channel through the Helix program. No equity given.',date:'Jun 12, 2026',stage:'active',value:'—'},
+      {icon:'🧑‍💼',name:'Recruiter Referral Network',desc:'Two independent recruiters informally agreed to refer VeriCV to HR contacts in exchange for early access.',date:'Jun 27, 2026',stage:'talks',value:'—'},
+    ]
+  }
+};
+
+const STAGE_META={
+  signed:{label:'✅ Signed',cls:'signed'},
+  talks:{label:'🟡 In Talks',cls:'talks'},
+  prospecting:{label:'🔵 Prospecting',cls:'prospecting'},
+  active:{label:'● Live',cls:'signed'}
+};
+
+let activeBusinessCategory='partners';
+
+function showBusinessCategory(cat){
+  activeBusinessCategory=cat;
+  document.querySelectorAll('.bt-cat-header').forEach(el=>{
+    el.classList.remove('active');
+    if(el.getAttribute('onclick')===`showBusinessCategory('${cat}')`){el.classList.add('active')}
+  });
+  renderBusiness();
+}
+
+function renderBusiness(){
+  const container=document.getElementById('business-content');
+  const cat=BUSINESS_CATEGORIES[activeBusinessCategory];
+  if(!cat){container.innerHTML='';return}
+
+  let html=`
+    <div class="category-header">
+      <div class="cat-title">
+        <div class="cat-icon">${cat.icon}</div>
+        <div class="cat-name">${cat.name}</div>
+        <div class="cat-count">${cat.files.length} items · ${cat.desc}</div>
+      </div>
+      <button class="btn-sm">+ Add Deal</button>
+    </div>
+    <div class="file-grid">
+  `;
+
+  cat.files.forEach(f=>{
+    const sm=STAGE_META[f.stage]||{label:'',cls:''};
+    html+=`
+      <div class="file-card">
+        <div class="fc-top">
+          <div class="fc-icon">${f.icon}</div>
+          <span class="fc-source ${sm.cls}">${sm.label}</span>
+        </div>
+        <div class="fc-name">${f.name}</div>
+        <div class="fc-desc">${f.desc}</div>
+        <div class="fc-footer">
+          <div class="fc-date">📅 ${f.date}${f.value&&f.value!=='—'?' · <span class="fc-value">'+f.value+'</span>':''}</div>
+          <div class="fc-actions">
+            <button class="fc-action">View</button>
+            <button class="fc-action">Share</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  html+='</div>';
+  container.innerHTML=html;
+}
+
+/* ── CHAT ── */
+let currentConv='product';
+
+function showChat(key){currentConv=key;showScreen('s-chat')}
+
+function loadConv(key){
+  if(!CONVS[key])return;
+  currentConv=key;
+  document.getElementById('agent-label').textContent=CONVS[key].agent;
+  document.querySelectorAll('.conv-item').forEach(i=>i.classList.remove('active'));
+  const idx=Object.keys(CONVS).indexOf(key);
+  document.querySelectorAll('.conv-item')[idx]?.classList.add('active');
+  document.querySelectorAll('.demo-chip').forEach((c,i)=>c.classList.toggle('active',i===idx));
+  const container=document.getElementById('messages');
+  container.innerHTML='';
+  CONVS[key].messages.forEach((m,i)=>setTimeout(()=>renderMsg(m,container),i*80));
+}
+
+function renderMsg(m,container){
+  const div=document.createElement('div');
+  div.className='msg '+m.role;
+  const av=document.createElement('div');
+  av.className='msg-avatar';
+  av.textContent=m.role==='user'?'AC':(CONVS[currentConv]?.emoji||'🤖');
+  const bubble=document.createElement('div');
+  bubble.className='msg-bubble';
+  if(m.role==='ai'&&m.agent){
+    const lbl=document.createElement('div');
+    lbl.className='agent-label';
+    lbl.textContent=m.agent+' · HelixOS';
+    bubble.appendChild(lbl);
+  }
+  const content=document.createElement('div');
+  content.innerHTML=m.text.replace(/\n/g,'<br>');
+  bubble.appendChild(content);
+  div.appendChild(av);div.appendChild(bubble);
+  container.appendChild(div);
+  container.scrollTop=container.scrollHeight;
+}
+
+function sendDemo(){
+  const input=document.getElementById('chat-input');
+  const text=input.value.trim();
+  if(!text)return;
+  input.value='';input.style.height='auto';
+  const container=document.getElementById('messages');
+  renderMsg({role:'user',text},container);
+  const typing=document.createElement('div');
+  typing.className='msg ai';
+  typing.innerHTML=`<div class="msg-avatar" style="background:var(--surface);border:1.5px solid var(--border)">${CONVS[currentConv]?.emoji||'🤖'}</div><div class="msg-bubble" style="display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem"><span style="font-size:.78rem;color:var(--dim)">${CONVS[currentConv]?.agent||'HelixOS'} is thinking</span><div style="display:flex;gap:.25rem">${[0,200,400].map(d=>`<span style="width:5px;height:5px;border-radius:50%;background:var(--red);display:inline-block;animation:td 1.2s ${d}ms infinite;opacity:.5"></span>`).join('')}</div></div>`;
+  container.appendChild(typing);container.scrollTop=container.scrollHeight;
+  if(!document.getElementById('td-st')){const st=document.createElement('style');st.id='td-st';st.textContent='@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}';document.head.appendChild(st)}
+  setTimeout(()=>{
+    if(typing.parentNode)container.removeChild(typing);
+    renderMsg({role:'ai',agent:CONVS[currentConv]?.agent||'HelixOS',text:`Great question. Based on VeriCV's current stage and your venture profile, here's my take:<br><br>Your biggest leverage right now is customer conversations — everything else should follow what you learn from real people. Would you like me to help you prepare, or go deeper on something specific?`},container);
+  },2200);
+}
+
+/* ── NAVIGATION ── */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';s.style.opacity='0'});
+  const s=document.getElementById(id);
+  s.style.display='flex';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{s.style.opacity='1';s.classList.add('active')}));
+  if(id==='s-chat')loadConv(currentConv);
+  if(id==='s-tasks')renderTasksMain();
+  if(id==='s-ventures')renderVentures();
+  if(id==='s-business')renderBusiness();
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  const ta=document.getElementById('chat-input');
+  if(ta){ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'})}
+  loadConv('product');
+  ALL_TASKS.forEach(t=>{ if(taskState[t.id]==='running')scheduleCompletion(t.id) });
+});
+</script>
+</body>
+</html>

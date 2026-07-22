@@ -1,0 +1,562 @@
+<title>PilotEquip — Pitch Deck | HELIX 2026</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --dark:   #040c18;
+    --deep:   #071526;
+    --rail:   #061222;
+    --sky:    #38b2f8;
+    --gold:   #f5c540;
+    --white:  #dde6f8;
+    --muted:  #4a6278;
+    --mid:    #7896b4;
+    --danger: #e84040;
+    --green:  #3ec878;
+  }
+  html, body {
+    height: 100%; background: var(--dark);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Helvetica Neue', Arial, sans-serif; color: var(--white); overflow: hidden;
+  }
+  .stage { position: relative; width: 960px; height: 540px; overflow: hidden; }
+  .slide { position: absolute; inset: 0; display: none; flex-direction: row; background: var(--deep); }
+  .slide.active { display: flex; }
+  .rail {
+    width: 210px; flex-shrink: 0; background: var(--rail);
+    border-right: 2px solid var(--sky);
+    display: flex; flex-direction: column; justify-content: space-between; padding: 30px 22px;
+  }
+  .rail-num { font-size: 70px; font-weight: 900; color: rgba(56,178,248,0.10); line-height: 1; letter-spacing: -4px; }
+  .rail-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); font-weight: 700; }
+  .rail-brand { font-size: 11px; color: var(--muted); }
+  .content { flex: 1; padding: 36px 44px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+  .slide-tag { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); margin-bottom: 10px; font-weight: 700; }
+  h2 { font-size: 24px; font-weight: 800; color: var(--white); line-height: 1.2; margin-bottom: 14px; }
+  .rule { height: 2px; background: var(--sky); width: 48px; margin-bottom: 16px; }
+  p.body { font-size: 13.5px; line-height: 1.65; color: #b0bcd8; margin-bottom: 10px; }
+  .bold  { font-weight: 800; color: var(--white); }
+  .sky   { color: var(--sky); font-weight: 700; }
+  .gold  { color: var(--gold); font-weight: 700; }
+  .red   { color: var(--danger); font-weight: 700; }
+  .green { color: var(--green); font-weight: 700; }
+
+  /* Stat cards */
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 10px 0; }
+  .stat-card { background: rgba(232,64,64,0.08); border: 1px solid rgba(232,64,64,0.2); border-radius: 8px; padding: 16px 14px; text-align: center; }
+  .stat-card.sky-card { background: rgba(56,178,248,0.07); border: 1px solid rgba(56,178,248,0.2); }
+  .stat-num { font-size: 36px; font-weight: 900; color: var(--danger); line-height: 1; margin-bottom: 6px; }
+  .stat-num.sky { color: var(--sky); }
+  .stat-num.gold { color: var(--gold); }
+  .stat-label { font-size: 11.5px; color: var(--mid); line-height: 1.4; }
+
+  /* Cmd cards */
+  .cmd-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .cmd-card { background: rgba(56,178,248,0.07); border: 1px solid rgba(56,178,248,0.22); border-radius: 8px; padding: 18px 14px; text-align: center; }
+  .cmd-card.gap-card { background: rgba(232,64,64,0.06); border-color: rgba(232,64,64,0.18); }
+  .cmd-icon { font-size: 22px; font-weight: 900; color: var(--sky); margin-bottom: 8px; letter-spacing: 2px; }
+  .cmd-icon.red { color: var(--danger); }
+  .cmd-name { font-size: 13px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+  .cmd-desc { font-size: 11.5px; color: var(--mid); line-height: 1.45; }
+
+  /* Force rows */
+  .force-row { display: flex; gap: 10px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: flex-start; }
+  .force-badge { min-width: 86px; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--sky); padding-top: 2px; flex-shrink: 0; }
+  .force-text { font-size: 13px; color: #b0bcd8; line-height: 1.5; }
+
+  /* Phase rows */
+  .phase-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: flex-start; }
+  .phase-badge { background: var(--sky); color: #000; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 3px; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; margin-top: 2px; }
+  .phase-text { font-size: 13px; color: #b0bcd8; line-height: 1.5; }
+
+  /* Mkt cards */
+  .mkt-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 10px 0; }
+  .mkt-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 14px 12px; }
+  .mkt-num { font-size: 28px; font-weight: 900; color: var(--sky); line-height: 1; margin-bottom: 4px; }
+  .mkt-label { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  /* Rev cards */
+  .rev-block { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+  .rev-card { background: rgba(56,178,248,0.06); border: 1px solid rgba(56,178,248,0.18); border-radius: 8px; padding: 14px 14px; }
+  .rev-price { font-size: 22px; font-weight: 900; color: var(--sky); line-height: 1; margin-bottom: 5px; }
+  .rev-label { font-size: 12.5px; color: var(--white); font-weight: 700; margin-bottom: 4px; }
+  .rev-sub { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+
+  /* Formula */
+  .formula-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(56,178,248,0.05); border: 1px solid rgba(56,178,248,0.14); border-radius: 6px; margin: 10px 0; font-size: 13px; color: #b0bcd8; flex-wrap: wrap; }
+  .formula-bar .f-part { color: var(--sky); font-weight: 800; }
+  .formula-bar .f-op { color: var(--muted); font-weight: 700; margin: 0 2px; }
+
+  /* Comparison table */
+  .cmp-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+  .cmp-table th { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+  .cmp-table th:first-child { text-align: left; }
+  .cmp-table td { font-size: 12.5px; color: #b0bcd8; padding: 9px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
+  .cmp-table td:first-child { text-align: left; font-weight: 700; color: var(--white); }
+  .cmp-table tr:first-child td { color: var(--sky); }
+  .cmp-table tr:first-child td:first-child { color: var(--sky); }
+  .cmp-chk { color: var(--green); font-weight: 900; font-size: 14px; }
+  .cmp-x { color: var(--danger); font-weight: 900; font-size: 14px; opacity: 0.6; }
+
+  /* Quote/Founder */
+  .quote-block { background: rgba(56,178,248,0.05); border-left: 3px solid var(--sky); padding: 13px 16px; border-radius: 0 6px 6px 0; margin: 10px 0; font-size: 14px; font-style: italic; color: #c8d4f0; line-height: 1.6; }
+  .founder-block { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid var(--sky); border-radius: 0 8px 8px 0; padding: 13px 16px; margin: 8px 0; font-size: 13px; color: #b0bcd8; line-height: 1.65; }
+
+  /* Ask */
+  .ask-amount { font-size: 48px; font-weight: 900; color: var(--sky); line-height: 1; margin-bottom: 4px; }
+  .ask-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 700; }
+  ul.bullets { list-style: none; }
+  ul.bullets li { padding: 7px 0 7px 20px; font-size: 13px; color: #b0bcd8; line-height: 1.5; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; }
+  ul.bullets li::before { content: '◆'; color: var(--sky); font-size: 7px; position: absolute; left: 0; top: 11px; }
+
+  /* Validation bar */
+  .val-bar { display: flex; align-items: center; gap: 14px; padding: 10px 14px; background: rgba(62,200,120,0.06); border: 1px solid rgba(62,200,120,0.16); border-radius: 6px; margin-top: 12px; font-size: 12.5px; color: #b0bcd8; }
+  .val-bar strong { color: var(--green); }
+
+  /* Pilot tag */
+  .pilot-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(56,178,248,0.1); border: 1px solid rgba(56,178,248,0.28); color: var(--sky); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+
+  /* Controls */
+  .controls { display: flex; align-items: center; gap: 20px; margin-top: 14px; }
+  button.nav { background: rgba(56,178,248,0.10); border: 1px solid var(--sky); color: var(--white); padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 700; transition: background 0.15s; letter-spacing: 1px; }
+  button.nav:hover { background: var(--sky); color: #000; }
+  .progress-dots { display: flex; gap: 5px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); opacity: 0.4; transition: all 0.2s; cursor: pointer; }
+  .dot.on { background: var(--sky); opacity: 1; width: 18px; border-radius: 3px; }
+  #slide-counter { font-size: 11px; color: var(--muted); letter-spacing: 2px; font-weight: 700; }
+
+  /* Notes */
+  .notes-panel { width: 960px; margin-top: 10px; background: rgba(0,0,0,0.45); border: 1px solid rgba(56,178,248,0.1); border-radius: 4px; padding: 12px 18px 14px; }
+  .notes-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--sky); margin-bottom: 7px; font-weight: 700; opacity: 0.75; }
+  #notes-text { font-size: 13px; line-height: 1.75; color: rgba(255,255,255,0.62); max-height: 90px; overflow-y: auto; }
+  #notes-text::-webkit-scrollbar { width: 3px; }
+  #notes-text::-webkit-scrollbar-thumb { background: rgba(56,178,248,0.2); border-radius: 2px; }
+  .export-bar { width: 960px; margin-top: 6px; display: flex; align-items: center; gap: 8px; }
+  .export-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.3); font-weight: 700; margin-right: 4px; font-family: inherit; }
+  .export-btn { font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.5); cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: all 0.12s; font-family: inherit; }
+  .export-btn:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.3); }
+  @media print {
+    html, body { overflow: visible !important; height: auto !important; display: block !important; justify-content: initial !important; }
+    .stage { height: auto !important; overflow: visible !important; position: static !important; display: block !important; }
+    .slide { display: block !important; position: relative !important; inset: auto !important; page-break-after: always !important; break-after: page !important; min-height: 540px; }
+    .controls, .notes-panel, .export-bar { display: none !important; }
+  }
+</style>
+
+<div class="stage" id="stage">
+
+  <!-- 01: HOOK -->
+  <div class="slide active">
+    <div class="rail">
+      <div class="rail-num">01</div>
+      <div>
+        <div class="rail-label">Hook</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="pilot-tag">✈ PilotEquip</div>
+      <div class="slide-tag">Founder · Aviation Technology</div>
+      <h2>The Cockpit Is the Goal.<br>The Equipment List Is the Wall.</h2>
+      <div class="rule"></div>
+      <p class="body">My name is Sagiv Zilbersher and I'm entering my fourth year of the <span class="bold">Honours Bachelor of Aviation Technology</span> program at Seneca. I'm a student pilot — I live this problem.</p>
+      <div class="quote-block">"The day I started flight training, I got two things: my first lesson schedule — and a list of everything I needed to buy before I could get in the cockpit. Every student pilot I've talked to had the same moment."</div>
+      <p class="body" style="margin-top:8px">Before the first engine start: <span class="sky">headset $349 · flight bag $129 · charts + tools $100+</span>. All listed as "required." All sold as new. There's a better way.</p>
+    </div>
+  </div>
+
+  <!-- 02: PROBLEM -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">02</div>
+      <div>
+        <div class="rail-label">Problem</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">The Pilot Shortage</div>
+      <h2>620,000 Pilots Needed.<br>We're Building 1,200.</h2>
+      <div class="rule"></div>
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-num">620K</div>
+          <div class="stat-label">pilots needed worldwide by 2036 — a documented global crisis</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">&lt;1,200</div>
+          <div class="stat-label">new commercial pilot licences issued in Canada each year</div>
+        </div>
+        <div class="stat-card" style="background:rgba(245,197,64,0.07);border-color:rgba(245,197,64,0.2)">
+          <div class="stat-num" style="color:var(--gold)">$75K+</div>
+          <div class="stat-label">average cost to complete flight training in Canada — before equipment</div>
+        </div>
+      </div>
+      <p class="body" style="margin-top:8px">People who want to fly — who have the talent — stop before they finish. Not because they lack ability. Because they <span class="red">run out of money</span>. Equipment is the part nobody talks about, and it's the part PilotEquip fixes.</p>
+    </div>
+  </div>
+
+  <!-- 03: ROOT CAUSE -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">03</div>
+      <div>
+        <div class="rail-label">Root Cause</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">The Hidden Wall</div>
+      <h2>Equipment: The Cost Nobody Budgets For</h2>
+      <div class="rule"></div>
+      <div class="force-row">
+        <div class="force-badge">Headsets</div>
+        <div class="force-text"><span class="bold">$300–$900 new.</span> The single largest equipment purchase — and most students buy new because they don't know an alternative exists.</div>
+      </div>
+      <div class="force-row">
+        <div class="force-badge">Flight Bags</div>
+        <div class="force-text"><span class="bold">$80–$200 new.</span> Required from day one. Carries charts, logbook, kneeboard, headset. Every pre-flight needs it.</div>
+      </div>
+      <div class="force-row">
+        <div class="force-badge">Charts & Tools</div>
+        <div class="force-text"><span class="bold">$100+ per cycle.</span> Kneeboards, protractors, navigation charts, plotter. Bought new. Most items are durable and reusable.</div>
+      </div>
+      <p class="body" style="margin-top:12px">Graduating pilots leave behind <span class="sky">perfectly functional gear</span> with no organized buyer. Student pilots need that gear with no organized seller. PilotEquip closes the gap.</p>
+    </div>
+  </div>
+
+  <!-- 04: ALTERNATIVES -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">04</div>
+      <div>
+        <div class="rail-label">The Gap</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">Broken Alternatives</div>
+      <h2>Every Existing Option Has a Catch</h2>
+      <div class="rule"></div>
+      <div class="cmd-row">
+        <div class="cmd-card gap-card">
+          <div class="cmd-icon red">BURSARIES</div>
+          <div class="cmd-name">Scholarships</div>
+          <div class="cmd-desc">Limited funding pool. Competitive applications. <span style="color:#e84040;font-weight:700">Can't scale</span> to every student who needs help.</div>
+        </div>
+        <div class="cmd-card gap-card">
+          <div class="cmd-icon red">KIJIJI / eBay</div>
+          <div class="cmd-name">General Marketplaces</div>
+          <div class="cmd-desc">Untested, unvetted. No aviation expertise. <span style="color:#e84040;font-weight:700">Quality lottery</span> — you don't know if the headset works.</div>
+        </div>
+        <div class="cmd-card gap-card">
+          <div class="cmd-icon red">AVWORLD</div>
+          <div class="cmd-name">Aviation Retail</div>
+          <div class="cmd-desc">Aviation-focused and legitimate. But <span style="color:#e84040;font-weight:700">full retail price</span> defeats the purpose of searching for savings.</div>
+        </div>
+      </div>
+      <p class="body" style="margin-top:10px">There is no option that is <span class="sky">both aviation-focused and cost-effective</span>. That's the gap PilotEquip was built to fill.</p>
+    </div>
+  </div>
+
+  <!-- 05: SOLUTION -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">05</div>
+      <div>
+        <div class="rail-label">Solution</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">The Solution</div>
+      <h2>Every Piece. Tested. Half the Price.</h2>
+      <div class="rule"></div>
+      <p class="body">PilotEquip is the pre-owned aviation equipment marketplace built <span class="sky">exclusively for student pilots</span> — the only one that is aviation-focused, quality-checked, and genuinely cost-effective.</p>
+      <div class="cmd-row">
+        <div class="cmd-card">
+          <div class="cmd-icon">SOURCE</div>
+          <div class="cmd-name">Acquire</div>
+          <div class="cmd-desc">From graduating pilots, flight school surplus, and aviation estates. Every item documented and priced to move.</div>
+        </div>
+        <div class="cmd-card">
+          <div class="cmd-icon">INSPECT</div>
+          <div class="cmd-name">Verify</div>
+          <div class="cmd-desc">Cleaned and tested to manufacturer specs. Headset audio, bag integrity, tool accuracy. Failed items are not listed.</div>
+        </div>
+        <div class="cmd-card">
+          <div class="cmd-icon">SELL</div>
+          <div class="cmd-name">Deliver</div>
+          <div class="cmd-desc">Direct to student pilots across Canada at <span class="sky">40–60% below new retail</span>. Online store, transparent grading.</div>
+        </div>
+      </div>
+      <p class="body">Product range: <span class="bold">headsets, flight bags, kneeboards, aviation protractors, navigation plotters, charts</span> — everything on the equipment list.</p>
+    </div>
+  </div>
+
+  <!-- 06: HOW IT WORKS -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">06</div>
+      <div>
+        <div class="rail-label">Product</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">The Process</div>
+      <h2>From Graduating Pilot to New Student</h2>
+      <div class="rule"></div>
+      <div class="phase-row">
+        <div class="phase-badge">Acquire</div>
+        <div class="phase-text">Purchase surplus from pilots who've completed training, flight schools, and aviation estates. Competitive buy prices incentivize sellers. Fully documented provenance.</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-badge">Inspect</div>
+        <div class="phase-text">Every item tested against manufacturer specs: headset audio quality and seal, bag structural integrity, tool accuracy. Items that don't pass are not listed — ever.</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-badge">Prepare</div>
+        <div class="phase-text">Cleaned, sanitized, photographed from multiple angles, and graded A/B/C. Grade and condition shown transparently to every buyer.</div>
+      </div>
+      <div class="phase-row" style="border-bottom:none">
+        <div class="phase-badge">Sell</div>
+        <div class="phase-text">Listed on online store with full condition disclosure. Shipped directly to student pilots across Canada with a satisfaction guarantee.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07: MARKET -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">07</div>
+      <div>
+        <div class="rail-label">Market</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">Market Size</div>
+      <h2>5,000 Students. Growing Every Year.</h2>
+      <div class="rule"></div>
+      <div class="mkt-row">
+        <div class="mkt-card">
+          <div class="mkt-num">5,000</div>
+          <div class="mkt-label">students enrolled in Canadian flight programs at any given time</div>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-num">+14%</div>
+          <div class="mkt-label">growth in Private Pilot Licence issuance year-over-year (2024)</div>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-num">+2.7%</div>
+          <div class="mkt-label">growth in Commercial Pilot Licence issuance year-over-year (2024)</div>
+        </div>
+      </div>
+      <p class="body" style="margin-top:10px">Every new student needs equipment. The pool is growing. If each of the 5,000 saves <span class="sky">$300 through PilotEquip</span> — a conservative estimate — that's <span class="gold">$1.5M in annual student savings</span>. PilotEquip captures a share of that while building a category that doesn't yet exist.</p>
+      <p class="body">Beachhead: <span class="bold">GTA flight schools</span> (Seneca Aviation, Toronto Airways, Button Aviation). Expansion: coast to coast via online store and airshow partnerships.</p>
+    </div>
+  </div>
+
+  <!-- 08: BUSINESS MODEL -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">08</div>
+      <div>
+        <div class="rail-label">Revenue</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">Pricing Model</div>
+      <h2>Cost + 30% + 5% Prep + Shipping</h2>
+      <div class="rule"></div>
+      <div class="formula-bar">
+        <span class="f-part">Acquisition Cost</span>
+        <span class="f-op">+</span>
+        <span class="f-part">30% margin</span>
+        <span class="f-op">+</span>
+        <span class="f-part">5% prep fee</span>
+        <span class="f-op">+</span>
+        <span class="f-part">Shipping</span>
+        <span class="f-op">=</span>
+        <span style="color:var(--white);font-weight:800">Sale Price</span>
+      </div>
+      <div class="rev-block">
+        <div class="rev-card">
+          <div class="rev-price">~$210</div>
+          <div class="rev-label">David Clark H10-13.4 Headset</div>
+          <div class="rev-sub">Acquired: $150 → Sell: $202 + $8 prep + shipping<br><span style="color:var(--green);font-weight:700">Student saves $140+ vs. $349 new</span><br>PilotEquip earns ~$60</div>
+        </div>
+        <div class="rev-card">
+          <div class="rev-price">~$44</div>
+          <div class="rev-label">Jeppesen Flight Bag</div>
+          <div class="rev-sub">Acquired: $30 → Sell: $42 + $2 prep + shipping<br><span style="color:var(--green);font-weight:700">Student saves $85+ vs. $129 new</span><br>PilotEquip earns ~$14</div>
+        </div>
+      </div>
+      <p class="body">~30% gross margin per item. Consistent across all product categories. No inventory risk beyond acquisition cost — items are tested before listing, not after complaints.</p>
+    </div>
+  </div>
+
+  <!-- 09: COMPETITIVE POSITION -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">09</div>
+      <div>
+        <div class="rail-label">vs. Alternatives</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">Competitive Edge</div>
+      <h2>Aviation-Focused AND Cost-Effective</h2>
+      <div class="rule"></div>
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Aviation-Specific</th>
+            <th>Cost-Effective</th>
+            <th>Quality-Checked</th>
+            <th>Student-First</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>PilotEquip</td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-chk">✓</span></td>
+          </tr>
+          <tr>
+            <td>AvWorld</td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-x">✗</span></td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-x">✗</span></td>
+          </tr>
+          <tr>
+            <td>Kijiji / Facebook / eBay</td>
+            <td><span class="cmp-x">✗</span></td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-x">✗</span></td>
+            <td><span class="cmp-x">✗</span></td>
+          </tr>
+          <tr>
+            <td>New Retail (Sporty's etc.)</td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-x">✗</span></td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-x">✗</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="val-bar">
+        <span>📋</span>
+        <span><strong>100% of student pilots surveyed</strong> said aviation equipment is too expensive — and price is their #1 purchase factor. The demand is validated.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10: THE ASK -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">10</div>
+      <div>
+        <div class="rail-label">The Ask</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">Founder & The Ask</div>
+      <h2>20 Sales in 90 Days</h2>
+      <div class="rule"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start">
+        <div>
+          <div class="ask-amount">$5,500</div>
+          <div class="ask-label">Seed Funding</div>
+          <ul class="bullets">
+            <li>First inventory: 12–15 items (~$1,000 acquisition)</li>
+            <li>Shopify storefront + photography: ~$1,500</li>
+            <li>Airshow attendance (CWHM + Toronto): ~$1,000</li>
+            <li>Prep supplies + working capital: ~$2,000</li>
+          </ul>
+          <p class="body" style="margin-top:10px;font-size:12px">Also asking for: introductions to <span class="sky">flight school directors</span> at Seneca Aviation, Toronto Airways, and Button Aviation.</p>
+        </div>
+        <div>
+          <div class="founder-block">
+            <div style="font-weight:800;color:var(--white);margin-bottom:4px">Sagiv Zilbersher</div>
+            4th-year Honours Bachelor of Aviation Technology, Seneca Polytechnic. Student pilot with direct access to the sourcing network and the customer community. I am not building for this market — <span style="color:var(--sky);font-weight:700">I am this market.</span>
+          </div>
+          <div class="quote-block" style="margin-top:8px;font-size:12.5px">"Every student pilot I know had a moment where the equipment list almost stopped them. PilotEquip makes sure that moment never wins." </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /stage -->
+
+<div class="controls">
+  <button class="nav" id="prev">← Prev</button>
+  <div class="progress-dots" id="dots"></div>
+  <button class="nav" id="next">Next →</button>
+  <span id="slide-counter">01 / 10</span>
+</div>
+
+<div class="notes-panel">
+  <div class="notes-label">Speaker Notes — Press N to toggle</div>
+  <div id="notes-text"></div>
+</div>
+
+<div class="export-bar">
+  <span class="export-label">Open:</span>
+  <button class="export-btn" onclick="window.open(location.href,'_blank')">New Window</button>
+  <button class="export-btn" onclick="window.print()">Print / PDF</button>
+</div>
+
+<script>
+const NOTES = [
+  "My name is Sagiv Zilbersher, founder of PilotEquip. I'm entering my fourth year of the Honours Bachelor of Aviation Technology program. The moment I started flight training, I understood the full cost. But what surprised me — and every student pilot I've talked to — wasn't the flight hours. It was the equipment list. Before your first engine start: headset $349, flight bag $129, charts and tools over $100. All listed as required. All sold as new. There is a better way.",
+  "The global pilot shortage is documented and accelerating. By 2036 the world will need 620,000 more pilots. Here in Canada we are issuing fewer than 1,200 commercial licences per year. Training costs $70,000 to $80,000 before you add equipment. People who want to fly — who have the talent — stop before they finish. Not because they lack ability. Because they run out of money. Equipment is the part nobody talks about, and it's the part PilotEquip fixes.",
+  "The training cost is the headline. Equipment is the hidden wall. A quality headset runs $300 to $900 new. Most students buy new because they don't know an alternative exists. A flight bag is $80 to $200. Charts, kneeboard, protractor, navigation tools add another $100 per semester. Here's the part that frustrates me: graduating pilots leave behind perfectly functional gear. There's no organized marketplace for student pilots to access it. PilotEquip closes that gap.",
+  "There are three things students do today and none of them work. Bursaries help but can't reach everyone — funding is limited and competitive. General marketplaces like Kijiji and eBay exist but nobody checks if the headset actually meets aviation standards. AvWorld is legitimate, but sells at full retail — that defeats the purpose if you're trying to cut costs. There is no option that is both aviation-focused and cost-effective. That's the gap we fill.",
+  "PilotEquip is the pre-owned aviation equipment marketplace built exclusively for student pilots. We source from graduating pilots and flight schools. Every item is cleaned, tested to manufacturer specs, and graded before it goes up for sale. Headsets, flight bags, kneeboards, protractors, navigation plotters, charts — everything on the equipment list, at 40 to 60 percent below new retail.",
+  "The process is four steps. We acquire surplus from pilots who've completed training, flight schools, and aviation estates. We inspect every item — headsets tested for audio and seal, bags for structural integrity, tools for accuracy. Anything that doesn't pass is not listed. We clean, sanitize, photograph, and grade A, B, or C. Then we list on our online store and ship directly to students across Canada.",
+  "There are approximately 5,000 people in Canadian flight programs at any given time. In 2024, Private Pilot Licence issuance grew 14 percent year over year. Commercial grew 2.7 percent. The market is growing and every new student needs equipment. If each one saves $300 through PilotEquip — a conservative number — that's $1.5 million in annual student savings. We don't need all of it to build a real business. Our beachhead is GTA flight schools, with online-store expansion across Canada.",
+  "The pricing formula is straightforward: acquisition cost plus 30 percent margin plus a 5 percent preparation fee plus shipping. A David Clark headset acquired for $150 sells for about $210 with prep — versus $349 new. The student saves $140. We earn about $60. A Jeppesen flight bag acquired for $30 sells for $44 — versus $129 new. Student saves $85. We earn $14. The margin is consistent across all product categories and the value to the student is obvious.",
+  "Here's the competitive quadrant. AvWorld is aviation-focused but expensive — full retail. Kijiji and eBay are cheap but completely unvetted and not aviation-specific. New retail is priced out of reach. PilotEquip is the only option that is aviation-specific, cost-effective, quality-checked, and student-first. I validated this. Every single student pilot I surveyed said aviation equipment is too expensive and price is their number-one purchase factor.",
+  "I am asking for $5,500 and introductions to flight school directors across the GTA. The money covers: first inventory batch of 12 to 15 items, a Shopify storefront and product photography, and attendance at the Canadian Warplane Heritage Museum Airshow and the Toronto International Air Show for sourcing and school relationships. My 90-day goal: 20 sold items and partnerships with 5 flight schools. I am a fourth-year Aviation Technology student. I am not building for this market — I am this market. Every student pilot I know had a moment where the equipment list almost stopped them. PilotEquip makes sure that moment never wins. Thank you."
+];
+
+const slides = document.querySelectorAll('.slide');
+const dotsC = document.getElementById('dots');
+const counter = document.getElementById('slide-counter');
+const notesEl = document.getElementById('notes-text');
+let cur = 0;
+
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' on' : '');
+  d.addEventListener('click', () => go(i));
+  dotsC.appendChild(d);
+});
+
+function go(n) {
+  slides[cur].classList.remove('active');
+  dotsC.children[cur].classList.remove('on');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+  dotsC.children[cur].classList.add('on');
+  counter.textContent = `${String(cur+1).padStart(2,'0')} / ${slides.length}`;
+  notesEl.textContent = NOTES[cur] || '';
+}
+
+document.getElementById('prev').addEventListener('click', () => go(cur - 1));
+document.getElementById('next').addEventListener('click', () => go(cur + 1));
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') go(cur + 1);
+  if (e.key === 'ArrowLeft') go(cur - 1);
+});
+
+notesEl.textContent = NOTES[0];
+</script>

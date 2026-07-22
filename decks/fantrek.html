@@ -1,0 +1,559 @@
+<title>FanTrek — Pitch Deck | HELIX 2026</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --dark:  #0f0a1a;
+    --deep:  #180e2e;
+    --rail:  #130b20;
+    --rose:  #e8407a;
+    --gold:  #f5a623;
+    --teal:  #40d4c0;
+    --white: #f4e8ff;
+    --muted: #6a4a7a;
+    --mid:   #a87ac0;
+    --danger:#e84040;
+    --green: #3ec878;
+  }
+  html, body {
+    height: 100%; background: var(--dark);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Helvetica Neue', Arial, sans-serif; color: var(--white); overflow: hidden;
+  }
+  .stage { position: relative; width: 960px; height: 540px; overflow: hidden; }
+  .slide { position: absolute; inset: 0; display: none; flex-direction: row; background: var(--deep); }
+  .slide.active { display: flex; }
+  .rail {
+    width: 210px; flex-shrink: 0; background: var(--rail);
+    border-right: 2px solid var(--rose);
+    display: flex; flex-direction: column; justify-content: space-between; padding: 30px 22px;
+  }
+  .rail-num { font-size: 70px; font-weight: 900; color: rgba(232,64,122,0.10); line-height: 1; letter-spacing: -4px; }
+  .rail-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--rose); font-weight: 700; }
+  .rail-brand { font-size: 11px; color: var(--muted); }
+  .content { flex: 1; padding: 36px 44px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+  .slide-tag { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--rose); margin-bottom: 10px; font-weight: 700; }
+  h2 { font-size: 24px; font-weight: 800; color: var(--white); line-height: 1.2; margin-bottom: 14px; }
+  .rule { height: 2px; background: var(--rose); width: 48px; margin-bottom: 16px; }
+  p.body { font-size: 13.5px; line-height: 1.65; color: #c0a8d8; margin-bottom: 10px; }
+  .rose  { color: var(--rose); font-weight: 700; }
+  .gold  { color: var(--gold); font-weight: 700; }
+  .teal  { color: var(--teal); font-weight: 700; }
+  .bold  { font-weight: 800; color: var(--white); }
+  .red   { color: var(--danger); font-weight: 700; }
+  .green { color: var(--green); font-weight: 700; }
+
+  /* Force rows */
+  .force-row { display: flex; gap: 10px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: flex-start; }
+  .force-badge { min-width: 100px; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--rose); padding-top: 2px; flex-shrink: 0; }
+  .force-text { font-size: 13px; color: #c0a8d8; line-height: 1.5; }
+
+  /* Cmd cards */
+  .cmd-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 12px 0; }
+  .cmd-card { background: rgba(232,64,122,0.07); border: 1px solid rgba(232,64,122,0.22); border-radius: 8px; padding: 16px 14px; text-align: center; }
+  .cmd-card.teal-card { background: rgba(64,212,192,0.07); border-color: rgba(64,212,192,0.22); }
+  .cmd-card.gold-card { background: rgba(245,166,35,0.08); border-color: rgba(245,166,35,0.22); }
+  .cmd-icon { font-size: 13px; font-weight: 900; color: var(--rose); margin-bottom: 8px; letter-spacing: 2px; }
+  .cmd-icon.teal { color: var(--teal); }
+  .cmd-icon.gold { color: var(--gold); }
+  .cmd-name { font-size: 13px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+  .cmd-desc { font-size: 11.5px; color: var(--mid); line-height: 1.45; }
+
+  /* Phase rows */
+  .phase-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: flex-start; }
+  .phase-badge { background: var(--rose); color: #fff; font-size: 10px; font-weight: 900; padding: 3px 8px; border-radius: 3px; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; margin-top: 2px; }
+  .phase-badge.teal { background: var(--teal); color: #0f0a1a; }
+  .phase-badge.gold { background: var(--gold); color: #0f0a1a; }
+  .phase-text { font-size: 13px; color: #c0a8d8; line-height: 1.5; }
+
+  /* Mkt cards */
+  .mkt-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 10px 0; }
+  .mkt-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 14px 12px; }
+  .mkt-num { font-size: 28px; font-weight: 900; color: var(--rose); line-height: 1; margin-bottom: 4px; }
+  .mkt-num.gold { color: var(--gold); }
+  .mkt-num.teal { color: var(--teal); }
+  .mkt-label { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  /* Rev cards */
+  .rev-block { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+  .rev-card { background: rgba(232,64,122,0.06); border: 1px solid rgba(232,64,122,0.18); border-radius: 8px; padding: 14px 14px; }
+  .rev-card.teal { background: rgba(64,212,192,0.06); border-color: rgba(64,212,192,0.18); }
+  .rev-price { font-size: 22px; font-weight: 900; color: var(--rose); line-height: 1; margin-bottom: 5px; }
+  .rev-price.teal { color: var(--teal); }
+  .rev-label { font-size: 12.5px; color: var(--white); font-weight: 700; margin-bottom: 4px; }
+  .rev-sub { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+
+  /* Comparison table */
+  .cmp-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+  .cmp-table th { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+  .cmp-table th:first-child { text-align: left; }
+  .cmp-table td { font-size: 12.5px; color: #c0a8d8; padding: 9px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
+  .cmp-table td:first-child { text-align: left; font-weight: 700; color: var(--white); }
+  .cmp-table tr:first-child td { color: var(--rose); }
+  .cmp-chk { color: var(--green); font-weight: 900; font-size: 14px; }
+  .cmp-x { color: var(--danger); font-weight: 900; font-size: 14px; opacity: 0.6; }
+
+  /* Quote/Founder */
+  .quote-block { background: rgba(232,64,122,0.05); border-left: 3px solid var(--rose); padding: 13px 16px; border-radius: 0 6px 6px 0; margin: 10px 0; font-size: 14px; font-style: italic; color: #d0b8e8; line-height: 1.6; }
+  .founder-block { background: rgba(255,255,255,0.04); border-left: 3px solid var(--rose); border-radius: 0 8px 8px 0; padding: 13px 16px; margin: 8px 0; font-size: 13px; color: #c0a8d8; line-height: 1.65; }
+
+  /* Fan tag */
+  .fan-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(232,64,122,0.12); border: 1px solid rgba(232,64,122,0.3); color: var(--rose); font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 20px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+
+  /* Ask */
+  .ask-amount { font-size: 48px; font-weight: 900; color: var(--rose); line-height: 1; margin-bottom: 4px; }
+  .ask-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; font-weight: 700; }
+  ul.bullets { list-style: none; }
+  ul.bullets li { padding: 7px 0 7px 20px; font-size: 13px; color: #c0a8d8; line-height: 1.5; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; }
+  ul.bullets li::before { content: '◆'; color: var(--rose); font-size: 7px; position: absolute; left: 0; top: 11px; }
+
+  /* Trend bar */
+  .trend-bar { display: flex; align-items: center; gap: 14px; padding: 10px 14px; background: rgba(64,212,192,0.06); border: 1px solid rgba(64,212,192,0.16); border-radius: 6px; margin-top: 10px; font-size: 12.5px; color: #c0a8d8; }
+  .trend-bar strong { color: var(--teal); }
+
+  /* Pilot stats */
+  .pilot-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+  .pilot-stat { background: rgba(245,166,35,0.07); border: 1px solid rgba(245,166,35,0.18); border-radius: 8px; padding: 12px 14px; text-align: center; }
+  .pilot-stat-num { font-size: 28px; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 4px; }
+  .pilot-stat-label { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  /* Controls */
+  .controls { display: flex; align-items: center; gap: 20px; margin-top: 14px; }
+  button.nav { background: rgba(232,64,122,0.10); border: 1px solid var(--rose); color: var(--white); padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 700; transition: background 0.15s; letter-spacing: 1px; }
+  button.nav:hover { background: var(--rose); color: #fff; }
+  .progress-dots { display: flex; gap: 5px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); opacity: 0.4; transition: all 0.2s; cursor: pointer; }
+  .dot.on { background: var(--rose); opacity: 1; width: 18px; border-radius: 3px; }
+  #slide-counter { font-size: 11px; color: var(--muted); letter-spacing: 2px; font-weight: 700; }
+
+  /* Notes */
+  .notes-panel { width: 960px; margin-top: 10px; background: rgba(0,0,0,0.45); border: 1px solid rgba(232,64,122,0.1); border-radius: 4px; padding: 12px 18px 14px; }
+  .notes-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--rose); margin-bottom: 7px; font-weight: 700; opacity: 0.75; }
+  #notes-text { font-size: 13px; line-height: 1.75; color: rgba(255,255,255,0.62); max-height: 90px; overflow-y: auto; }
+  #notes-text::-webkit-scrollbar { width: 3px; }
+  #notes-text::-webkit-scrollbar-thumb { background: rgba(232,64,122,0.2); border-radius: 2px; }
+  .export-bar { width: 960px; margin-top: 6px; display: flex; align-items: center; gap: 8px; }
+  .export-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.3); font-weight: 700; margin-right: 4px; font-family: inherit; }
+  .export-btn { font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.5); cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: all 0.12s; font-family: inherit; }
+  .export-btn:hover { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.3); }
+  @media print {
+    html, body { overflow: visible !important; height: auto !important; display: block !important; justify-content: initial !important; }
+    .stage { height: auto !important; overflow: visible !important; position: static !important; display: block !important; }
+    .slide { display: block !important; position: relative !important; inset: auto !important; page-break-after: always !important; break-after: page !important; min-height: 540px; }
+    .controls, .notes-panel, .export-bar { display: none !important; }
+  }
+</style>
+
+<div class="stage" id="stage">
+
+  <!-- 01: OPENING -->
+  <div class="slide active">
+    <div class="rail">
+      <div class="rail-num">01</div>
+      <div>
+        <div class="rail-label">Opening</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="fan-tag">⚽ FanTrek</div>
+      <div class="slide-tag">Founder · Sport Event Marketing</div>
+      <h2>Women's Sports Fans Are<br>Traveling Alone.</h2>
+      <div class="rule"></div>
+      <p class="body">My name is Alicia Johnson, founder of FanTrek. Women's sports is having its moment — <span class="bold">PWHL, WNBA, NWSL</span>. But for the fan who wants to follow her team to an away game, the experience is still self-assembled, lonely, and fragmented.</p>
+      <div class="quote-block">"A fan can love the team, buy the ticket, and still have no one to go with. Tickets, hotels, safety, and community — none of it is packaged for her. FanTrek turns the trip into the community."</div>
+    </div>
+  </div>
+
+  <!-- 02: THE PROBLEM -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">02</div>
+      <div>
+        <div class="rail-label">Problem</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">The Fan's Problem</div>
+      <h2>The Demand Is Emotional.<br>The Logistics Are a Mess.</h2>
+      <div class="rule"></div>
+      <div class="force-row">
+        <div class="force-badge">No Crew</div>
+        <div class="force-text"><span class="bold">Many fans don't have friends who follow the same teams.</span> A ticket alone doesn't create the experience — the people around you do. Right now, there's no organized way to find them.</div>
+      </div>
+      <div class="force-row">
+        <div class="force-badge">DIY Friction</div>
+        <div class="force-text"><span class="bold">Fans who want away-game weekends must self-assemble everything:</span> tickets, hotels, transport, pre-game plans. First-timers hesitate. Veterans get burned out re-planning the same trip alone.</div>
+      </div>
+      <div class="force-row" style="border-bottom:none">
+        <div class="force-badge">Safety Gap</div>
+        <div class="force-text"><span class="bold">Safety and belonging are real considerations</span> for women traveling to unfamiliar cities for games. FanTrek packages both into one curated experience.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03: WHY NOW -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">03</div>
+      <div>
+        <div class="rail-label">Why Now</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">The Timing</div>
+      <h2>Women's Sports Has Crossed Into<br>a New Demand Curve.</h2>
+      <div class="rule"></div>
+      <div class="cmd-row">
+        <div class="cmd-card">
+          <div class="cmd-icon">PWHL · WNBA · NWSL</div>
+          <div class="cmd-name">Leagues Growing Fast</div>
+          <div class="cmd-desc">Attendance, media rights, and brand investment in women's sports are all accelerating. The fan base is growing faster than the infrastructure around it.</div>
+        </div>
+        <div class="cmd-card teal-card">
+          <div class="cmd-icon teal">BRANDS CHASING FANS</div>
+          <div class="cmd-name">Sponsorship Opportunity</div>
+          <div class="cmd-desc">Brands are actively looking for authentic access to women's sports fan communities. Fan travel packages are a natural activation vehicle.</div>
+        </div>
+        <div class="cmd-card gold-card">
+          <div class="cmd-icon gold">CATEGORY OPEN</div>
+          <div class="cmd-name">No One Owns This</div>
+          <div class="cmd-desc">There is no dedicated women's sports travel brand. The category is wide open and the timing is right — before the first mover advantage disappears.</div>
+        </div>
+      </div>
+      <div class="trend-bar">
+        <span>📈</span>
+        <span><strong>Every major indicator is pointing up.</strong> The window to own this category is now — not in five years when a larger player notices it.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04: SOLUTION -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">04</div>
+      <div>
+        <div class="rail-label">Solution</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">What FanTrek Packages</div>
+      <h2>Curated Fan Trips Built Around Belonging.</h2>
+      <div class="rule"></div>
+      <p class="body">FanTrek is not a travel agency. It is a <span class="rose">fan community with a travel layer</span>. We package the full away-game experience — and the podcast is how fans meet the brand before they ever board a bus.</p>
+      <div class="cmd-row">
+        <div class="cmd-card">
+          <div class="cmd-icon">GAME + STAY</div>
+          <div class="cmd-name">The Package</div>
+          <div class="cmd-desc">Ticket coordination, hotel guidance, transport, and group check-in so the fan shows up having made zero stressful logistics decisions.</div>
+        </div>
+        <div class="cmd-card teal-card">
+          <div class="cmd-icon teal">PRE + POST</div>
+          <div class="cmd-name">The Community</div>
+          <div class="cmd-desc">Pre-game meetups, post-game events, and real-time connection between travelers who share the same fandom and energy.</div>
+        </div>
+        <div class="cmd-card gold-card">
+          <div class="cmd-icon gold">PODCAST</div>
+          <div class="cmd-name">The Trust Layer</div>
+          <div class="cmd-desc">Podcast and social content build parasocial trust before the purchase. Fans join the community first — the trip is how they deepen it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05: PILOT -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">05</div>
+      <div>
+        <div class="rail-label">Pilot</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">First Trip — Prove the Model</div>
+      <h2>Toronto → Montreal. PWHL Away Game.<br>One Perfect Trip.</h2>
+      <div class="rule"></div>
+      <div class="pilot-stats">
+        <div class="pilot-stat">
+          <div class="pilot-stat-num">20–30</div>
+          <div class="pilot-stat-label">travelers on the first trip</div>
+        </div>
+        <div class="pilot-stat">
+          <div class="pilot-stat-num">1 trip</div>
+          <div class="pilot-stat-label">to prove the full model</div>
+        </div>
+      </div>
+      <div class="phase-row" style="margin-top:6px">
+        <div class="phase-badge">Trip</div>
+        <div class="phase-text">One PWHL away game — Toronto to Montreal. Tight, manageable, high-fan-energy, and easy to document from start to finish.</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-badge teal">Content</div>
+        <div class="phase-text">Document the entire weekend as content: pre-trip hype, in-travel footage, game day, post-game community. The content IS the next sales pitch.</div>
+      </div>
+      <div class="phase-row" style="border-bottom:none">
+        <div class="phase-badge gold">Measure</div>
+        <div class="phase-text">NPS score from travelers, referral rate, sponsor interest signals, and media impressions. One successful trip unlocks the next ten conversations.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06: MARKET -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">06</div>
+      <div>
+        <div class="rail-label">Market</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">Market Size</div>
+      <h2>A Niche With Unusually Strong<br>Spend and Identity.</h2>
+      <div class="rule"></div>
+      <div class="force-row">
+        <div class="force-badge">Sports Tourism</div>
+        <div class="force-text"><span class="bold">Sports tourism is one of the fastest-growing travel segments.</span> Fans spend on experiences differently than general tourists — they book around emotion, identity, and belonging, not price comparison.</div>
+      </div>
+      <div class="force-row">
+        <div class="force-badge">Women's Fandom</div>
+        <div class="force-text"><span class="bold">Women's sports fandom is community-driven.</span> These fans organize, they advocate, they bring others in. The core fan doesn't just buy a ticket — they recruit four friends to come.</div>
+      </div>
+      <div class="force-row" style="border-bottom:none">
+        <div class="force-badge">Pull Effect</div>
+        <div class="force-text"><span class="bold">Core fans pull casual fans into the experience.</span> FanTrek's strongest conversion mechanism is the existing community — one die-hard fan's post-trip story converts three people who weren't sure they'd come.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07: BUSINESS MODEL -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">07</div>
+      <div>
+        <div class="rail-label">Revenue</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">Business Model</div>
+      <h2>Trip Margin + Media + Sponsorship.</h2>
+      <div class="rule"></div>
+      <div class="rev-block">
+        <div class="rev-card">
+          <div class="rev-price">15–25%</div>
+          <div class="rev-label">Trip Package Margin</div>
+          <div class="rev-sub">Gross margin on each curated travel package. Scales with group size. The core unit economics from Day 1.</div>
+        </div>
+        <div class="rev-card teal">
+          <div class="rev-price teal">Affiliate</div>
+          <div class="rev-label">Hotels + Tickets</div>
+          <div class="rev-sub">Revenue from hotel and ticket partner referrals. Every booking through FanTrek earns a commission. Low effort, high volume at scale.</div>
+        </div>
+      </div>
+      <div class="rev-block" style="margin-top:6px">
+        <div class="rev-card" style="background:rgba(245,166,35,0.07);border-color:rgba(245,166,35,0.22)">
+          <div class="rev-price" style="color:var(--gold)">Podcast</div>
+          <div class="rev-label">Sponsorships + Ads</div>
+          <div class="rev-sub">Podcast sponsorships from women's sports brands, gear companies, and travel brands who want authentic fan reach.</div>
+        </div>
+        <div class="rev-card" style="background:rgba(232,64,122,0.07);border-color:rgba(232,64,122,0.22)">
+          <div class="rev-price">Activations</div>
+          <div class="rev-label">Brand Partnerships</div>
+          <div class="rev-sub">Brand activations embedded in trips. Not ads — real experiences that brands sponsor because the fan community is genuinely engaged.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08: COMPETITION -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">08</div>
+      <div>
+        <div class="rail-label">vs. Alternatives</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">Competitive Edge</div>
+      <h2>Generic Sports Travel Misses the Culture.</h2>
+      <div class="rule"></div>
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Women's Sports Focus</th>
+            <th>Community Layer</th>
+            <th>Brand Partnership Ready</th>
+            <th>Content-Driven</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>FanTrek</td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-chk">✓</span></td>
+          </tr>
+          <tr>
+            <td>General sports travel</td>
+            <td><span class="cmp-x">✗</span></td>
+            <td><span class="cmp-x">✗</span></td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-x">✗</span></td>
+          </tr>
+          <tr>
+            <td>DIY booking (Expedia, etc.)</td>
+            <td><span class="cmp-x">✗</span></td>
+            <td><span class="cmp-x">✗</span></td>
+            <td><span class="cmp-x">✗</span></td>
+            <td><span class="cmp-x">✗</span></td>
+          </tr>
+          <tr>
+            <td>Fan group chats / Reddit</td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-chk">✓</span></td>
+            <td><span class="cmp-x">✗</span></td>
+            <td><span class="cmp-x">✗</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="body" style="margin-top:10px">We are not trying to become Expedia for sports. We are <span class="rose">owning a specific cultural category</span> before the large players notice it — women's sports fan travel, with community at the center.</p>
+    </div>
+  </div>
+
+  <!-- 09: FOUNDER -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">09</div>
+      <div>
+        <div class="rail-label">Founder</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">Why Alicia</div>
+      <h2>Sport Event Marketing Is<br>the Operating System.</h2>
+      <div class="rule"></div>
+      <div class="founder-block">
+        <div style="font-weight:800;color:var(--white);margin-bottom:4px">Alicia Johnson</div>
+        Sport Entertainment and Event Management background at Seneca. Direct experience planning and executing live sport events — the exact skills needed to run a sold-out fan trip. Not building a theory. Building on a foundation.
+      </div>
+      <div class="force-row" style="margin-top:8px">
+        <div class="force-badge">Community</div>
+        <div class="force-text">Direct connection to women's sports fan communities. Early validation through youth and women's sports event work. The target customer is someone Alicia already knows and has organized alongside.</div>
+      </div>
+      <div class="force-row" style="border-bottom:none">
+        <div class="force-badge">Timing</div>
+        <div class="force-text">A game is not just a game. The arrival, the meetups, the people beside you — <span class="rose">that is the product</span>. Alicia has been in the rooms where that experience is designed. FanTrek builds it for fans who deserve it.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10: THE ASK -->
+  <div class="slide">
+    <div class="rail">
+      <div class="rail-num">10</div>
+      <div>
+        <div class="rail-label">The Ask</div>
+        <div class="rail-brand" style="margin-top:6px">HELIX Pitch Day</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="slide-tag">Founder & The Ask</div>
+      <h2>Fund One Trip That Proves the Model.</h2>
+      <div class="rule"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start">
+        <div>
+          <div class="ask-amount">$10,000</div>
+          <div class="ask-label">Seed Funding</div>
+          <ul class="bullets">
+            <li>Group travel deposits and ticket coordination</li>
+            <li>Insurance and logistics for 20–30 travelers</li>
+            <li>Podcast launch + social content production</li>
+            <li>Launch marketing and waitlist build</li>
+          </ul>
+          <p class="body" style="margin-top:10px;font-size:12px">Also asking for: introductions to <span class="rose">hotel partners, women's sports league contacts, and podcast sponsors</span> in the women's sports space.</p>
+        </div>
+        <div>
+          <div class="founder-block">
+            <div style="font-weight:800;color:var(--white);margin-bottom:4px">The 90-Day Goal</div>
+            Sell out one Toronto–Montreal PWHL away-game trip. Produce content that converts the next trip's waitlist. Secure one podcast sponsor. Return to the next pitch with proof that women's sports fans travel together when you make it easy.
+          </div>
+          <div class="quote-block" style="margin-top:8px;font-size:12.5px">"The fan base is outgrowing the infrastructure around it. FanTrek builds what that fan deserves — a trip that feels like it was designed for her."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /stage -->
+
+<div class="controls">
+  <button class="nav" id="prev">← Prev</button>
+  <div class="progress-dots" id="dots"></div>
+  <button class="nav" id="next">Next →</button>
+  <span id="slide-counter">01 / 10</span>
+</div>
+
+<div class="notes-panel">
+  <div class="notes-label">Speaker Notes — Press N to toggle</div>
+  <div id="notes-text"></div>
+</div>
+
+<div class="export-bar">
+  <span class="export-label">Open:</span>
+  <button class="export-btn" onclick="window.open(location.href,'_blank')">New Window</button>
+  <button class="export-btn" onclick="window.print()">Print / PDF</button>
+</div>
+
+<script>
+const NOTES = [
+  "Hi, I am Alicia Johnson, founder of FanTrek. Women's sports is having its moment. PWHL, WNBA, NWSL — the fan base is growing and the energy is real. But for the fan who wants to follow her team to an away game, the experience is still self-assembled, often lonely, and full of friction. Tickets, hotels, transport, safety, community — none of it is packaged for her. FanTrek turns the trip into the community.",
+  "The problem is not that women's sports fans don't want to travel. They absolutely do. The problem is that away-game travel is hard, especially alone. Many fans don't have friends who follow the same teams. DIY travel means self-assembling tickets, hotels, transport, and pre-game plans from scratch. For first-timers, that's too much friction. For veterans, it's exhausting to do every time. And safety and belonging are real considerations for women traveling to unfamiliar cities. FanTrek packages all of it.",
+  "The timing is important. Women's sports is not just growing — it is crossing into a new phase. Attendance is rising, media rights are expanding, brands are chasing the fan community. And there is no dedicated women's sports travel brand that owns this category. That window is open right now. We are not building something five years too late. We are building before the category is obvious.",
+  "FanTrek packages the full experience: ticket coordination, hotel guidance, transport, pre-game and post-game community events. But what makes FanTrek different is the trust layer. The podcast is not a side project — it is how fans meet the brand before they travel with it. By the time someone buys a trip, they already feel like they know us. That changes the conversion economics completely.",
+  "We do not need ten cities to prove the model. We need one perfect trip. Toronto to Montreal for a PWHL away game — high energy, manageable scale, easy to document. Thirty travelers. Document everything: the pre-trip hype, the travel, the game, the post-game. That content becomes the next trip's marketing. The NPS and referral data from one trip tells us everything we need to know for the next five.",
+  "Sports tourism is one of the fastest-growing travel segments. But the women's sports fan market has a specific characteristic that makes it even more valuable: it is community-driven. These fans don't just buy tickets — they recruit other fans. A core fan brings three or four people into the experience. That pull effect is FanTrek's most powerful growth mechanism. We don't need to acquire every customer. We need to acquire the ones who bring the others.",
+  "Revenue starts with package margin — 15 to 25 percent on each curated trip. Then hotel and ticket affiliates. Then podcast sponsorships. Then brand activations. Each layer is additive. The important thing is that once the community is real, sponsors are not buying impressions — they are buying authentic access to engaged fans. That is a meaningfully different pitch to a brand than standard advertising.",
+  "Our competition is not primarily other travel companies. It is the status quo: fans booking nothing because it's too hard, or piecing things together on their own. General sports travel companies focus on men's leagues and premium events. DIY booking has no community layer. Fan group chats have community but no logistics or activation ability. FanTrek is the only option that is women's sports focused, community-driven, brand-partnership ready, and content-first.",
+  "My background is sport entertainment and event management. I understand that a game is not just a game. The arrival, the who-you're-with, the pre-game energy, the shared moments after the final buzzer — those are the product. I have been in the rooms where those experiences are designed. FanTrek builds that experience for the fan who has always deserved it.",
+  "I am asking for ten thousand dollars and introductions to hotel and ticket partners, women's sports league contacts, and podcast sponsors. The money covers group travel deposits, insurance, content production, and launch marketing. My 90-day goal: sell out one trip, produce content that converts the next waitlist, and secure one podcast sponsor. FanTrek proves the market by selling out one unforgettable trip. Thank you."
+];
+
+const slides = document.querySelectorAll('.slide');
+const dotsC = document.getElementById('dots');
+const counter = document.getElementById('slide-counter');
+const notesEl = document.getElementById('notes-text');
+let cur = 0;
+
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' on' : '');
+  d.addEventListener('click', () => go(i));
+  dotsC.appendChild(d);
+});
+
+function go(n) {
+  slides[cur].classList.remove('active');
+  dotsC.children[cur].classList.remove('on');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+  dotsC.children[cur].classList.add('on');
+  counter.textContent = `${String(cur+1).padStart(2,'0')} / ${slides.length}`;
+  notesEl.textContent = NOTES[cur] || '';
+}
+
+document.getElementById('prev').addEventListener('click', () => go(cur - 1));
+document.getElementById('next').addEventListener('click', () => go(cur + 1));
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') go(cur + 1);
+  if (e.key === 'ArrowLeft') go(cur - 1);
+});
+
+notesEl.textContent = NOTES[0];
+</script>

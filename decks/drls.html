@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DRLS Beauty Lab — Pitch Deck</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d0912;color:#f2eef5;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 32px}
+
+/* ── deck shell ── */
+#deck{display:flex;width:100%;max-width:960px;height:540px;border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+
+/* ── rail ── */
+#rail{width:210px;flex-shrink:0;background:rgba(232,160,184,.12);border-right:1px solid rgba(232,160,184,.18);display:flex;flex-direction:column;padding:28px 20px 24px;gap:16px}
+#venture-name{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#e8a0b8;line-height:1.3}
+#slide-num{font-size:.75rem;color:rgba(242,238,245,.45)}
+#dots{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(232,160,184,.25);cursor:pointer;transition:background .2s}
+.dot.active{background:#e8a0b8}
+#slide-label{margin-top:auto;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(232,160,184,.7);border-top:1px solid rgba(232,160,184,.15);padding-top:14px}
+
+/* ── stage ── */
+#stage{flex:1;background:#0d0912;padding:40px 44px;overflow:hidden;position:relative}
+
+/* ── slide components ── */
+.eyebrow{font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#c9a0d8;margin-bottom:10px}
+.slide-title{font-size:2rem;font-weight:700;line-height:1.15;color:#f2eef5;margin-bottom:8px}
+.slide-sub{font-size:.95rem;color:rgba(242,238,245,.6);margin-bottom:28px;line-height:1.5}
+.slide-title em{color:#e8a0b8;font-style:normal}
+
+.stat-row{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.stat{background:rgba(232,160,184,.1);border:1px solid rgba(232,160,184,.2);border-radius:10px;padding:16px 20px;flex:1;min-width:120px}
+.stat-val{font-size:1.6rem;font-weight:800;color:#e8a0b8;font-variant-numeric:tabular-nums}
+.stat-lab{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(242,238,245,.5);margin-top:4px}
+
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}
+.pill{padding:8px 16px;border-radius:20px;font-size:.8rem;font-weight:600;background:rgba(201,160,216,.13);border:1px solid rgba(201,160,216,.3);color:#c9a0d8}
+.pill.accent{background:rgba(232,160,184,.15);border-color:rgba(232,160,184,.4);color:#e8a0b8}
+
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.cmp-card{border-radius:10px;padding:16px 18px}
+.cmp-card.bad{background:rgba(255,100,100,.08);border:1px solid rgba(255,100,100,.2)}
+.cmp-card.good{background:rgba(232,160,184,.1);border:1px solid rgba(232,160,184,.3)}
+.cmp-label{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.cmp-card.bad .cmp-label{color:rgba(255,140,140,.7)}
+.cmp-card.good .cmp-label{color:#e8a0b8}
+.cmp-item{font-size:.82rem;color:rgba(242,238,245,.75);margin-bottom:4px;line-height:1.4}
+
+.phase-list{display:flex;flex-direction:column;gap:10px}
+.phase{display:flex;align-items:flex-start;gap:12px}
+.phase-num{width:28px;height:28px;border-radius:50%;background:rgba(232,160,184,.18);border:1px solid rgba(232,160,184,.35);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#e8a0b8;flex-shrink:0}
+.phase-body{flex:1}
+.phase-title{font-size:.85rem;font-weight:600;color:#f2eef5;margin-bottom:2px}
+.phase-desc{font-size:.75rem;color:rgba(242,238,245,.55)}
+
+.insight-box{background:rgba(201,160,216,.1);border:1px solid rgba(201,160,216,.25);border-left:3px solid #c9a0d8;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:16px}
+.insight-box p{font-size:.85rem;color:rgba(242,238,245,.85);line-height:1.5}
+.insight-box strong{color:#c9a0d8}
+
+.big-number{font-size:3.2rem;font-weight:900;color:#e8a0b8;line-height:1;margin-bottom:6px}
+.big-label{font-size:.75rem;color:rgba(242,238,245,.5);letter-spacing:.06em;text-transform:uppercase}
+
+.ask-box{background:linear-gradient(135deg,rgba(232,160,184,.12),rgba(201,160,216,.08));border:1px solid rgba(232,160,184,.25);border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.ask-box h3{font-size:1rem;color:#e8a0b8;margin-bottom:10px}
+.ask-item{font-size:.85rem;color:rgba(242,238,245,.8);padding:6px 0;border-bottom:1px solid rgba(232,160,184,.1);line-height:1.4}
+.ask-item:last-child{border:none}
+.ask-item::before{content:'→ ';color:#e8a0b8}
+
+/* ── notes panel ── */
+#notes-wrap{width:100%;max-width:960px;margin-top:16px}
+#notes-head{font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(232,160,184,.6);margin-bottom:8px}
+#notes-body{background:rgba(255,255,255,.04);border:1px solid rgba(232,160,184,.12);border-radius:10px;padding:18px 22px;font-size:.9rem;line-height:1.65;color:rgba(242,238,245,.8)}
+
+/* ── nav ── */
+#nav{display:flex;gap:12px;margin-top:14px;justify-content:center}
+#nav button{background:rgba(232,160,184,.12);border:1px solid rgba(232,160,184,.25);color:#e8a0b8;font-size:.85rem;font-weight:600;padding:9px 28px;border-radius:8px;cursor:pointer;transition:background .15s}
+#nav button:hover{background:rgba(232,160,184,.22)}
+</style>
+</head>
+<body>
+
+<div id="deck">
+  <div id="rail">
+    <div id="venture-name">DRLS Beauty Lab</div>
+    <div id="slide-num"></div>
+    <div id="dots"></div>
+    <div id="slide-label"></div>
+  </div>
+  <div id="stage"></div>
+</div>
+
+<div id="notes-wrap">
+  <div id="notes-head">Script — Say This Out Loud</div>
+  <div id="notes-body"></div>
+</div>
+
+<div id="nav">
+  <button onclick="move(-1)">← Prev</button>
+  <button onclick="move(1)">Next →</button>
+</div>
+
+<script>
+const LABELS = [
+  'Opening','Problem','Solution','Business Model',
+  'Market Size','Traction','Go-to-Market','The Ask'
+];
+
+const SLIDES = [
+`<div class="eyebrow">Pitch Day 2026</div>
+<div class="slide-title">Meet <em>DRLS Beauty Lab</em></div>
+<div class="slide-sub">Nervous-system-aware skincare for the aesthetics industry.<br>Founded by Dania Shalabi — HELIX Launch Cohort 2026.</div>
+<div class="stat-row">
+  <div class="stat"><div class="stat-val">B2B</div><div class="stat-lab">Aesthetics Clinics</div></div>
+  <div class="stat"><div class="stat-val">Hydro</div><div class="stat-lab">Treatment Solutions</div></div>
+  <div class="stat"><div class="stat-val">$5.50</div><div class="stat-lab">Per-Client Gap We're Closing</div></div>
+</div>
+<div class="pills">
+  <span class="pill accent">Science-Led Formulation</span>
+  <span class="pill">Recurring B2B Revenue</span>
+  <span class="pill">Ontario → Canada</span>
+</div>`,
+
+`<div class="eyebrow">The Problem</div>
+<div class="slide-title">Clinics are using products <em>not built for them</em></div>
+<div class="slide-sub">The hydrodermabrasion solutions on the market today are commodity products — generic, underformulated, and not designed around how skin responds to clinical treatment.</div>
+<div class="compare-grid">
+  <div class="cmp-card bad">
+    <div class="cmp-label">Status Quo</div>
+    <div class="cmp-item">Generic solutions (e.g. YMEYFAN) at ~$5.50/client</div>
+    <div class="cmp-item">No skin-stress or nervous system formulation science</div>
+    <div class="cmp-item">No clinical-grade packaging or workflow design</div>
+    <div class="cmp-item">Clinics accept it because no better option exists</div>
+  </div>
+  <div class="cmp-card good">
+    <div class="cmp-label">What Clinics Actually Want</div>
+    <div class="cmp-item">Better client outcomes → higher rebooking rates</div>
+    <div class="cmp-item">Products formulated around skin response, not just abrasion</div>
+    <div class="cmp-item">Reliable supply with clinic-sized quantities</div>
+    <div class="cmp-item">A brand they're proud to recommend to clients</div>
+  </div>
+</div>
+<div class="insight-box"><p><strong>Direct quote from Hydro Glow Clinic:</strong> "We'd switch if something better existed." — That signal is the market.</p></div>`,
+
+`<div class="eyebrow">The Solution</div>
+<div class="slide-title"><em>DRLS Hydro</em> — formulated for results</div>
+<div class="slide-sub">Three targeted hydrodermabrasion solutions designed with skin neurophysiology in mind — reducing stress response, improving treatment outcomes, and giving clinics a product they can stand behind.</div>
+<div class="stat-row">
+  <div class="stat"><div class="stat-val">Hydro A</div><div class="stat-lab">Sensitive / Reactive Skin</div></div>
+  <div class="stat"><div class="stat-val">Hydro B</div><div class="stat-lab">Normal / Combination</div></div>
+  <div class="stat"><div class="stat-val">Hydro C</div><div class="stat-lab">Oily / Congested</div></div>
+</div>
+<div class="insight-box"><p><strong>What "nervous-system-aware" means:</strong> Skin has a stress response to abrasive treatments. DRLS formulations include calming actives that buffer this response — meaning less redness, faster recovery, and clients who come back sooner.</p></div>`,
+
+`<div class="eyebrow">Business Model</div>
+<div class="slide-title">B2B wholesale — <em>recurring per-treatment revenue</em></div>
+<div class="slide-sub">Clinics reorder every treatment cycle. As their client volume grows, our revenue grows with them.</div>
+<div class="compare-grid">
+  <div class="cmp-card good">
+    <div class="cmp-label">Revenue Model</div>
+    <div class="cmp-item">Wholesale per unit to aesthetics clinics</div>
+    <div class="cmp-item">Target: $4–5/client (vs. $5.50 incumbent)</div>
+    <div class="cmp-item">Better price + better product = easy switch</div>
+    <div class="cmp-item">Reorder cycle follows clinic booking volume</div>
+  </div>
+  <div class="cmp-card good">
+    <div class="cmp-label">Unit Economics (Target)</div>
+    <div class="cmp-item">COGS target: &lt;$1.50/client at scale</div>
+    <div class="cmp-item">Gross margin target: 65%+</div>
+    <div class="cmp-item">Minimum order: clinic trial pack (30 treatments)</div>
+    <div class="cmp-item">Reorder rate target: 80%+ at 90 days</div>
+  </div>
+</div>`,
+
+`<div class="eyebrow">Market Size</div>
+<div class="slide-title">A <em>growing industry</em> with no science-led incumbent</div>
+<div class="slide-sub">The Canadian medical aesthetics market is expanding. Hydrodermabrasion is one of the fastest-growing non-invasive treatment categories.</div>
+<div class="stat-row">
+  <div class="stat"><div class="stat-val">$3.2B</div><div class="stat-lab">Canadian Medical Aesthetics Market</div></div>
+  <div class="stat"><div class="stat-val">2,000+</div><div class="stat-lab">Licensed Aesthetics Clinics in Ontario</div></div>
+  <div class="stat"><div class="stat-val">18%</div><div class="stat-lab">Annual Market Growth Rate</div></div>
+</div>
+<div class="insight-box"><p><strong>The opportunity:</strong> No incumbent owns "science-led hydrodermabrasion" in Canada. The market is served by generic wholesale distributors, not brands with formulation IP. That's the white space DRLS is claiming.</p></div>`,
+
+`<div class="eyebrow">Traction</div>
+<div class="slide-title"><em>First signal confirmed</em> — now building the pattern</div>
+<div class="slide-sub">One discovery interview completed. More in progress. The willingness to switch is real.</div>
+<div class="phase-list">
+  <div class="phase"><div class="phase-num">✓</div><div class="phase-body"><div class="phase-title">Discovery Interview #1 — Hydro Glow Clinic</div><div class="phase-desc">Confirmed: ~$5.50/client on current solution (YMEYFAN). Confirmed: would switch for better formulation and similar pricing. Confirmed: pain around skin stress response post-treatment.</div></div></div>
+  <div class="phase"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Standardized survey created</div><div class="phase-desc">Deploying to 2–3 more Ontario aesthetics clinics to confirm the pattern and refine unit economics inputs.</div></div></div>
+  <div class="phase"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Unit economics model — in progress</div><div class="phase-desc">Building the cost model for COGS, margin, and pricing. Target: finalize with 3 clinic data points.</div></div></div>
+  <div class="phase"><div class="phase-num">4</div><div class="phase-body"><div class="phase-title">Product formulation — next step</div><div class="phase-desc">First cosmetic chemistry consultation planned once pattern confirmation complete.</div></div></div>
+</div>`,
+
+`<div class="eyebrow">Go-to-Market</div>
+<div class="slide-title">Direct to clinics — <em>starting with warm leads</em></div>
+<div class="slide-sub">Build the first 3–5 pilot relationships in Ontario. Use outcomes data to expand through referral.</div>
+<div class="phase-list">
+  <div class="phase"><div class="phase-num">1</div><div class="phase-body"><div class="phase-title">Phase 1 — Pilot Partners (0–6 months)</div><div class="phase-desc">3–5 Ontario clinics. Start with Hydro Glow (warm relationship). Provide product, collect outcome data and rebooking rates.</div></div></div>
+  <div class="phase"><div class="phase-num">2</div><div class="phase-body"><div class="phase-title">Phase 2 — Case Study Expansion (6–18 months)</div><div class="phase-desc">Turn pilot outcomes into proof. Target 20 clinics in the GTA using referral + aesthetics industry events (ICES Canada, Spa Industry Association).</div></div></div>
+  <div class="phase"><div class="phase-num">3</div><div class="phase-body"><div class="phase-title">Phase 3 — National Distribution (18–36 months)</div><div class="phase-desc">Partner with aesthetics supply distributors. Expand formulation line. Consider DTC companion skincare for clinic retail shelves.</div></div></div>
+</div>`,
+
+`<div class="eyebrow">The Ask</div>
+<div class="slide-title">Help us get <em>DRLS</em> from lab to clinic</div>
+<div class="slide-sub">We're raising early-stage support to complete validation and commission our first production run.</div>
+<div class="ask-box">
+  <h3>What I'm Looking For</h3>
+  <div class="ask-item">Introductions to cosmetic chemists or contract manufacturers in Canada</div>
+  <div class="ask-item">Connections to Ontario aesthetics clinic networks or industry associations</div>
+  <div class="ask-item">Early-stage funding to commission first production batch</div>
+  <div class="ask-item">Advisors who know B2B beauty, medical aesthetics, or CPG</div>
+</div>
+<div class="stat-row">
+  <div class="stat"><div class="stat-val">3–5</div><div class="stat-lab">Pilot Clinics Targeted</div></div>
+  <div class="stat"><div class="stat-val">~$25K</div><div class="stat-lab">First Production Run Est.</div></div>
+  <div class="stat"><div class="stat-val">Dania S.</div><div class="stat-lab">daniashalabi98@gmail.com</div></div>
+</div>`
+];
+
+const NOTES = [
+  "Hi, I'm Dania Shalabi, founder of DRLS Beauty Lab. We're developing science-led hydrodermabrasion solutions designed specifically for aesthetics clinics — products that are better for the client's skin, better for the clinic's workflow, and better priced than what's currently on the market. DRLS stands for science-led beauty that starts with how skin actually works.",
+
+  "Right now, most aesthetics clinics are using hydrodermabrasion solutions that were never designed for clinic use. The leading product costs about five dollars and fifty cents per client. It's generic, it's commodity, and when I sat down with Hydro Glow Clinic for my first discovery interview, they told me directly: 'We'd switch if something better existed.' That sentence is the entire business case.",
+
+  "DRLS Beauty Lab is developing three targeted hydrodermabrasion solutions — Hydro A, B, and C — each formulated for a different skin type. What makes us different is the nervous-system-aware angle: skin has a stress response to abrasive treatments. Our formulations include calming actives that buffer that response. The result is less redness, faster recovery, and clients who come back sooner — which is exactly what clinic owners care about.",
+
+  "Our model is B2B wholesale to aesthetics clinics. Clinics reorder every treatment cycle — so as their booking volume grows, our revenue grows with them. We're targeting a price of four to five dollars per client, which beats the incumbent on cost while delivering a better product. Our gross margin target is sixty-five percent at scale. This is a recurring revenue business driven by clinic growth.",
+
+  "The Canadian medical aesthetics market is a three-point-two billion dollar industry growing at eighteen percent annually. Ontario alone has over two thousand licensed aesthetics clinics. And here's the key insight: no incumbent owns the science-led formulation space in this category. The market is served by generic wholesale distributors, not brands with formulation IP. That white space is exactly where DRLS is building.",
+
+  "I've completed my first discovery interview with Hydro Glow Clinic. They confirmed they spend about five-fifty per client, they confirmed they'd switch, and they validated that the post-treatment skin stress response is a real pain point their clients complain about. I now have a standardized survey running with two to three more clinics to confirm the pattern. The unit economics model is in progress — I'm targeting to finalize it with three data points.",
+
+  "My go-to-market is direct to clinics in Ontario. Phase one: three to five pilot partners, starting with Hydro Glow. I give them product, collect rebooking rate data, and build the case study. Phase two: use those case studies to open twenty GTA clinics through referral and aesthetics industry events. Phase three: partner with national distributors and expand the formulation line. This is a relationship-driven market — one great clinic partnership opens ten doors.",
+
+  "I'm here for three things. First, introductions: cosmetic chemists, contract manufacturers, or anyone connected to the Ontario aesthetics clinic network. Second, early-stage funding to commission the first production batch — estimated at around twenty-five thousand dollars. Third, advisors who've built in B2B beauty, medical aesthetics, or CPG. If that's you, I want to talk. Thank you."
+];
+
+let cur = 0;
+const total = SLIDES.length;
+
+function render() {
+  document.getElementById('stage').innerHTML = SLIDES[cur];
+  document.getElementById('slide-num').textContent = (cur+1) + ' / ' + total;
+  document.getElementById('slide-label').textContent = LABELS[cur];
+  document.getElementById('notes-body').textContent = NOTES[cur];
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+}
+
+function move(d) {
+  cur = (cur + d + total) % total;
+  render();
+}
+
+// build dots
+const dotsEl = document.getElementById('dots');
+for(let i=0;i<total;i++){
+  const d = document.createElement('div');
+  d.className='dot';
+  d.onclick = ()=>{ cur=i; render(); };
+  dotsEl.appendChild(d);
+}
+
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') move(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') move(-1);
+});
+
+render();
+</script>
+</body>
+</html>

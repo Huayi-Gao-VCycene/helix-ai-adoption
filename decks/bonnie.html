@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mom's Design Place — Pitch Deck</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0008; color: #f0eaf3; font-family: 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; }
+
+  .wrapper { max-width: 980px; margin: 0 auto; padding: 24px 16px 40px; }
+
+  .brand-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .brand-logo { width: 40px; height: 40px; border-radius: 8px; background: #e95b9e; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: #fff; letter-spacing: -1px; flex-shrink: 0; }
+  .brand-name { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #e95b9e; }
+  .brand-sub { font-size: 11px; color: #7a6880; margin-top: 2px; }
+
+  /* Stage */
+  .stage-shell { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid #2a1a2e; margin-bottom: 0; }
+
+  /* Left rail */
+  .rail { width: 200px; flex-shrink: 0; background: #110b15; border-right: 1px solid #2a1a2e; padding: 12px 0; display: flex; flex-direction: column; gap: 2px; }
+  .rail-item { padding: 7px 14px; font-size: 11px; color: #6a5070; cursor: pointer; border-left: 2px solid transparent; line-height: 1.35; transition: all 0.15s; }
+  .rail-item:hover { color: #c090b0; background: #1a0f20; }
+  .rail-item.active { color: #e95b9e; border-left-color: #e95b9e; background: #1a0f20; font-weight: 600; }
+  .rail-num { font-size: 9px; color: #4a3455; display: block; margin-bottom: 1px; letter-spacing: 1px; }
+
+  /* Slide */
+  .slide-area { flex: 1; min-height: 400px; position: relative; overflow: hidden; background: #0d0812; }
+  .slide { display: none; width: 100%; height: 100%; min-height: 400px; padding: 40px 44px; position: absolute; top: 0; left: 0; }
+  .slide.active { display: flex; flex-direction: column; justify-content: center; }
+
+  /* Slide content styles */
+  .slide-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #e95b9e; margin-bottom: 10px; opacity: 0.8; }
+  .slide-title { font-size: 28px; font-weight: 800; line-height: 1.15; color: #f5eef8; margin-bottom: 16px; }
+  .slide-title .accent { color: #e95b9e; }
+  .slide-body { font-size: 14px; color: #b090c0; line-height: 1.65; max-width: 480px; }
+  .slide-body strong { color: #f0e8f5; }
+
+  .big-stat { font-size: 52px; font-weight: 900; color: #e95b9e; line-height: 1; margin-bottom: 8px; }
+  .big-stat-label { font-size: 13px; color: #907080; }
+
+  .stat-row { display: flex; gap: 32px; margin-top: 20px; }
+  .stat-box { }
+  .stat-val { font-size: 28px; font-weight: 800; color: #e95b9e; }
+  .stat-lbl { font-size: 11px; color: #7a6080; margin-top: 2px; }
+
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .pill { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .pill-bad { background: #2a1020; color: #d06080; border: 1px solid #3a1830; }
+  .pill-good { background: #1a0a20; color: #e95b9e; border: 1px solid #3a1535; }
+
+  .step-list { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .step-item { display: flex; align-items: flex-start; gap: 10px; }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; background: #e95b9e; color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 13px; color: #b090c0; line-height: 1.5; }
+  .step-text strong { color: #f0e8f5; }
+
+  .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .price-card { background: #150c1a; border: 1px solid #2a1535; border-radius: 6px; padding: 12px 14px; }
+  .price-name { font-size: 11px; color: #907080; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .price-val { font-size: 20px; font-weight: 800; color: #e95b9e; }
+  .price-desc { font-size: 11px; color: #705060; margin-top: 3px; }
+
+  .comp-table { margin-top: 16px; width: 100%; border-collapse: collapse; font-size: 12px; }
+  .comp-table th { text-align: left; padding: 6px 10px; color: #7a6080; font-weight: 600; border-bottom: 1px solid #2a1535; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+  .comp-table td { padding: 8px 10px; border-bottom: 1px solid #1a0f20; color: #a080a0; }
+  .comp-table tr.highlight td { color: #f0e8f5; background: #180d22; }
+  .comp-table .check { color: #e95b9e; font-weight: 700; }
+  .comp-table .cross { color: #4a3040; }
+
+  /* Decorative blobs */
+  .blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.12; pointer-events: none; }
+  .blob1 { width: 300px; height: 300px; background: #e95b9e; right: -60px; top: -60px; }
+  .blob2 { width: 200px; height: 200px; background: #a855f7; right: 80px; bottom: -40px; }
+
+  /* Quote style for opening */
+  .big-quote { font-size: 20px; font-style: italic; color: #d0a0c0; line-height: 1.5; margin-bottom: 16px; }
+  .big-quote em { color: #e95b9e; font-style: normal; }
+
+  /* Nav */
+  .nav-bar { background: #110b15; border-top: 1px solid #2a1a2e; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-radius: 0 0 10px 0; }
+  .nav-dots { display: flex; gap: 6px; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #3a2545; cursor: pointer; transition: background 0.2s; }
+  .nav-dot.active { background: #e95b9e; }
+  .nav-arrows { display: flex; gap: 8px; }
+  .nav-btn { background: #1a0f20; border: 1px solid #2a1a2e; color: #c090b0; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; user-select: none; }
+  .nav-btn:hover { background: #25152e; color: #e95b9e; border-color: #e95b9e; }
+  .slide-counter { font-size: 11px; color: #5a4060; }
+
+  /* Script panel */
+  .script-panel { background: #0d0812; border: 1px solid #2a1a2e; border-top: none; border-radius: 0 0 10px 10px; padding: 20px 24px; }
+  .script-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #4a3455; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .script-label::after { content: ''; flex: 1; height: 1px; background: #1e1025; }
+  .script-text { font-size: 14px; color: #c0a0c8; line-height: 1.75; }
+  .script-text strong { color: #e95b9e; font-weight: 600; }
+
+  /* Blowfish hero */
+  .blowfish-hero { font-size: 64px; font-weight: 900; color: #e95b9e; letter-spacing: -2px; line-height: 1; margin-bottom: 8px; }
+  .blowfish-sub { font-size: 14px; color: #907080; }
+
+  .ask-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .ask-item { background: #150c1a; border: 1px solid #2a1535; border-radius: 6px; padding: 10px 12px; font-size: 12px; color: #a080a0; }
+  .ask-item strong { display: block; color: #e95b9e; margin-bottom: 3px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="brand-bar">
+    <div class="brand-logo">M</div>
+    <div>
+      <div class="brand-name">Mom's Design Place</div>
+      <div class="brand-sub">Bonnie Dalton · Seneca HELIX Pitch Day · Aug 13, 2026</div>
+    </div>
+  </div>
+
+  <div class="stage-shell">
+    <!-- Left rail -->
+    <div class="rail" id="rail">
+      <div class="rail-item active" onclick="goto(0)"><span class="rail-num">01</span>Opening Hook</div>
+      <div class="rail-item" onclick="goto(1)"><span class="rail-num">02</span>The Problem</div>
+      <div class="rail-item" onclick="goto(2)"><span class="rail-num">03</span>Market Landscape</div>
+      <div class="rail-item" onclick="goto(3)"><span class="rail-num">04</span>The Solution</div>
+      <div class="rail-item" onclick="goto(4)"><span class="rail-num">05</span>The Process</div>
+      <div class="rail-item" onclick="goto(5)"><span class="rail-num">06</span>Market Size</div>
+      <div class="rail-item" onclick="goto(6)"><span class="rail-num">07</span>Pricing & Revenue</div>
+      <div class="rail-item" onclick="goto(7)"><span class="rail-num">08</span>Competitive Positioning</div>
+      <div class="rail-item" onclick="goto(8)"><span class="rail-num">09</span>The Founder</div>
+      <div class="rail-item" onclick="goto(9)"><span class="rail-num">10</span>The Ask</div>
+    </div>
+
+    <!-- Slides -->
+    <div style="flex:1; display:flex; flex-direction:column;">
+      <div class="slide-area">
+
+        <!-- Slide 1 -->
+        <div class="slide active">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="slide-eyebrow">Opening Hook</div>
+          <div class="big-quote">Two products. Same quality inside.<br><em>Which one do you pick up?</em></div>
+          <div class="slide-body">
+            Hi, I'm <strong>Bonnie Dalton</strong>, founder of <strong>Mom's Design Place</strong>.<br>
+            Professional packaging wins before anyone opens the box.
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Problem</div>
+          <div class="slide-title">The <span class="accent">Design Gap</span></div>
+          <div class="slide-body">
+            Most small business owners know their product is amazing.<br>Their packaging just doesn't show it.
+          </div>
+          <div class="stat-row">
+            <div class="stat-box">
+              <div class="stat-val">$2K–$20K</div>
+              <div class="stat-lbl">Agency minimum</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">6–10 wks</div>
+              <div class="stat-lbl">Agency timeline</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">$0</div>
+              <div class="stat-lbl">Budget most SMBs have</div>
+            </div>
+          </div>
+          <div class="slide-body" style="margin-top:14px">That gap — between <strong>"can't afford an agency"</strong> and <strong>"needs real design"</strong> — is exactly where Mom's Design Place lives.</div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Market Landscape</div>
+          <div class="slide-title">Three <span class="accent">Broken</span> Options</div>
+          <div class="slide-body" style="margin-bottom:12px">1.2M small businesses in Canada with under 10 employees. All need design. None of the options work.</div>
+          <div class="pill-row">
+            <div class="pill pill-bad">Agencies: $5K–$20K min, 6–10 weeks</div>
+            <div class="pill pill-bad">Fiverr: quality lottery, no relationship</div>
+            <div class="pill pill-bad">DIY / Canva: customers notice the difference</div>
+          </div>
+          <div class="slide-body" style="margin-top:16px">
+            <strong>Mom's Design Place</strong> is the professional option they've been missing — at freelance prices, with a designer they can actually call.
+          </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Solution</div>
+          <div class="blowfish-hero">Blowfish<br>Package™</div>
+          <div class="blowfish-sub">A name that demands attention. Just like the packaging it delivers.</div>
+          <div class="slide-body" style="margin-top:14px">
+            <strong>3 design concepts</strong> in 48 hours · <strong>2 revision rounds</strong> · Print-ready + web-ready files · Brand guidelines included
+          </div>
+          <div class="pill-row" style="margin-top:12px">
+            <div class="pill pill-good">48-hr turnaround</div>
+            <div class="pill pill-good">Real designer you can call</div>
+            <div class="pill pill-good">Freelance prices</div>
+            <div class="pill pill-good">Yours to keep forever</div>
+          </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Process</div>
+          <div class="slide-title">Four <span class="accent">Steps</span></div>
+          <div class="step-list">
+            <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Brief:</strong> 10-min design brief. Scope confirmed in 4 hrs.</div></div>
+            <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Concepts:</strong> 3 distinct design directions in 48 hrs, each with a PDF rationale.</div></div>
+            <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Refine:</strong> Pick a direction. Two revision rounds.</div></div>
+            <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Deliver:</strong> Print-ready + web-ready + brand guidelines. No surprise charges.</div></div>
+          </div>
+          <div class="slide-body" style="margin-top:16px; font-style:italic;">A relationship, not a transaction.</div>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Market Size</div>
+          <div class="big-stat">$280M</div>
+          <div class="big-stat-label">Canadian small business design market</div>
+          <div class="stat-row" style="margin-top:20px;">
+            <div class="stat-box">
+              <div class="stat-val">100K+</div>
+              <div class="stat-lbl">New home-based product businesses since 2020</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">$12K</div>
+              <div class="stat-lbl">Avg SMB annual design spend</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">20</div>
+              <div class="stat-lbl">Clients needed in 90 days</div>
+            </div>
+          </div>
+          <div class="slide-body" style="margin-top:16px;">I don't need to capture all of it. I need to prove the model.</div>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Pricing & Revenue Model</div>
+          <div class="slide-title">Prices a <span class="accent">bakery can afford</span></div>
+          <div class="price-grid">
+            <div class="price-card">
+              <div class="price-name">Logo Package</div>
+              <div class="price-val">$199</div>
+              <div class="price-desc">Brand mark + variations</div>
+            </div>
+            <div class="price-card">
+              <div class="price-name">Packaging Design</div>
+              <div class="price-val">$399</div>
+              <div class="price-desc">Print-ready + digital</div>
+            </div>
+            <div class="price-card">
+              <div class="price-name">Full Brand Kit</div>
+              <div class="price-val">$599</div>
+              <div class="price-desc">Logo + packaging + 5 social templates + guidelines</div>
+            </div>
+            <div class="price-card" style="border-color:#e95b9e4a;">
+              <div class="price-name" style="color:#e95b9e;">Monthly Retainer</div>
+              <div class="price-val">$299<span style="font-size:13px;color:#907080;">/mo</span></div>
+              <div class="price-desc">4 pieces/mo, priority turnaround</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Competitive Positioning</div>
+          <div class="slide-title">The <span class="accent">Sweet Spot</span></div>
+          <table class="comp-table">
+            <tr><th>Option</th><th>Price</th><th>Speed</th><th>Relationship</th><th>Quality</th></tr>
+            <tr><td>Agencies</td><td>$5K–$20K</td><td class="cross">✗ 6–10 wks</td><td class="cross">✗ Corporate</td><td class="check">✓</td></tr>
+            <tr><td>Fiverr</td><td>$50–$300</td><td class="check">✓ Fast</td><td class="cross">✗ Transactional</td><td class="cross">✗ Lottery</td></tr>
+            <tr><td>DIY/Canva</td><td>Free</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗ Obvious</td></tr>
+            <tr class="highlight"><td><strong>Mom's Design Place</strong></td><td><strong>$199–$599</strong></td><td class="check">✓ 48 hrs</td><td class="check">✓ Local designer</td><td class="check">✓ Professional</td></tr>
+          </table>
+          <div class="slide-body" style="margin-top:14px;">The Blowfish Package name is the proof — if I can brand my own product that well, imagine what I can do for yours.</div>
+        </div>
+
+        <!-- Slide 9 -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Founder</div>
+          <div class="slide-title"><span class="accent">Bonnie Dalton</span></div>
+          <div class="slide-body">
+            Business Design Innovation graduate · Seneca Polytechnic
+          </div>
+          <div class="pill-row" style="margin-top:14px;">
+            <div class="pill pill-good">Brand identity</div>
+            <div class="pill pill-good">Packaging design</div>
+            <div class="pill pill-good">Print production</div>
+          </div>
+          <div class="slide-body" style="margin-top:16px;">
+            I created the <strong>Blowfish Package</strong> concept as a demonstration of what a standout product identity actually looks like.<br><br>
+            The skills are built. The systems are built. The only thing left is building the client base — which is what this funding does.
+          </div>
+        </div>
+
+        <!-- Slide 10 -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Ask</div>
+          <div class="big-stat">$5,500</div>
+          <div class="big-stat-label">90-day client acquisition sprint</div>
+          <div class="ask-grid">
+            <div class="ask-item"><strong>Portfolio Site</strong>10 case studies, live + searchable</div>
+            <div class="ask-item"><strong>Instagram Ads</strong>Targeting local SMB owners</div>
+            <div class="ask-item"><strong>Gumroad + Upwork</strong>Price-penetration listings for early credibility</div>
+            <div class="ask-item"><strong>Network Ask</strong>Intros to BIAs + local incubators</div>
+          </div>
+          <div class="slide-body" style="margin-top:14px; font-style:italic; color:#e95b9e80;">
+            Goal: 20 paying clients in 90 days.<br>
+            <span style="color:#c0a0b0; font-style:normal;">A great product in bad packaging loses every time. Mom's Design Place exists to make sure that never has to happen.</span>
+          </div>
+        </div>
+
+      </div><!-- slide-area -->
+
+      <!-- Bottom nav -->
+      <div class="nav-bar">
+        <div class="nav-dots" id="dots"></div>
+        <div class="slide-counter" id="counter">1 / 10</div>
+        <div class="nav-arrows">
+          <div class="nav-btn" onclick="prev()">←</div>
+          <div class="nav-btn" onclick="next()">→</div>
+        </div>
+      </div>
+    </div><!-- flex col -->
+  </div><!-- stage-shell -->
+
+  <!-- Script panel -->
+  <div class="script-panel">
+    <div class="script-label">Speaker Script</div>
+    <div class="script-text" id="script-text"></div>
+  </div>
+</div>
+
+<script>
+const SCRIPTS = [
+  `Hi, I'm Bonnie Dalton, founder of Mom's Design Place. Before I start — imagine something. You're in a market. Two products side by side. Same quality inside. One has packaging that's polished, professional, considered. The other looks like it was built in Canva on a Sunday night. <strong>Which one do you pick up?</strong>`,
+
+  `The answer is obvious. And that's the problem. Most small business owners know their product is amazing. Their packaging just doesn't show it. They're losing customers before anyone opens the box. And here's why that keeps happening: professional design costs $2,000 to $20,000 at a Toronto agency. So small businesses go without. Or they try Fiverr and get something inconsistent. Or they use Canva and hope nobody notices. That gap — between "can't afford an agency" and "needs real design" — is exactly where Mom's Design Place lives.`,
+
+  `1.2 million small businesses in Canada with under 10 employees. All of them need design at some point. The three options available right now all fail them. Agencies: $5,000 to $20,000 minimum, 6 to 10 weeks, built for corporates. Fiverr: a quality lottery — no relationship, no revision clarity, no understanding of the local market. DIY tools like Canva: customers notice the difference between professional design and template design, even if they can't name it.`,
+
+  `Mom's Design Place delivers professional graphic design and packaging at a price small businesses can actually afford — with a designer they can actually call. My signature product is called the <strong>Blowfish Package</strong>. That name sticks. It's exactly what good packaging does — it demands attention, it has personality, it sells the product before anyone opens it. I deliver three design concepts in 48 hours. Two rounds of revisions. Print-ready and web-ready files. Brand guidelines included. Yours to use forever.`,
+
+  `The process is simple. First, the client fills a 10-minute design brief. I confirm scope within 4 hours. Second, 48 hours later: three distinct design directions, each with a PDF rationale. Third, they pick a direction and we refine through two revision rounds. Fourth, final files — print-ready, web-ready, plus brand guidelines. No 6-week agency timeline. No surprise revision charges. A relationship, not a transaction.`,
+
+  `The Canadian small business design market is a $280 million segment. Over 100,000 new home-based product businesses launched in Canada since 2020 — every one of them needing branding at some point. On average, small businesses spend $12,000 a year on logos, packaging, and marketing materials. I don't need to capture all of that. I need 20 clients in 90 days to prove the model.`,
+
+  `Project-based and retainer pricing. Logo package: $199. Packaging design: $399. Full brand kit — logo, packaging, five social templates, and brand guidelines: $599. Monthly retainer: $299 per month for four pieces of design at priority turnaround. These are prices a one-person bakery can actually afford. They're also prices that let me run a profitable business from day one.`,
+
+  `I sit between two extremes and that's exactly where the demand is. Agencies: too expensive, too slow. Fiverr: cheap, inconsistent, impersonal. DIY: obvious to discerning customers. Mom's Design Place: local expertise, a real relationship, 48-hour turnaround, at freelance prices. And the Blowfish Package — that name, that concept — is exactly the kind of memorable branding I sell for my clients. If I can name my own product that well, imagine what I can do for yours.`,
+
+  `I'm Bonnie Dalton, a Business Design Innovation graduate from Seneca Polytechnic. I specialized in brand identity, packaging design, and print production. I created the Blowfish Package concept as a demonstration of what a standout product identity actually looks like. The skills are built. The systems are built. The only thing left is building the client base — which is what this funding does.`,
+
+  `I'm asking for $5,500 to launch a 90-day client acquisition sprint. Portfolio website with 10 case studies. First paid ad campaigns on Instagram targeting local small business owners. Listings on Gumroad and Upwork with a price-penetration strategy to build credibility fast. Goal: 20 paying clients in 90 days. Also asking for introductions to local business incubators and BIA networks. [<em>Pause.</em>] A great product in bad packaging loses every time. Mom's Design Place exists to make sure that never has to happen. Thank you.`
+];
+
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const railItems = document.querySelectorAll('.rail-item');
+const dotsEl = document.getElementById('dots');
+const counter = document.getElementById('counter');
+const scriptEl = document.getElementById('script-text');
+
+// Build dots
+SCRIPTS.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goto(i);
+  dotsEl.appendChild(d);
+});
+
+function goto(n) {
+  slides[cur].classList.remove('active');
+  railItems[cur].classList.remove('active');
+  dotsEl.children[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+  railItems[cur].classList.add('active');
+  dotsEl.children[cur].classList.add('active');
+  counter.textContent = (cur + 1) + ' / ' + slides.length;
+  scriptEl.innerHTML = SCRIPTS[cur];
+}
+
+function next() { goto(cur + 1); }
+function prev() { goto(cur - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+});
+
+// Init script
+scriptEl.innerHTML = SCRIPTS[0];
+</script>
+</body>
+</html>

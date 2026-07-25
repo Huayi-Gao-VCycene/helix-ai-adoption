@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Munchin' — Pitch Deck</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0c0601; color: #fdf3e7; font-family: 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; }
+
+  .wrapper { max-width: 980px; margin: 0 auto; padding: 24px 16px 40px; }
+
+  .brand-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .brand-logo {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: linear-gradient(135deg, #f97316, #fbbf24);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .brand-name { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #f97316; }
+  .brand-sub { font-size: 11px; color: #5a3a18; margin-top: 2px; }
+
+  .stage-shell { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid #2a1608; }
+
+  .rail { width: 200px; flex-shrink: 0; background: #100801; border-right: 1px solid #2a1608; padding: 12px 0; display: flex; flex-direction: column; gap: 2px; }
+  .rail-item { padding: 7px 14px; font-size: 11px; color: #4a2a10; cursor: pointer; border-left: 2px solid transparent; line-height: 1.35; transition: all 0.15s; }
+  .rail-item:hover { color: #c08040; background: #180d04; }
+  .rail-item.active { color: #f97316; border-left-color: #f97316; background: #180d04; font-weight: 600; }
+  .rail-num { font-size: 9px; color: #3a1c08; display: block; margin-bottom: 1px; letter-spacing: 1px; }
+
+  .slide-area { flex: 1; min-height: 400px; position: relative; overflow: hidden; background: #120903; }
+  .slide { display: none; width: 100%; height: 100%; min-height: 400px; padding: 40px 44px; position: absolute; top: 0; left: 0; }
+  .slide.active { display: flex; flex-direction: column; justify-content: center; }
+
+  .slide-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #f97316; margin-bottom: 10px; opacity: 0.8; }
+  .slide-title { font-size: 27px; font-weight: 800; line-height: 1.2; color: #fef3e0; margin-bottom: 16px; }
+  .slide-title .accent { color: #f97316; }
+  .slide-title .accent2 { color: #fbbf24; }
+  .slide-body { font-size: 14px; color: #a06030; line-height: 1.65; max-width: 480px; }
+  .slide-body strong { color: #e8c898; }
+
+  .big-stat { font-size: 52px; font-weight: 900; color: #f97316; line-height: 1; margin-bottom: 8px; }
+  .big-stat-label { font-size: 13px; color: #5a3a18; }
+
+  .stat-row { display: flex; gap: 28px; margin-top: 20px; flex-wrap: wrap; }
+  .stat-val { font-size: 26px; font-weight: 800; color: #f97316; }
+  .stat-lbl { font-size: 11px; color: #4a2a10; margin-top: 2px; }
+
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .pill { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .pill-bad { background: #1e0c02; color: #6a3a18; border: 1px solid #2a1208; }
+  .pill-good { background: #1c0d02; color: #f97316; border: 1px solid #3a1a06; }
+  .pill-amber { background: #1c1002; color: #fbbf24; border: 1px solid #3a2206; }
+
+  .step-list { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .step-item { display: flex; align-items: flex-start; gap: 10px; }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #fbbf24); color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 13px; color: #a06030; line-height: 1.5; }
+  .step-text strong { color: #e8c898; }
+
+  .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.12; pointer-events: none; }
+  .blob1 { width: 280px; height: 280px; background: #f97316; right: -40px; top: -60px; }
+  .blob2 { width: 180px; height: 180px; background: #fbbf24; right: 80px; bottom: -40px; }
+
+  .hero-line { font-size: 40px; font-weight: 900; line-height: 1.15; color: #fef3e0; margin-bottom: 12px; }
+  .hero-accent { color: #f97316; }
+  .hero-sub { font-size: 15px; color: #8a5020; line-height: 1.6; max-width: 420px; }
+  .hero-sub strong { color: #c8902a; }
+
+  .funnel-track { display: flex; gap: 0; margin-top: 16px; border-radius: 6px; overflow: hidden; border: 1px solid #2a1608; }
+  .funnel-box { flex: 1; padding: 10px 12px; background: #180d04; border-right: 1px solid #2a1608; text-align: center; }
+  .funnel-box:last-child { border-right: none; }
+  .funnel-box.active-f { background: #201005; border-bottom: 2px solid #f97316; }
+  .funnel-label { font-size: 10px; color: #3a1c08; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+  .funnel-name { font-size: 12px; font-weight: 700; color: #5a3018; }
+  .funnel-box.active-f .funnel-name { color: #f97316; }
+
+  .mvp-list { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .mvp-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #906030; }
+  .mvp-dot { width: 8px; height: 8px; border-radius: 50%; background: #f97316; flex-shrink: 0; }
+  .mvp-item strong { color: #e8c898; }
+
+  .comp-table { margin-top: 16px; width: 100%; border-collapse: collapse; font-size: 12px; }
+  .comp-table th { text-align: left; padding: 6px 10px; color: #5a3018; font-weight: 600; border-bottom: 1px solid #2a1608; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+  .comp-table td { padding: 8px 10px; border-bottom: 1px solid #1a0d04; color: #6a3a18; }
+  .comp-table tr.highlight td { color: #fef3e0; background: #1e0f04; }
+  .comp-table .check { color: #f97316; font-weight: 700; }
+  .comp-table .cross { color: #2a1408; }
+
+  .price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .price-card { background: #180d04; border: 1px solid #2a1608; border-radius: 6px; padding: 12px 14px; }
+  .price-name { font-size: 11px; color: #5a3018; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .price-val { font-size: 20px; font-weight: 800; color: #f97316; }
+  .price-desc { font-size: 11px; color: #3a1c08; margin-top: 3px; }
+
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .market-card { background: #180d04; border: 1px solid #2a1608; border-radius: 6px; padding: 12px 14px; text-align: center; }
+  .market-val { font-size: 22px; font-weight: 800; color: #f97316; }
+  .market-lbl { font-size: 11px; color: #3a1c08; margin-top: 3px; }
+
+  .founder-card { background: #180d04; border: 1px solid #2a1608; border-radius: 8px; padding: 18px 20px; margin-top: 14px; }
+  .founder-name { font-size: 18px; font-weight: 800; color: #fef3e0; }
+  .founder-role { font-size: 12px; color: #f97316; margin-bottom: 10px; }
+  .founder-bio { font-size: 13px; color: #806030; line-height: 1.6; }
+  .founder-bio strong { color: #c8902a; }
+
+  .ask-list { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .ask-item { display: flex; align-items: flex-start; gap: 12px; }
+  .ask-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .ask-text { font-size: 13px; color: #906030; line-height: 1.5; }
+  .ask-text strong { color: #e8c898; }
+
+  /* quote */
+  .big-quote { font-size: 22px; font-weight: 700; font-style: italic; color: #d08040; line-height: 1.45; margin-bottom: 14px; }
+  .big-quote em { color: #f97316; font-style: normal; }
+
+  .nav-bar { background: #100801; border-top: 1px solid #2a1608; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-dots { display: flex; gap: 6px; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #2a1608; cursor: pointer; transition: background 0.2s; }
+  .nav-dot.active { background: #f97316; }
+  .nav-arrows { display: flex; gap: 8px; }
+  .nav-btn { background: #1a0d04; border: 1px solid #2a1608; color: #8a4020; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; user-select: none; }
+  .nav-btn:hover { background: #251205; color: #f97316; border-color: #f97316; }
+  .slide-counter { font-size: 11px; color: #3a1c08; }
+
+  .script-panel { background: #100801; border: 1px solid #2a1608; border-top: none; border-radius: 0 0 10px 10px; padding: 20px 24px; }
+  .script-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #2a1608; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .script-label::after { content: ''; flex: 1; height: 1px; background: #1a0d04; }
+  .script-text { font-size: 14px; color: #906030; line-height: 1.75; }
+  .script-text strong { color: #f97316; font-weight: 600; }
+  .script-text em { color: #7a4a20; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="brand-bar">
+    <div class="brand-logo">🍳</div>
+    <div>
+      <div class="brand-name">Munchin'</div>
+      <div class="brand-sub">Vivian Ng · Seneca HELIX Pitch Day · Aug 13, 2026</div>
+    </div>
+  </div>
+
+  <div class="stage-shell">
+    <div class="rail" id="rail">
+      <div class="rail-item active" onclick="goto(0)"><span class="rail-num">01</span>Opening Hook</div>
+      <div class="rail-item" onclick="goto(1)"><span class="rail-num">02</span>The Problem</div>
+      <div class="rail-item" onclick="goto(2)"><span class="rail-num">03</span>The Insight</div>
+      <div class="rail-item" onclick="goto(3)"><span class="rail-num">04</span>The Solution</div>
+      <div class="rail-item" onclick="goto(4)"><span class="rail-num">05</span>The MVP</div>
+      <div class="rail-item" onclick="goto(5)"><span class="rail-num">06</span>Market Size</div>
+      <div class="rail-item" onclick="goto(6)"><span class="rail-num">07</span>Business Model</div>
+      <div class="rail-item" onclick="goto(7)"><span class="rail-num">08</span>Competition</div>
+      <div class="rail-item" onclick="goto(8)"><span class="rail-num">09</span>The Founder</div>
+      <div class="rail-item" onclick="goto(9)"><span class="rail-num">10</span>The Ask</div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column;">
+      <div class="slide-area">
+
+        <!-- Slide 1: Opening -->
+        <div class="slide active">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="slide-eyebrow">Opening Hook</div>
+          <div class="big-quote">People don't need another recipe.<br><em>They need confidence.</em></div>
+          <div class="slide-body">
+            Hi, I'm <strong>Vivian Ng</strong>, founder of <strong>Munchin'</strong>.<br>
+            Most cooking apps assume you already know how to cook. A lot of people don't — and that gap is exactly where Munchin' lives.
+          </div>
+          <div class="pill-row" style="margin-top:14px;">
+            <div class="pill pill-good">Food costs push people to cook at home</div>
+            <div class="pill pill-good">Beginner cooks still feel intimidated</div>
+            <div class="pill pill-amber">Munchin' builds confidence first</div>
+          </div>
+        </div>
+
+        <!-- Slide 2: Problem -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Problem</div>
+          <div class="slide-title">Recipe apps skip<br>the <span class="accent">emotional barrier</span></div>
+          <div class="slide-body" style="margin-bottom:12px;">If someone doesn't understand timing, texture, or substitutions, a recipe is just a list of ways to fail. That's why people buy groceries and still order delivery.</div>
+          <div class="step-list">
+            <div class="step-item"><div class="step-num">→</div><div class="step-text"><strong>Young adults want to save money</strong> — food inflation makes cooking urgent</div></div>
+            <div class="step-item"><div class="step-num">→</div><div class="step-text">Existing apps give <strong>instructions but not confidence</strong></div></div>
+            <div class="step-item"><div class="step-num">→</div><div class="step-text">Restricted eaters and beginners need <strong>guidance at their level</strong> — not a 47-step Julia Child recipe</div></div>
+          </div>
+        </div>
+
+        <!-- Slide 3: Insight -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Insight / Pivot</div>
+          <div class="slide-title"><span class="accent">TikTok first.</span><br>App second.</div>
+          <div class="slide-body" style="margin-bottom:14px;">Instead of starting with a complex app, Munchin' starts as <strong>content</strong>: short, warm, beginner-safe cooking sessions that prove what people actually need before we build anything expensive.</div>
+          <div class="funnel-track">
+            <div class="funnel-box active-f"><div class="funnel-label">Phase 1</div><div class="funnel-name">Content</div></div>
+            <div class="funnel-box"><div class="funnel-label">Phase 2</div><div class="funnel-name">Audience</div></div>
+            <div class="funnel-box"><div class="funnel-label">Phase 3</div><div class="funnel-name">Waitlist</div></div>
+            <div class="funnel-box"><div class="funnel-label">Phase 4</div><div class="funnel-name">App</div></div>
+          </div>
+          <div class="slide-body" style="margin-top:14px;">Cooking trust is built through <strong>personality and repetition</strong>. Friends already gather around Munchin' cooking sessions — that's the proof of concept.</div>
+        </div>
+
+        <!-- Slide 4: Solution -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="slide-eyebrow">The Solution</div>
+          <div class="hero-line">A cooking platform that feels like<br><span class="hero-accent">a friend beside you.</span></div>
+          <div class="hero-sub">Munchin' turns cooking into a <strong>guided progression</strong> — tiny wins, skill unlocks, and a community that makes beginners feel like they belong in the kitchen.</div>
+          <div class="pill-row" style="margin-top:14px;">
+            <div class="pill pill-good">Short-form tutorials you actually finish</div>
+            <div class="pill pill-good">Beginner paths + gamified progress</div>
+            <div class="pill pill-amber">Community recipes + challenges</div>
+            <div class="pill pill-good">Built after the audience proves the need</div>
+          </div>
+        </div>
+
+        <!-- Slide 5: MVP -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The MVP</div>
+          <div class="big-stat">100</div>
+          <div class="big-stat-label">Videos before the full app build</div>
+          <div class="slide-body" style="margin-top:12px; margin-bottom:14px;">The MVP is content, not code. One hundred videos, a waitlist, and feedback from people who actually try the meals. Then we build the app around <strong>proven behavior</strong>.</div>
+          <div class="mvp-list">
+            <div class="mvp-item"><div class="mvp-dot"></div><div><strong>Publish</strong> repeatable TikTok formats — consistent look, sound, and pacing</div></div>
+            <div class="mvp-item"><div class="mvp-dot"></div><div><strong>Measure</strong> saves, comments, and reported meal attempts</div></div>
+            <div class="mvp-item"><div class="mvp-dot"></div><div><strong>Build</strong> the waitlist from top-performing recipes</div></div>
+            <div class="mvp-item"><div class="mvp-dot"></div><div><strong>Prototype only</strong> the features the audience actually asks for</div></div>
+          </div>
+        </div>
+
+        <!-- Slide 6: Market -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Market Size</div>
+          <div class="slide-title">Cooking, wellness, and<br><span class="accent">budget pressure</span> overlap</div>
+          <div class="market-grid">
+            <div class="market-card">
+              <div class="market-val">$20B+</div>
+              <div class="market-lbl">Global cooking app market</div>
+            </div>
+            <div class="market-card">
+              <div class="market-val">18%</div>
+              <div class="market-lbl">YoY growth in food & wellness apps</div>
+            </div>
+            <div class="market-card">
+              <div class="market-val">Gen Z</div>
+              <div class="market-lbl">Most want to cook — least confident doing it</div>
+            </div>
+          </div>
+          <div class="slide-body" style="margin-top:14px;">The pressure is practical — people want to <strong>eat better, spend less, and feel less embarrassed</strong> in the kitchen. Gamified beginner cooking that feels like TikTok, not a cookbook, is still wide open.</div>
+        </div>
+
+        <!-- Slide 7: Business Model -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Business Model</div>
+          <div class="slide-title">Creator funnel<br>to <span class="accent">app revenue</span></div>
+          <div class="price-grid">
+            <div class="price-card">
+              <div class="price-name">Free Content</div>
+              <div class="price-val">$0</div>
+              <div class="price-desc">Audience acquisition via TikTok/Instagram — earns trust + attention</div>
+            </div>
+            <div class="price-card" style="border-color:#3a1a06;">
+              <div class="price-name" style="color:#f97316;">App Subscription</div>
+              <div class="price-val">$4.99–$7.99<span style="font-size:12px;color:#5a3018;">/mo</span></div>
+              <div class="price-desc">Gamified paths, advanced tutorials, progress tracking for committed users</div>
+            </div>
+            <div class="price-card">
+              <div class="price-name">Brand Partnerships</div>
+              <div class="price-val">B2B</div>
+              <div class="price-desc">Kitchen tool affiliates + branded recipe content once community has signal</div>
+            </div>
+            <div class="price-card">
+              <div class="price-name">Creator Collabs</div>
+              <div class="price-val">Growth</div>
+              <div class="price-desc">Co-created content with food creators to expand reach</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 8: Competition -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Competition</div>
+          <div class="slide-title">Recipe databases<br>are <span class="accent">not</span> beginner coaching</div>
+          <table class="comp-table">
+            <tr><th>Option</th><th>Content Type</th><th>Beginner-First</th><th>Personality-Led</th><th>Progression</th></tr>
+            <tr><td>YouTube</td><td>Fragmented</td><td class="cross">✗</td><td class="cross">✗ Inconsistent</td><td class="cross">✗</td></tr>
+            <tr><td>Tasty / AllRecipes</td><td>Recipes only</td><td class="cross">✗ Assumes skill</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+            <tr><td>Yummly / Whisk</td><td>Recipe DB</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+            <tr class="highlight"><td><strong>Munchin'</strong></td><td><strong>Guided learning</strong></td><td class="check">✓ Day one</td><td class="check">✓ Core identity</td><td class="check">✓ Gamified</td></tr>
+          </table>
+          <div class="slide-body" style="margin-top:12px;">Our promise is not "find dinner." It is <strong>"you can actually make this."</strong> That's a category Munchin' can own.</div>
+        </div>
+
+        <!-- Slide 9: Founder -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Founder</div>
+          <div class="slide-title">Design sense.<br><span class="accent">Real cooking charisma.</span></div>
+          <div class="founder-card">
+            <div class="founder-name">Vivian Ng</div>
+            <div class="founder-role">Founder · Munchin'</div>
+            <div class="founder-bio">
+              Interactive media and design background — I think in UX and I communicate in warmth. The <strong>Munchin' brand</strong> — the name, the tone, the beginner-first framing — comes from lived experience: cooking for friends, watching them go from nervous to confident, and knowing there's a product in that transformation.<br><br>
+              I'm not building an app for people who already cook. <strong>I'm building it for the person I used to be.</strong>
+            </div>
+          </div>
+          <div class="pill-row" style="margin-top:12px;">
+            <div class="pill pill-good">Interactive media & design</div>
+            <div class="pill pill-good">Natural content creator</div>
+            <div class="pill pill-amber">Strong founder-market fit</div>
+          </div>
+        </div>
+
+        <!-- Slide 10: The Ask -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="slide-eyebrow">The Ask</div>
+          <div class="big-stat">$12,000</div>
+          <div class="big-stat-label">Seed to build the audience and recruit the builder</div>
+          <div class="ask-list">
+            <div class="ask-item"><div class="ask-icon">🎬</div><div class="ask-text"><strong>Content calendar launch</strong> — 100-video TikTok/Instagram rollout with consistent format and production quality</div></div>
+            <div class="ask-item"><div class="ask-icon">👩‍💻</div><div class="ask-text"><strong>Recruit developer co-founder or MVP contractor</strong> — the app gets built after content proves the demand</div></div>
+            <div class="ask-item"><div class="ask-icon">📋</div><div class="ask-text"><strong>25 user interviews</strong> — understand exactly which features are worth building</div></div>
+            <div class="ask-item"><div class="ask-icon">🤝</div><div class="ask-text"><strong>Introductions</strong> to food creators and developers in your networks</div></div>
+          </div>
+          <div class="slide-body" style="margin-top:14px; font-style:italic;">
+            <span style="color:#806030; font-style:normal;">Munchin' helps beginners stop watching cooking — and start doing it. Thank you.</span>
+          </div>
+        </div>
+
+      </div><!-- slide-area -->
+
+      <div class="nav-bar">
+        <div class="nav-dots" id="dots"></div>
+        <div class="slide-counter" id="counter">1 / 10</div>
+        <div class="nav-arrows">
+          <div class="nav-btn" onclick="prev()">←</div>
+          <div class="nav-btn" onclick="next()">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="script-panel">
+    <div class="script-label">Speaker Script</div>
+    <div class="script-text" id="script-text"></div>
+  </div>
+</div>
+
+<script>
+const SCRIPTS = [
+  `I'm Vivian Ng, founder of Munchin'. I want to start with something that sounds simple: most people want to cook. They really do. Food costs are up, takeout gets old, and deep down everyone wants to be the person who can make something from scratch. The problem is not motivation. <strong>The problem is that every recipe app assumes you already know how to cook.</strong> A lot of people don't. And Munchin' is built for exactly that person.`,
+
+  `Here's the real issue. If you don't understand timing, texture, or what to do when a substitution goes wrong, a recipe is just a list of ways to fail. That's why people buy groceries on Sunday and still order delivery on Wednesday — the groceries sit there because the intimidation won. Existing apps give instructions. They don't give confidence. That's the gap. <strong>Young adults want to save money. They want to eat better. They just need a guide who makes them feel like they can actually do this.</strong>`,
+
+  `So here's the insight that shaped Munchin's approach: <strong>don't build the app first.</strong> Build the audience first. Instead of starting with a complex platform, Munchin' starts as content — short, warm, beginner-safe cooking sessions on TikTok and Instagram that prove what people actually need before we write a single line of app code. Cooking trust is built through personality and repetition. People cook along with someone they like. Friends already gather around Munchin' cooking sessions. That's the proof of concept.`,
+
+  `Munchin' is a cooking platform that feels like a friend beside you. Not a cookbook. Not a database. A <strong>guided progression</strong> — one tiny win at a time — that turns a nervous beginner into someone who knows what "sauté until fragrant" actually means. The app launches after content proves the demand. When it does: short-form tutorials, beginner skill paths, gamified progress, and a community that makes people feel like they belong in the kitchen. <strong>We build what the audience already asked for.</strong>`,
+
+  `The MVP is not an app. It's <strong>100 videos.</strong> One hundred short-form cooking sessions in a consistent format — same look, same warmth, same beginner-first framing. We measure saves, comments, and how many people actually try the meal. The top performers build the waitlist. The waitlist tells us which features are worth building. This is how we derisk the platform: <strong>prove behavior before we pay a developer.</strong> Content is the cheapest validation tool we have.`,
+
+  `The market makes this attractive because the pressure is practical, not aspirational. People need to eat better and spend less — not because wellness culture told them to, but because inflation is real. The cooking app market is over $20 billion globally and growing 18% year over year. But here's the gap nobody has closed: <strong>a gamified, personality-led beginner cooking experience that feels like TikTok and builds like Duolingo.</strong> That's still wide open.`,
+
+  `The business model starts with audience trust. Free content on TikTok and Instagram earns attention. Once that audience is engaged, the app converts committed users at <strong>$4.99 to $7.99 a month</strong> — personalized progression paths, advanced tutorials, and tracked progress. On top of that: brand partnerships with kitchen tool companies and food brands, and creator collaborations that expand reach. <strong>The key is sequence: audience first, monetization second.</strong>`,
+
+  `Let me show you how Munchin' is different. YouTube is fragmented — no consistency, no beginner progression. Tasty and AllRecipes are recipe databases that assume you already cook. Yummly, Whisk — same thing. None of them own the beginner relationship. None of them build confidence over time. <strong>Munchin's promise is not "find dinner." It's "you can actually make this."</strong> That positioning is available. We're claiming it.`,
+
+  `This venture fits my strengths in a specific way. I have an interactive media and design background — I think in UX, I communicate in warmth, and I've spent years figuring out how to make complex things feel approachable. The Munchin' brand — the name, the tone, the beginner-first framing — that all came from a real place: watching friends go from nervous to confident in the kitchen and knowing there was a product in that transformation. <strong>I'm not building an app for people who already cook. I'm building it for the person I used to be.</strong>`,
+
+  `I'm asking for <strong>$12,000 and introductions.</strong> The $12,000 funds the 100-video content calendar launch, prototype and user testing, and the search for a developer co-founder or MVP contractor. The introductions I'm asking for: food creators in your networks who would collaborate on content, and developers who might be interested in building something people genuinely love to use. <em>[Pause.]</em> Munchin' helps beginners stop watching cooking — and start doing it. Thank you.`
+];
+
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const railItems = document.querySelectorAll('.rail-item');
+const dotsEl = document.getElementById('dots');
+const counter = document.getElementById('counter');
+const scriptEl = document.getElementById('script-text');
+
+SCRIPTS.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goto(i);
+  dotsEl.appendChild(d);
+});
+
+function goto(n) {
+  slides[cur].classList.remove('active');
+  railItems[cur].classList.remove('active');
+  dotsEl.children[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+  railItems[cur].classList.add('active');
+  dotsEl.children[cur].classList.add('active');
+  counter.textContent = (cur + 1) + ' / ' + slides.length;
+  scriptEl.innerHTML = SCRIPTS[cur];
+}
+
+function next() { goto(cur + 1); }
+function prev() { goto(cur - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+});
+
+scriptEl.innerHTML = SCRIPTS[0];
+</script>
+</body>
+</html>

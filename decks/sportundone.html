@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sport Undone — Pitch Deck</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #020a1a; color: #eef5ff; font-family: 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; }
+
+  .wrapper { max-width: 980px; margin: 0 auto; padding: 24px 16px 40px; }
+
+  .brand-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .brand-logo {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: linear-gradient(135deg, #ff4b16, #1358f4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 900; color: #fff; flex-shrink: 0; letter-spacing: -1px;
+  }
+  .brand-name { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ff4b16; }
+  .brand-sub { font-size: 11px; color: #1a2d50; margin-top: 2px; }
+
+  .stage-shell { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid #0d2040; }
+
+  .rail { width: 200px; flex-shrink: 0; background: #030d1e; border-right: 1px solid #0d2040; padding: 12px 0; display: flex; flex-direction: column; gap: 2px; }
+  .rail-item { padding: 7px 14px; font-size: 11px; color: #1e3560; cursor: pointer; border-left: 2px solid transparent; line-height: 1.35; transition: all 0.15s; }
+  .rail-item:hover { color: #6090c0; background: #071428; }
+  .rail-item.active { color: #ff4b16; border-left-color: #ff4b16; background: #071428; font-weight: 600; }
+  .rail-num { font-size: 9px; color: #152840; display: block; margin-bottom: 1px; letter-spacing: 1px; }
+
+  .slide-area { flex: 1; min-height: 400px; position: relative; overflow: hidden; background: #040e20; }
+  .slide { display: none; width: 100%; height: 100%; min-height: 400px; padding: 40px 44px; position: absolute; top: 0; left: 0; }
+  .slide.active { display: flex; flex-direction: column; justify-content: center; }
+
+  .slide-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #ff4b16; margin-bottom: 10px; opacity: 0.8; }
+  .slide-title { font-size: 27px; font-weight: 800; line-height: 1.2; color: #eef5ff; margin-bottom: 14px; }
+  .slide-title .accent { color: #ff4b16; }
+  .slide-title .accent2 { color: #62adff; }
+  .slide-body { font-size: 14px; color: #4a7090; line-height: 1.65; max-width: 490px; }
+  .slide-body strong { color: #b8d8f0; }
+
+  .big-stat { font-size: 52px; font-weight: 900; color: #ff4b16; line-height: 1; margin-bottom: 8px; }
+  .big-stat-label { font-size: 13px; color: #1a3560; }
+
+  .stat-row { display: flex; gap: 28px; margin-top: 18px; flex-wrap: wrap; }
+  .stat-val { font-size: 24px; font-weight: 800; color: #ff4b16; }
+  .stat-lbl { font-size: 11px; color: #1e3560; margin-top: 2px; }
+
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .pill { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .pill-orange { background: #1a0e08; color: #ff4b16; border: 1px solid #3a1808; }
+  .pill-blue { background: #080e28; color: #62adff; border: 1px solid #0d1e48; }
+  .pill-dark { background: #06111e; color: #3a6090; border: 1px solid #0d2040; }
+
+  .step-list { margin-top: 14px; display: flex; flex-direction: column; gap: 9px; }
+  .step-item { display: flex; align-items: flex-start; gap: 10px; }
+  .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff4b16; flex-shrink: 0; margin-top: 5px; }
+  .step-text { font-size: 13px; color: #4a7090; line-height: 1.5; }
+  .step-text strong { color: #b8d8f0; }
+
+  .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.1; pointer-events: none; }
+  .blob1 { width: 300px; height: 300px; background: #ff4b16; right: -50px; top: -70px; }
+  .blob2 { width: 200px; height: 200px; background: #1358f4; right: 70px; bottom: -50px; }
+
+  .hero-line { font-size: 38px; font-weight: 900; line-height: 1.15; color: #eef5ff; margin-bottom: 12px; }
+  .hero-accent { color: #ff4b16; }
+  .hero-tagline { font-size: 14px; letter-spacing: 3px; text-transform: uppercase; color: #1358f4; margin-bottom: 14px; font-weight: 700; }
+
+  .pillar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .pillar-card { background: #06111e; border: 1px solid #0d2040; border-radius: 6px; padding: 10px 14px; }
+  .pillar-card.orange { border-color: #3a1808; }
+  .pillar-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #ff4b16; margin-bottom: 3px; font-weight: 700; }
+  .pillar-label.blue { color: #62adff; }
+  .pillar-text { font-size: 12px; color: #3a6090; }
+
+  .funnel-track { display: flex; gap: 0; margin-top: 14px; border-radius: 6px; overflow: hidden; border: 1px solid #0d2040; }
+  .funnel-box { flex: 1; padding: 10px 10px; background: #06111e; border-right: 1px solid #0d2040; text-align: center; }
+  .funnel-box:last-child { border-right: none; }
+  .funnel-box.current { background: #0a1830; border-bottom: 2px solid #ff4b16; }
+  .funnel-step { font-size: 9px; color: #1a3560; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+  .funnel-name { font-size: 12px; font-weight: 700; color: #2a4570; }
+  .funnel-box.current .funnel-name { color: #ff4b16; }
+
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .market-card { background: #06111e; border: 1px solid #0d2040; border-radius: 6px; padding: 14px; text-align: center; }
+  .market-val { font-size: 24px; font-weight: 800; }
+  .market-val.orange { color: #ff4b16; }
+  .market-val.blue { color: #1358f4; }
+  .market-val.sky { color: #62adff; }
+  .market-lbl { font-size: 11px; color: #1a3560; margin-top: 4px; }
+  .market-name { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #0d2040; margin-bottom: 4px; font-weight: 700; }
+
+  .comp-table { margin-top: 14px; width: 100%; border-collapse: collapse; font-size: 12px; }
+  .comp-table th { text-align: left; padding: 6px 10px; color: #1e3560; font-weight: 600; border-bottom: 1px solid #0d2040; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+  .comp-table td { padding: 8px 10px; border-bottom: 1px solid #06111e; color: #2a4570; }
+  .comp-table tr.highlight td { color: #eef5ff; background: #081828; }
+  .comp-table .check { color: #ff4b16; font-weight: 700; }
+  .comp-table .cross { color: #0d2040; }
+
+  .team-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .team-card { background: #06111e; border: 1px solid #0d2040; border-radius: 6px; padding: 12px 14px; }
+  .team-card.featured { border-color: #3a1808; }
+  .team-name { font-size: 13px; font-weight: 800; color: #c8e0ff; }
+  .team-role { font-size: 10px; color: #ff4b16; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+  .team-role.blue { color: #62adff; }
+  .team-desc { font-size: 11px; color: #2a4570; line-height: 1.5; }
+
+  .ask-list { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .ask-item { display: flex; align-items: flex-start; gap: 12px; }
+  .ask-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .ask-text { font-size: 13px; color: #4a7090; line-height: 1.5; }
+  .ask-text strong { color: #b8d8f0; }
+
+  .stat-highlight { background: #06111e; border: 1px solid #0d2040; border-left: 3px solid #ff4b16; border-radius: 0 6px 6px 0; padding: 10px 14px; margin-top: 14px; font-size: 13px; color: #4a7090; }
+  .stat-highlight strong { color: #c8e0ff; }
+
+  .nav-bar { background: #030d1e; border-top: 1px solid #0d2040; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-dots { display: flex; gap: 6px; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #0d2040; cursor: pointer; transition: background 0.2s; }
+  .nav-dot.active { background: #ff4b16; }
+  .nav-arrows { display: flex; gap: 8px; }
+  .nav-btn { background: #071428; border: 1px solid #0d2040; color: #2a4570; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; user-select: none; }
+  .nav-btn:hover { background: #0a1e38; color: #ff4b16; border-color: #ff4b16; }
+  .slide-counter { font-size: 11px; color: #152840; }
+
+  .script-panel { background: #030d1e; border: 1px solid #0d2040; border-top: none; border-radius: 0 0 10px 10px; padding: 20px 24px; }
+  .script-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #152840; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .script-label::after { content: ''; flex: 1; height: 1px; background: #071428; }
+  .script-text { font-size: 14px; color: #3a6090; line-height: 1.75; }
+  .script-text strong { color: #ff4b16; font-weight: 600; }
+  .script-text em { color: #2a4570; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="brand-bar">
+    <div class="brand-logo">SU</div>
+    <div>
+      <div class="brand-name">Sport Undone</div>
+      <div class="brand-sub">Alicia Johnson · Seneca HELIX Pitch Day · Aug 13, 2026</div>
+    </div>
+  </div>
+
+  <div class="stage-shell">
+    <div class="rail" id="rail">
+      <div class="rail-item active" onclick="goto(0)"><span class="rail-num">01</span>Opening</div>
+      <div class="rail-item" onclick="goto(1)"><span class="rail-num">02</span>The Hook</div>
+      <div class="rail-item" onclick="goto(2)"><span class="rail-num">03</span>The Problem</div>
+      <div class="rail-item" onclick="goto(3)"><span class="rail-num">04</span>The Timing</div>
+      <div class="rail-item" onclick="goto(4)"><span class="rail-num">05</span>The Solution</div>
+      <div class="rail-item" onclick="goto(5)"><span class="rail-num">06</span>The Product</div>
+      <div class="rail-item" onclick="goto(6)"><span class="rail-num">07</span>Market</div>
+      <div class="rail-item" onclick="goto(7)"><span class="rail-num">08</span>Competition</div>
+      <div class="rail-item" onclick="goto(8)"><span class="rail-num">09</span>Team</div>
+      <div class="rail-item" onclick="goto(9)"><span class="rail-num">10</span>The Ask</div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column;">
+      <div class="slide-area">
+
+        <!-- Slide 1: Opening -->
+        <div class="slide active">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="hero-tagline">Travel. Connect. Cheer Together.</div>
+          <div class="hero-line">Sport <span class="hero-accent">Undone.</span><br>Your game. Elevated.</div>
+          <div class="slide-body">
+            Hi, I'm <strong>Alicia Johnson</strong>, founder of Sport Undone. We help women's sports fans travel, connect, and cheer together — for the fan who wants more than a ticket.
+          </div>
+          <div class="pillar-grid" style="margin-top:16px;">
+            <div class="pillar-card"><div class="pillar-label">Group Trips</div><div class="pillar-text">Travel together, save together</div></div>
+            <div class="pillar-card orange"><div class="pillar-label" style="color:#ff4b16;">Game Experiences</div><div class="pillar-text">Tickets, events, exclusive access</div></div>
+            <div class="pillar-card"><div class="pillar-label blue">Community</div><div class="pillar-text">Meet fans who get it before game day</div></div>
+            <div class="pillar-card orange"><div class="pillar-label" style="color:#ff4b16;">Content & Stories</div><div class="pillar-text">Relive moments, share the passion</div></div>
+          </div>
+        </div>
+
+        <!-- Slide 2: Hook -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Hook</div>
+          <div class="slide-title">The fan experience<br>is still <span class="accent">unfinished.</span></div>
+          <div class="slide-body" style="margin-bottom:14px;">Imagine hearing about a women's sports game you'd love to attend. You want to go — and then the real work starts.</div>
+          <div class="step-list">
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Where do I get tickets?</strong> No single trusted place for women's sports</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Where do I stay?</strong> Travel planning is expensive and time-consuming</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Is anyone else going?</strong> Many fans have no one to travel with</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>No platform</strong> focuses on women's sports travel end to end</div></div>
+          </div>
+          <div class="slide-body" style="margin-top:14px;">The game is exciting. <strong>Everything around the game becomes friction.</strong></div>
+        </div>
+
+        <!-- Slide 3: Problem -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Problem</div>
+          <div class="slide-title">Women's sports fans<br><span class="accent">deserve better.</span></div>
+          <div class="slide-body" style="margin-bottom:12px;">Fans already travel for sport. The planning and community layer around women's sports doesn't exist yet.</div>
+          <div class="step-list">
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Pain points:</strong> cost, planning time, solo attendance, fragmented communities</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text">Fans: <strong>women's sports fans, students, families, and sports travelers</strong></div></div>
+          </div>
+          <div class="stat-highlight">
+            <strong>10.5 million</strong> Canadian domestic trips in 2025 included attending a sports event as a spectator — Statistics Canada, June 2026. The behavior already exists. Sport Undone focuses it.
+          </div>
+        </div>
+
+        <!-- Slide 4: Timing -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Timing</div>
+          <div class="slide-title">Women's sports is moving<br>from niche to <span class="accent">movement.</span></div>
+          <div class="step-list">
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>PWHL, WNBA, NWSL, and women's soccer</strong> are expanding audience attention fast</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text">Fans want <strong>community around the event</strong> — not just a seat in the arena</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Brands are actively looking</strong> for authentic women's sports communities to partner with</div></div>
+          </div>
+          <div class="slide-body" style="margin-top:14px;">
+            The travel layer for women's sports is still early. That gives Sport Undone a chance to become the <strong>trusted home for fans</strong> before a generic travel company tries to bolt this on later.
+          </div>
+          <div class="pill-row">
+            <div class="pill pill-orange">PWHL expanding</div>
+            <div class="pill pill-blue">WNBA record viewership</div>
+            <div class="pill pill-orange">NWSL + women's soccer growth</div>
+            <div class="pill pill-blue">Sponsor budgets following audience</div>
+          </div>
+        </div>
+
+        <!-- Slide 5: Solution -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="slide-eyebrow">The Solution</div>
+          <div class="hero-tagline">Travel. Connect. Cheer Together.</div>
+          <div class="slide-title">Sport Undone brings<br>the whole fan journey <span class="accent">together.</span></div>
+          <div class="pillar-grid">
+            <div class="pillar-card orange"><div class="pillar-label">Group Trips</div><div class="pillar-text">Travel together. Save together. No more solo logistics.</div></div>
+            <div class="pillar-card"><div class="pillar-label blue">Game Experiences</div><div class="pillar-text">Tickets, events, and exclusive access in one place.</div></div>
+            <div class="pillar-card"><div class="pillar-label blue">Community</div><div class="pillar-text">Meet fans who get it before game day.</div></div>
+            <div class="pillar-card orange"><div class="pillar-label">Content & Stories</div><div class="pillar-text">Relive moments and share the passion after the whistle.</div></div>
+          </div>
+          <div class="slide-body" style="margin-top:14px;">Four things that are usually separate — combined into <strong>one fan journey.</strong></div>
+        </div>
+
+        <!-- Slide 6: Product -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Product</div>
+          <div class="slide-title">From interest to<br><span class="accent">unforgettable trip.</span></div>
+          <div class="funnel-track">
+            <div class="funnel-box current"><div class="funnel-step">Step 1</div><div class="funnel-name">Discover</div></div>
+            <div class="funnel-box"><div class="funnel-step">Step 2</div><div class="funnel-name">Join</div></div>
+            <div class="funnel-box"><div class="funnel-step">Step 3</div><div class="funnel-name">Connect</div></div>
+            <div class="funnel-box"><div class="funnel-step">Step 4</div><div class="funnel-name">Attend</div></div>
+            <div class="funnel-box"><div class="funnel-step">Step 5</div><div class="funnel-name">Share</div></div>
+          </div>
+          <div class="step-list" style="margin-top:14px;">
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Discover</strong> women's sports events and fan trips</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Join</strong> a group package with clear pricing and logistics</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Connect</strong> with fellow travelers before the game</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Attend</strong> and create memories with the group</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Share</strong> the story — testimonials, content, referrals</div></div>
+          </div>
+        </div>
+
+        <!-- Slide 7: Market -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Market Size</div>
+          <div class="slide-title">Start focused.<br><span class="accent">Grow with</span> the fan base.</div>
+          <div class="market-grid">
+            <div class="market-card">
+              <div class="market-name">TAM</div>
+              <div class="market-val orange">35M</div>
+              <div class="market-lbl">Women's sports fans across North America</div>
+            </div>
+            <div class="market-card">
+              <div class="market-name">SAM</div>
+              <div class="market-val blue">4.8M</div>
+              <div class="market-lbl">Fans who travel and are open to group travel</div>
+            </div>
+            <div class="market-card">
+              <div class="market-name">SOM (Yr 1–3)</div>
+              <div class="market-val sky">5,000</div>
+              <div class="market-lbl">Sport Undone members in first three years</div>
+            </div>
+          </div>
+          <div class="slide-body" style="margin-top:14px;">The first market is focused enough to reach but large enough to matter. And the addressable behavior is already proven — <strong>10.5M domestic Canadian trips in 2025 included a live sports event.</strong></div>
+        </div>
+
+        <!-- Slide 8: Competition -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Competition</div>
+          <div class="slide-title">Others cover pieces.<br>Sport Undone <span class="accent">connects it all.</span></div>
+          <table class="comp-table">
+            <tr><th>Platform</th><th>Content</th><th>Community</th><th>Group Travel</th><th>Trip Planning</th></tr>
+            <tr><td>The Gist</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+            <tr><td>Just Women's Sports</td><td class="check">✓</td><td>Limited</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+            <tr><td>PWHL / Tempo fan groups</td><td class="cross">✗</td><td>Team-only</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+            <tr><td>Generic travel agencies</td><td class="cross">✗</td><td class="cross">✗</td><td>Generic</td><td class="check">✓</td></tr>
+            <tr class="highlight"><td><strong>Sport Undone</strong></td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+          </table>
+          <div class="slide-body" style="margin-top:12px;"><strong>Sport Undone owns the intersection</strong> — the only all-in-one platform built specifically for women's sports fans.</div>
+        </div>
+
+        <!-- Slide 9: Team -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Team</div>
+          <div class="slide-title">Built around fan trust<br>and <span class="accent">execution.</span></div>
+          <div class="team-grid">
+            <div class="team-card featured">
+              <div class="team-name">Alicia Johnson</div>
+              <div class="team-role">Founder & CEO</div>
+              <div class="team-desc">Partnerships, marketing, content, and business growth. The vision and the voice of the community.</div>
+            </div>
+            <div class="team-card">
+              <div class="team-name">James Carter</div>
+              <div class="team-role blue">CTO</div>
+              <div class="team-desc">Website, app, booking system, and community features. Builds the platform fans experience.</div>
+            </div>
+            <div class="team-card">
+              <div class="team-name">Tasha Williams</div>
+              <div class="team-role">Operations & CX</div>
+              <div class="team-desc">Travel packages and event logistics. Makes every trip safe, exciting, and well-run.</div>
+            </div>
+          </div>
+          <div class="slide-body" style="margin-top:14px;">Advisory board covers <strong>women's sports, travel & tourism, technology, and marketing</strong> — the gaps that matter most for early execution.</div>
+        </div>
+
+        <!-- Slide 10: Ask -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="slide-eyebrow">The Ask</div>
+          <div class="big-stat">$15,000</div>
+          <div class="big-stat-label">To prove the first fan trip — one sold-out pilot unlocks everything after it</div>
+          <div class="ask-list">
+            <div class="ask-item"><div class="ask-icon">✈️</div><div class="ask-text"><strong>Launch the first curated group trip</strong> — 25–30 women's sports fans, end-to-end handled</div></div>
+            <div class="ask-item"><div class="ask-icon">🤝</div><div class="ask-text"><strong>Secure partner relationships</strong> — ticket, hotel, and local experience partners for the pilot</div></div>
+            <div class="ask-item"><div class="ask-icon">📱</div><div class="ask-text"><strong>Capture the content engine</strong> — trip testimonials, referrals, and sponsor data from the pilot</div></div>
+            <div class="ask-item"><div class="ask-icon">🌐</div><div class="ask-text"><strong>Introductions</strong> to women's sports organizations, travel partners, and brand sponsors — you're in this room</div></div>
+          </div>
+          <div class="slide-body" style="margin-top:14px; font-style:italic;">
+            <span style="color:#3a6090; font-style:normal;">Sport Undone is not just helping fans attend games. We are helping them join the movement. Thank you.</span>
+          </div>
+        </div>
+
+      </div><!-- slide-area -->
+
+      <div class="nav-bar">
+        <div class="nav-dots" id="dots"></div>
+        <div class="slide-counter" id="counter">1 / 10</div>
+        <div class="nav-arrows">
+          <div class="nav-btn" onclick="prev()">←</div>
+          <div class="nav-btn" onclick="next()">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="script-panel">
+    <div class="script-label">Speaker Script</div>
+    <div class="script-text" id="script-text"></div>
+  </div>
+</div>
+
+<script>
+const SCRIPTS = [
+  `Good afternoon. My name is <strong>Alicia Johnson</strong>, founder and CEO of Sport Undone. We help women's sports fans travel, connect, and cheer together. Sport Undone is built for the fan who wants more than a ticket — they want the trip, the people, the memories, and the story around the game.`,
+
+  `Imagine hearing about a women's sports game you would love to attend. You want to go — and then the real work starts. Where do I get tickets? Where do I stay? Is anyone else going? Can I afford this? The game may be exciting, but everything around the game becomes friction. <strong>The fan experience is unfinished.</strong> Fans are ready to travel. The infrastructure hasn't caught up.`,
+
+  `This is not a small behavior. Statistics Canada reported that Canadians took <strong>10.5 million domestic trips in 2025</strong> that included attending a sports event as a spectator. Fans already travel for sport. Sport Undone focuses that behavior on women's sports — and solves the planning and community gap around it. The pain points are real: cost, planning time, solo attendance, and a fan community that exists in a hundred fragmented places instead of one.`,
+
+  `And the timing has never been better. Women's sports is growing — across leagues, media, live attendance, and social conversation. The PWHL, WNBA, NWSL, and women's soccer are all expanding their audience right now. Fans want community around the event, not just a seat in the arena. And brands are actively looking for authentic women's sports communities to partner with. <strong>The travel layer is still early — which means Sport Undone can become the trusted home for fans before a generic travel company tries to bolt this on later.</strong>`,
+
+  `Sport Undone combines four things that are usually separate. <strong>Group trips</strong> — travel together and save together. <strong>Game experiences</strong> — tickets, events, and exclusive access. <strong>Community</strong> — meet fans who get it before game day. And <strong>content and stories</strong> — relive the moments and keep the movement alive after the final whistle. Four pillars. One platform. One fan journey.`,
+
+  `The product journey is simple. A fan discovers an event, joins a group package with clear pricing and logistics, connects with other travelers before game day, attends the event with the group, then creates and shares the story afterward. <strong>We turn a complicated, isolating booking process into a shared experience.</strong> Fewer decisions. More belonging.`,
+
+  `The first market is focused enough to reach but large enough to matter. Our total addressable market is <strong>35 million women's sports fans</strong> across North America. Our serviceable segment is <strong>4.8 million</strong> fans who travel and are open to group travel. Our goal in the first three years is <strong>5,000 Sport Undone members</strong> — enough to prove the model and attract league and sponsor partnerships.`,
+
+  `The competitive gap is clear. Existing platforms cover content, team news, or fan communities — but none of them combine women's sports content, fan connection, group travel, and end-to-end trip planning. The Gist has content — no trips. Just Women's Sports has content — no community utility. Team-specific fan groups are team-specific. Generic travel agencies don't know this culture. <strong>Sport Undone owns the intersection.</strong>`,
+
+  `This team covers the three things the business must get right: community, technology, and operations. I lead partnerships, marketing, content, and business growth. <strong>James Carter</strong>, our CTO, builds the platform — website, app, booking, and community features. <strong>Tasha Williams</strong> handles operations and customer experience — she makes sure every trip is safe, exciting, and well-run. Our advisory board fills the gaps in women's sports, travel, technology, and marketing.`,
+
+  `Today I am asking for <strong>$15,000 and introductions.</strong> The $15,000 supports the first curated group trip for 25 to 30 fans — end-to-end handled — the content engine around it, and the data we need to sell the next trip and the next sponsor. The introductions I'm asking for: women's sports organizations, travel and tourism partners, and brand sponsors who are in this room right now. <em>[Pause.]</em> Sport Undone is not just helping fans attend games. We are helping them join the movement. Thank you.`
+];
+
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const railItems = document.querySelectorAll('.rail-item');
+const dotsEl = document.getElementById('dots');
+const counter = document.getElementById('counter');
+const scriptEl = document.getElementById('script-text');
+
+SCRIPTS.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goto(i);
+  dotsEl.appendChild(d);
+});
+
+function goto(n) {
+  slides[cur].classList.remove('active');
+  railItems[cur].classList.remove('active');
+  dotsEl.children[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+  railItems[cur].classList.add('active');
+  dotsEl.children[cur].classList.add('active');
+  counter.textContent = (cur + 1) + ' / ' + slides.length;
+  scriptEl.innerHTML = SCRIPTS[cur];
+}
+
+function next() { goto(cur + 1); }
+function prev() { goto(cur - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+});
+
+scriptEl.innerHTML = SCRIPTS[0];
+</script>
+</body>
+</html>

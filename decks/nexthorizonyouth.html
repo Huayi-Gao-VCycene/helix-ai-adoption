@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Next Horizon Youth — Pitch Deck</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #080704; color: #f0ebe0; font-family: 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; }
+
+  .wrapper { max-width: 980px; margin: 0 auto; padding: 24px 16px 40px; }
+
+  .brand-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .brand-logo {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: linear-gradient(135deg, #f59e0b, #0ea5e9);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 900; color: #fff; flex-shrink: 0; letter-spacing: -1px;
+  }
+  .brand-name { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #f59e0b; }
+  .brand-sub { font-size: 11px; color: #2a2010; margin-top: 2px; }
+
+  .stage-shell { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid #1a1208; }
+
+  .rail { width: 200px; flex-shrink: 0; background: #050402; border-right: 1px solid #1a1208; padding: 12px 0; display: flex; flex-direction: column; gap: 2px; }
+  .rail-item { padding: 7px 14px; font-size: 11px; color: #2a2010; cursor: pointer; border-left: 2px solid transparent; line-height: 1.35; transition: all 0.15s; }
+  .rail-item:hover { color: #7a6030; background: #0d0a06; }
+  .rail-item.active { color: #f59e0b; border-left-color: #f59e0b; background: #0d0a06; font-weight: 600; }
+  .rail-num { font-size: 9px; color: #1a1208; display: block; margin-bottom: 1px; letter-spacing: 1px; }
+
+  .slide-area { flex: 1; min-height: 400px; position: relative; overflow: hidden; background: #0d0a06; }
+  .slide { display: none; width: 100%; height: 100%; min-height: 400px; padding: 40px 44px; position: absolute; top: 0; left: 0; }
+  .slide.active { display: flex; flex-direction: column; justify-content: center; }
+
+  .slide-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #f59e0b; margin-bottom: 10px; opacity: 0.8; }
+  .slide-title { font-size: 27px; font-weight: 800; line-height: 1.2; color: #f0ebe0; margin-bottom: 14px; }
+  .slide-title .accent { color: #f59e0b; }
+  .slide-title .accent2 { color: #0ea5e9; }
+  .slide-body { font-size: 14px; color: #5a4828; line-height: 1.65; max-width: 490px; }
+  .slide-body strong { color: #c8b890; }
+
+  .big-stat { font-size: 52px; font-weight: 900; color: #f59e0b; line-height: 1; margin-bottom: 8px; }
+  .big-stat-label { font-size: 13px; color: #3a2e18; }
+
+  .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.08; pointer-events: none; }
+  .blob1 { width: 300px; height: 300px; background: #f59e0b; right: -50px; top: -70px; }
+  .blob2 { width: 200px; height: 200px; background: #0ea5e9; right: 70px; bottom: -50px; }
+
+  .hero-tagline { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #0ea5e9; margin-bottom: 10px; font-weight: 700; }
+  .hero-question { font-size: 38px; font-weight: 900; line-height: 1.15; color: #f0ebe0; margin-bottom: 10px; }
+  .hero-question .accent { color: #f59e0b; }
+
+  .stat-callout { background: #110e06; border: 1px solid #2a2010; border-left: 3px solid #f59e0b; border-radius: 0 6px 6px 0; padding: 12px 16px; margin-top: 14px; }
+  .stat-callout-num { font-size: 28px; font-weight: 900; color: #f59e0b; line-height: 1; }
+  .stat-callout-label { font-size: 12px; color: #5a4828; margin-top: 3px; }
+
+  .step-list { margin-top: 14px; display: flex; flex-direction: column; gap: 9px; }
+  .step-item { display: flex; align-items: flex-start; gap: 10px; }
+  .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; flex-shrink: 0; margin-top: 5px; }
+  .step-dot.blue { background: #0ea5e9; }
+  .step-text { font-size: 13px; color: #5a4828; line-height: 1.5; }
+  .step-text strong { color: #c8b890; }
+
+  .pillar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .pillar-card { background: #110e06; border: 1px solid #2a2010; border-radius: 6px; padding: 12px 14px; }
+  .pillar-card.amber { border-color: #3a2808; }
+  .pillar-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #f59e0b; margin-bottom: 4px; font-weight: 700; }
+  .pillar-label.blue { color: #0ea5e9; }
+  .pillar-num { font-size: 18px; font-weight: 900; color: #3a2e18; margin-bottom: 2px; }
+  .pillar-text { font-size: 12px; color: #3a2e18; line-height: 1.5; }
+  .pillar-text strong { color: #7a6030; }
+
+  .journey-track { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .journey-row { display: flex; align-items: flex-start; gap: 12px; }
+  .journey-marker { width: 56px; flex-shrink: 0; }
+  .journey-time { font-size: 10px; font-weight: 700; color: #f59e0b; text-transform: uppercase; letter-spacing: 1px; }
+  .journey-content { flex: 1; background: #110e06; border: 1px solid #2a2010; border-radius: 6px; padding: 8px 12px; font-size: 12px; color: #5a4828; line-height: 1.5; }
+  .journey-content strong { color: #c8b890; }
+
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .market-card { background: #110e06; border: 1px solid #2a2010; border-radius: 6px; padding: 14px; text-align: center; }
+  .market-name { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #1a1208; margin-bottom: 6px; font-weight: 700; }
+  .market-val { font-size: 22px; font-weight: 800; }
+  .market-val.amber { color: #f59e0b; }
+  .market-val.blue { color: #0ea5e9; }
+  .market-val.mid { color: #78654a; }
+  .market-lbl { font-size: 11px; color: #3a2e18; margin-top: 4px; line-height: 1.4; }
+
+  .rev-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .rev-card { background: #110e06; border: 1px solid #2a2010; border-radius: 6px; padding: 12px 14px; }
+  .rev-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #f59e0b; margin-bottom: 4px; font-weight: 700; }
+  .rev-text { font-size: 12px; color: #3a2e18; line-height: 1.45; }
+
+  .diff-table { margin-top: 14px; width: 100%; border-collapse: collapse; font-size: 12px; }
+  .diff-table th { text-align: left; padding: 6px 10px; color: #2a2010; font-weight: 600; border-bottom: 1px solid #1a1208; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+  .diff-table td { padding: 7px 10px; border-bottom: 1px solid #110e06; color: #3a2e18; }
+  .diff-table tr.highlight td { color: #f0ebe0; background: #1a1510; }
+  .diff-table .check { color: #f59e0b; font-weight: 700; }
+  .diff-table .cross { color: #1a1208; }
+  .diff-table .neutral { color: #3a2e18; }
+
+  .ask-amount { font-size: 48px; font-weight: 900; color: #f59e0b; line-height: 1; margin-bottom: 6px; }
+  .ask-sub { font-size: 13px; color: #3a2e18; margin-bottom: 16px; }
+  .ask-list { display: flex; flex-direction: column; gap: 9px; }
+  .ask-item { display: flex; align-items: flex-start; gap: 10px; background: #110e06; border: 1px solid #2a2010; border-radius: 6px; padding: 10px 12px; }
+  .ask-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .ask-text { font-size: 12px; color: #5a4828; line-height: 1.5; }
+  .ask-text strong { color: #c8b890; }
+
+  .prize-note { background: #0f0e08; border: 1px solid #2a2010; border-left: 3px solid #0ea5e9; border-radius: 0 6px 6px 0; padding: 8px 12px; margin-top: 10px; font-size: 12px; color: #3a6080; line-height: 1.5; }
+  .prize-note strong { color: #0ea5e9; }
+
+  .nav-bar { background: #050402; border-top: 1px solid #1a1208; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-dots { display: flex; gap: 6px; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #1a1208; cursor: pointer; transition: background 0.2s; }
+  .nav-dot.active { background: #f59e0b; }
+  .nav-arrows { display: flex; gap: 8px; }
+  .nav-btn { background: #0d0a06; border: 1px solid #1a1208; color: #3a2e18; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; user-select: none; }
+  .nav-btn:hover { background: #1a1208; color: #f59e0b; border-color: #f59e0b; }
+  .slide-counter { font-size: 11px; color: #1a1208; }
+
+  .script-panel { background: #050402; border: 1px solid #1a1208; border-top: none; border-radius: 0 0 10px 10px; padding: 20px 24px; }
+  .script-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #1a1208; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .script-label::after { content: ''; flex: 1; height: 1px; background: #0d0a06; }
+  .script-text { font-size: 14px; color: #4a3a20; line-height: 1.75; }
+  .script-text strong { color: #f59e0b; font-weight: 600; }
+  .script-text em { color: #2a2010; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="brand-bar">
+    <div class="brand-logo">NH</div>
+    <div>
+      <div class="brand-name">Next Horizon Youth</div>
+      <div class="brand-sub">Makada Frank · Seneca HELIX Pitch Day · Aug 13, 2026</div>
+    </div>
+  </div>
+
+  <div class="stage-shell">
+    <div class="rail" id="rail">
+      <div class="rail-item active" onclick="goto(0)"><span class="rail-num">01</span>Opening Hook</div>
+      <div class="rail-item" onclick="goto(1)"><span class="rail-num">02</span>The Problem</div>
+      <div class="rail-item" onclick="goto(2)"><span class="rail-num">03</span>Root Cause</div>
+      <div class="rail-item" onclick="goto(3)"><span class="rail-num">04</span>The Solution</div>
+      <div class="rail-item" onclick="goto(4)"><span class="rail-num">05</span>The Journey</div>
+      <div class="rail-item" onclick="goto(5)"><span class="rail-num">06</span>Market</div>
+      <div class="rail-item" onclick="goto(6)"><span class="rail-num">07</span>Revenue Model</div>
+      <div class="rail-item" onclick="goto(7)"><span class="rail-num">08</span>Differentiation</div>
+      <div class="rail-item" onclick="goto(8)"><span class="rail-num">09</span>The Founder</div>
+      <div class="rail-item" onclick="goto(9)"><span class="rail-num">10</span>The Ask</div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column;">
+      <div class="slide-area">
+
+        <!-- Slide 1: Opening Hook -->
+        <div class="slide active">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="hero-tagline">Wrap-around support · Ages 16–29</div>
+          <div class="hero-question">What happens<br>when someone<br>turns <span class="accent">18?</span></div>
+          <div class="slide-body">
+            My name is <strong>Makada Frank</strong>. I'm the founder of <strong>Next Horizon Youth</strong> — and I want to spend 5 minutes on the answer to that question.
+          </div>
+          <div class="stat-callout" style="max-width:380px;">
+            <div class="stat-callout-num">53%</div>
+            <div class="stat-callout-label">of youth who age out of foster care experience homelessness within 2 years of turning 18</div>
+          </div>
+        </div>
+
+        <!-- Slide 2: The Problem -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Problem</div>
+          <div class="slide-title">When 18 means<br><span class="accent">abandoned.</span></div>
+          <div class="slide-body" style="margin-bottom:12px;">For most people, 18 is a celebration. For tens of thousands of young Canadians aging out of foster care — 18 is the day the support stops. <strong>Not slowly. All at once.</strong></div>
+          <div class="step-list">
+            <div class="step-item"><div class="step-dot"></div><div class="step-text">Housing support, mental health services, employment programs, mentorship — <strong>gone on one birthday</strong></div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>53%</strong> of youth who age out of care experience homelessness within 2 years</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>80,000+</strong> young people in Ontario alone are not in education, employment, or training</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text">We have a system that <strong>abandons people at the exact moment they need it most</strong></div></div>
+          </div>
+        </div>
+
+        <!-- Slide 3: Root Cause -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Root Cause</div>
+          <div class="slide-title">The gap is<br><span class="accent">structural.</span></div>
+          <div class="step-list">
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Programs end at 18</strong> — but the brain isn't fully developed until 25. We withdraw support precisely when it's still needed.</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Services are siloed</strong> — mental health here, housing there, employment somewhere else. A person in crisis can't navigate that alone.</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Programs are time-limited</strong> — 3 months, 6 months. Youth build trust with a counsellor, then the program ends. Starting over is demoralizing.</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Many never seek help at all</strong> — because asking feels like admitting failure</div></div>
+          </div>
+        </div>
+
+        <!-- Slide 4: Solution -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="slide-eyebrow">The Solution</div>
+          <div class="slide-title">Four pillars.<br>One <span class="accent">continuous</span> relationship.</div>
+          <div class="slide-body" style="margin-bottom:12px;">Next Horizon Youth provides wrap-around support for youth <strong>ages 16 to 29</strong> — the whole span of young adulthood, not until 18.</div>
+          <div class="pillar-grid">
+            <div class="pillar-card amber">
+              <div class="pillar-label">01 · Mentorship</div>
+              <div class="pillar-text">Matched by <strong>lived experience</strong> — not authority figures, people who have been exactly where you are</div>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-label blue">02 · Life Skills</div>
+              <div class="pillar-text"><strong>Practical and actionable</strong>, not theoretical — money, housing, relationships, health</div>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-label blue">03 · Employment</div>
+              <div class="pillar-text">Resume, interview coaching, and <strong>job placement partnerships</strong> with local employers</div>
+            </div>
+            <div class="pillar-card amber">
+              <div class="pillar-label">04 · Community</div>
+              <div class="pillar-text">Weekly group sessions. <strong>A place to belong</strong> — connection that combats isolation</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 5: The Journey -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Program Journey</div>
+          <div class="slide-title">No hard cutoff.<br>The relationship <span class="accent">stays.</span></div>
+          <div class="journey-track">
+            <div class="journey-row">
+              <div class="journey-marker"><div class="journey-time">Week 1</div></div>
+              <div class="journey-content"><strong>Peer navigator assigned</strong> — someone who has been where they are. Together they build a support plan.</div>
+            </div>
+            <div class="journey-row">
+              <div class="journey-marker"><div class="journey-time">Mo. 1–3</div></div>
+              <div class="journey-content"><strong>Weekly 1-on-1 sessions</strong>, group life skills workshops, employment exploration</div>
+            </div>
+            <div class="journey-row">
+              <div class="journey-marker"><div class="journey-time">Mo. 3–12</div></div>
+              <div class="journey-content"><strong>Job placement support</strong>, housing stability check-ins, active community participation</div>
+            </div>
+            <div class="journey-row">
+              <div class="journey-marker"><div class="journey-time">Year 1+</div></div>
+              <div class="journey-content"><strong>Alumni become peer mentors.</strong> The cycle continues. No hard cutoff — as long as needed.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 6: Market — IMPROVED with TAM/SAM/SOM -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Market Size</div>
+          <div class="slide-title">Prevention is<br><span class="accent">dramatically cheaper</span> than crisis.</div>
+          <div class="market-grid">
+            <div class="market-card">
+              <div class="market-name">TAM</div>
+              <div class="market-val amber">80K+</div>
+              <div class="market-lbl">Ontario youth not in education, employment, or training (NEET)</div>
+            </div>
+            <div class="market-card">
+              <div class="market-name">SAM</div>
+              <div class="market-val blue">18K</div>
+              <div class="market-lbl">High-risk youth ages 16–25 in Greater Toronto Area actively seeking support</div>
+            </div>
+            <div class="market-card">
+              <div class="market-name">SOM (Yr 3)</div>
+              <div class="market-val mid">500</div>
+              <div class="market-lbl">Next Horizon Youth participants in 3-year growth target</div>
+            </div>
+          </div>
+          <div class="slide-body" style="margin-top:14px;">The <strong>federal government spends $2.3B annually</strong> on youth employment and social programs. Ontario Trillium Foundation, corporate ESG budgets, and municipal services are actively looking for evidence-based programs. One youth experiencing homelessness costs the system <strong>$15,000+</strong>. Prevention costs a fraction.</div>
+        </div>
+
+        <!-- Slide 7: Revenue -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Revenue Model</div>
+          <div class="slide-title">Sustainable by design.<br><span class="accent">Not charity</span> that runs out.</div>
+          <div class="rev-grid">
+            <div class="rev-card">
+              <div class="rev-label">Government Grants</div>
+              <div class="rev-text">Federal + provincial youth employment programs. <strong>Anchors base operations.</strong> ESDC Youth Employment Strategy is the near-term target post-pilot.</div>
+            </div>
+            <div class="rev-card">
+              <div class="rev-label" style="color:#0ea5e9;">Corporate Sponsorships</div>
+              <div class="rev-text">Local employers gain a <strong>talent pipeline + ESG alignment.</strong> Win-win: they fund the program, we place youth with them.</div>
+            </div>
+            <div class="rev-card">
+              <div class="rev-label" style="color:#0ea5e9;">Program Fees</div>
+              <div class="rev-text">Sliding scale — <strong>nobody is turned away</strong> for inability to pay. Those who can contribute, do.</div>
+            </div>
+            <div class="rev-card">
+              <div class="rev-label">Consulting</div>
+              <div class="rev-text">Schools and organizations pay to <strong>adopt our youth engagement model.</strong> Revenue + reach multiplier.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 8: Differentiation -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Competitive Position</div>
+          <div class="slide-title">Others cover pieces.<br>We cover <span class="accent">the whole person.</span></div>
+          <table class="diff-table">
+            <tr><th>Program</th><th>Age ceiling</th><th>Wrap-around</th><th>Duration</th><th>Peer mentors</th></tr>
+            <tr><td>Most Ontario programs</td><td class="neutral">18</td><td class="cross">✗ siloed</td><td class="neutral">3–6 months</td><td class="cross">✗</td></tr>
+            <tr><td>Government services</td><td class="neutral">Varies</td><td class="cross">✗ fragmented</td><td class="neutral">Time-limited</td><td class="cross">✗</td></tr>
+            <tr><td>NGO single-service</td><td class="neutral">18–21</td><td class="cross">✗ one pillar</td><td class="neutral">Short-term</td><td class="cross">✗</td></tr>
+            <tr class="highlight"><td><strong>Next Horizon Youth</strong></td><td class="check">29 ✓</td><td class="check">✓ all 4 pillars</td><td class="check">✓ as long as needed</td><td class="check">✓</td></tr>
+          </table>
+          <div class="slide-body" style="margin-top:12px;">The differentiation isn't incremental. We're the only program that <strong>combines the right age range, wrap-around support, no hard cutoff, and near-peer mentorship</strong> in one relationship.</div>
+        </div>
+
+        <!-- Slide 9: Founder -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Founder</div>
+          <div class="slide-title">Built from<br><span class="accent">understanding</span>, not assumption.</div>
+          <div class="slide-body" style="margin-bottom:14px;">I'm <strong>Makada Frank</strong>. I'm completing my Honours Bachelor in Mental Health and Addiction at Seneca Polytechnic. I've studied the psychology of youth vulnerability, addiction, and recovery.</div>
+          <div class="step-list">
+            <div class="step-item"><div class="step-dot"></div><div class="step-text">I built Next Horizon Youth from a <strong>deep understanding of what young people actually need</strong> — not what institutions think they need</div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text">The gap I'm describing isn't a lack of compassion. <strong>It's a lack of continuity.</strong></div></div>
+            <div class="step-item"><div class="step-dot"></div><div class="step-text"><strong>Support that stops is support that fails.</strong></div></div>
+          </div>
+        </div>
+
+        <!-- Slide 10: The Ask — IMPROVED framing -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="slide-eyebrow">The Ask</div>
+          <div class="ask-amount">$15,000</div>
+          <div class="ask-sub">3-month pilot · 25 youth · employment, housing, and wellbeing outcomes measured</div>
+          <div class="ask-list">
+            <div class="ask-item"><div class="ask-icon">📊</div><div class="ask-text"><strong>Run the pilot with 25 youth</strong> — 3 months, all four pillars, real outcome data on employment, housing stability, and wellbeing scores</div></div>
+            <div class="ask-item"><div class="ask-icon">📋</div><div class="ask-text"><strong>Apply for ESDC Youth Employment Strategy grant</strong> — pilot data is the evidence base; this prize unlocks that application</div></div>
+            <div class="ask-item"><div class="ask-icon">🤝</div><div class="ask-text"><strong>Introductions</strong> to high school counsellors, Ontario Works case workers, and community centre directors — the rooms I need to be in</div></div>
+          </div>
+          <div class="prize-note">The <strong>$5,500 prize</strong> directly funds 8–10 youth through the pilot — measuring what works, generating the data that unlocks the next grant cycle.</div>
+          <div class="slide-body" style="margin-top:12px; font-style:italic;">
+            <span style="color:#3a2e18; font-style:normal;">Every year, young people in this country turn 18 and lose everything at once. We're building the organization that makes that birthday survivable. Thank you.</span>
+          </div>
+        </div>
+
+      </div><!-- slide-area -->
+
+      <div class="nav-bar">
+        <div class="nav-dots" id="dots"></div>
+        <div class="slide-counter" id="counter">1 / 10</div>
+        <div class="nav-arrows">
+          <div class="nav-btn" onclick="prev()">←</div>
+          <div class="nav-btn" onclick="next()">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="script-panel">
+    <div class="script-label">Speaker Script</div>
+    <div class="script-text" id="script-text"></div>
+  </div>
+</div>
+
+<script>
+const SCRIPTS = [
+  `Good afternoon. My name is <strong>Makada Frank</strong>, and I'm the founder of Next Horizon Youth. I want to start with a question: what happens when someone turns 18? <em>[Pause — let the question land.]</em> Most people think birthday. Milestone. Beginning. For tens of thousands of young Canadians aging out of foster care — 18 is the day the support stops. Fifty-three percent of those youth experience homelessness within two years. I built Next Horizon Youth to change that.`,
+
+  `For most people, 18 is a celebration. For tens of thousands of young Canadians — youth aging out of foster care, youth on the margins — 18 is the day the support stops. Not slowly. All at once. Housing support, mental health services, employment programs, mentorship — gone. On one birthday. Fifty-three percent of youth who age out of the care system experience homelessness within two years. Over <strong>80,000 young people in Ontario alone</strong> are not in education, employment, or training. We have a system that abandons people at the exact moment they need it most.`,
+
+  `The support gap is structural. Most programs in Ontario end at 18. But neuroscience tells us the brain isn't fully developed until 25 — we withdraw support precisely when it's still needed. Services are siloed: mental health here, housing there, employment somewhere else. A young person in crisis can't navigate a fragmented system alone. Programs are time-limited — 3 months, 6 months. Youth build trust with a counsellor and then the program ends. <strong>Starting over is demoralizing.</strong> And many eligible youth never seek help at all — because asking feels like admitting failure.`,
+
+  `Next Horizon Youth provides wrap-around support for youth <strong>ages 16 to 29</strong> — the whole span of young adulthood, not until 18. Four pillars: <strong>mentorship</strong>, matched by lived experience. <strong>Life skills</strong> — practical and actionable, not theoretical. <strong>Employment support</strong> — resume, interview coaching, job placement partnerships. And <strong>community</strong> — a place to belong, weekly group sessions, connection that combats isolation. None of these in isolation. All of them together, maintained as long as the young person needs them.`,
+
+  `A young person comes to us. <strong>Week one: they meet a peer navigator</strong> — someone who has been where they are. Together they build a support plan. Months one to three: weekly one-on-one sessions, group life skills workshops, employment exploration. Months three to twelve: job placement support, housing stability check-ins, active community participation. Year one and beyond: <strong>alumni become peer mentors.</strong> The cycle continues. No hard cutoff. The relationship stays as long as it's needed.`,
+
+  `The addressable market is large and the funding landscape is active. Our TAM is <strong>80,000+ Ontario youth</strong> not in education, employment, or training. Our serviceable market is <strong>18,000 high-risk youth ages 16 to 25</strong> in the Greater Toronto Area. Our three-year target is <strong>500 participants</strong> through Next Horizon Youth. The federal government spends $2.3 billion annually on youth employment and social programs. Prevention is dramatically cheaper than crisis — the average cost to the system of one youth experiencing homelessness exceeds $15,000. Preventing that outcome with the right support costs a fraction.`,
+
+  `We're a social enterprise with <strong>four revenue streams</strong> — none of which we depend on alone. Government grants anchor base operations. Corporate sponsorships give local employers a talent pipeline and ESG alignment. Program fees on a sliding scale — nobody is turned away for inability to pay. And consulting revenue from schools and organizations that want to adopt our youth engagement model. <strong>This is a sustainable model, not a charity that runs until the grant runs out.</strong>`,
+
+  `What makes us different? Most programs end at 18. <strong>We go to 29.</strong> Most programs address one need — mental health or housing or employment. <strong>We address all four together, in one relationship.</strong> Most programs last 3 to 6 months. <strong>We stay as long as needed.</strong> And our mentors are near-peers — people with lived experience, not authority figures, not institutions. People who have been exactly where these youth are. The differentiation isn't incremental — it's the combination of all four that doesn't exist anywhere else.`,
+
+  `I'm <strong>Makada Frank</strong>. I'm completing my Honours Bachelor in Mental Health and Addiction at Seneca Polytechnic. I've studied the psychology of youth vulnerability, addiction, and recovery. I built Next Horizon Youth from a deep understanding of what young people actually need — not what institutions think they need. The gap I'm describing isn't a lack of compassion in the system. It's a lack of continuity. <strong>Support that stops is support that fails.</strong>`,
+
+  `I'm asking for <strong>$15,000</strong> to run a 3-month pilot with 25 youth — measuring employment outcomes, housing stability, and wellbeing scores. This data positions us to apply for the ESDC Youth Employment Strategy grant. The <strong>$5,500 prize</strong> directly funds 8 to 10 youth through that pilot — the evidence base that unlocks the next grant cycle. I'm also asking for introductions to high school counsellors, Ontario Works case workers, and community centre directors. <em>[Pause.]</em> Every year, young people in this country turn 18 and lose everything at once. We're building the organization that makes that birthday survivable. Thank you.`
+];
+
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const railItems = document.querySelectorAll('.rail-item');
+const dotsEl = document.getElementById('dots');
+const counter = document.getElementById('counter');
+const scriptEl = document.getElementById('script-text');
+
+SCRIPTS.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goto(i);
+  dotsEl.appendChild(d);
+});
+
+function goto(n) {
+  slides[cur].classList.remove('active');
+  railItems[cur].classList.remove('active');
+  dotsEl.children[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+  railItems[cur].classList.add('active');
+  dotsEl.children[cur].classList.add('active');
+  counter.textContent = (cur + 1) + ' / ' + slides.length;
+  scriptEl.innerHTML = SCRIPTS[cur];
+}
+
+function next() { goto(cur + 1); }
+function prev() { goto(cur - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+});
+
+scriptEl.innerHTML = SCRIPTS[0];
+</script>
+</body>
+</html>

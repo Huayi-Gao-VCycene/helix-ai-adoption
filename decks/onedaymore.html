@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Day More — Pitch Deck</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #05030e; color: #f0eeff; font-family: 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; }
+
+  .wrapper { max-width: 980px; margin: 0 auto; padding: 24px 16px 40px; }
+
+  .brand-bar { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .brand-logo {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, #c084fc, #f9a8d4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: #fff; flex-shrink: 0; letter-spacing: -1px;
+  }
+  .brand-name { font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #c084fc; }
+  .brand-sub { font-size: 11px; color: #1a1230; margin-top: 2px; }
+
+  .stage-shell { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid #110a28; }
+
+  .rail { width: 200px; flex-shrink: 0; background: #030208; border-right: 1px solid #110a28; padding: 12px 0; display: flex; flex-direction: column; gap: 2px; }
+  .rail-item { padding: 7px 14px; font-size: 11px; color: #1e1440; cursor: pointer; border-left: 2px solid transparent; line-height: 1.35; transition: all 0.15s; }
+  .rail-item:hover { color: #7050a0; background: #0a0618; }
+  .rail-item.active { color: #c084fc; border-left-color: #c084fc; background: #0a0618; font-weight: 600; }
+  .rail-num { font-size: 9px; color: #110a28; display: block; margin-bottom: 1px; letter-spacing: 1px; }
+
+  .slide-area { flex: 1; min-height: 410px; position: relative; overflow: hidden; background: #080514; }
+  .slide { display: none; width: 100%; height: 100%; min-height: 410px; padding: 38px 44px; position: absolute; top: 0; left: 0; }
+  .slide.active { display: flex; flex-direction: column; justify-content: center; }
+
+  .slide-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #c084fc; margin-bottom: 10px; opacity: 0.8; }
+  .slide-title { font-size: 26px; font-weight: 800; line-height: 1.2; color: #f0eeff; margin-bottom: 14px; }
+  .slide-title .accent { color: #c084fc; }
+  .slide-title .accent2 { color: #f9a8d4; }
+  .slide-body { font-size: 13.5px; color: #4a3870; line-height: 1.7; max-width: 500px; }
+  .slide-body strong { color: #b8a8e0; }
+
+  .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.09; pointer-events: none; }
+  .blob1 { width: 320px; height: 320px; background: #c084fc; right: -60px; top: -80px; }
+  .blob2 { width: 200px; height: 200px; background: #f9a8d4; right: 60px; bottom: -60px; }
+
+  /* Opening slide */
+  .story-quote { border-left: 3px solid #c084fc; padding: 12px 16px; margin: 14px 0; background: #0d0820; border-radius: 0 6px 6px 0; }
+  .story-quote-text { font-size: 14px; color: #8068b0; line-height: 1.7; font-style: italic; }
+  .story-quote-text strong { color: #d8c0f8; font-style: normal; }
+
+  .hero-line { font-size: 34px; font-weight: 900; line-height: 1.2; color: #f0eeff; margin-bottom: 10px; }
+  .hero-line .accent { color: #c084fc; }
+  .hero-tagline { font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #f9a8d4; margin-bottom: 14px; font-weight: 700; }
+
+  /* Problem cards */
+  .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .problem-card { background: #0d0820; border: 1px solid #1e1440; border-radius: 6px; padding: 12px 14px; }
+  .problem-card.pink { border-left: 2px solid #f9a8d4; }
+  .problem-card.purple { border-left: 2px solid #c084fc; }
+  .problem-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 4px; }
+  .problem-title.pink { color: #f9a8d4; }
+  .problem-title.purple { color: #c084fc; }
+  .problem-text { font-size: 12px; color: #3a2a60; line-height: 1.5; }
+  .problem-text strong { color: #7060a0; }
+
+  /* Feature pillars */
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .feature-card { background: #0d0820; border: 1px solid #1e1440; border-radius: 6px; padding: 12px 14px; }
+  .feature-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #c084fc; margin-bottom: 4px; font-weight: 700; }
+  .feature-label.pink { color: #f9a8d4; }
+  .feature-text { font-size: 12px; color: #3a2a60; line-height: 1.5; }
+  .feature-text strong { color: #8068b0; }
+
+  /* Support circle highlight */
+  .circle-center { background: #100a22; border: 1px solid #2a1a50; border-radius: 10px; padding: 18px 20px; margin-top: 14px; }
+  .circle-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: #f9a8d4; margin-bottom: 8px; font-weight: 700; }
+  .circle-desc { font-size: 13px; color: #6050a0; line-height: 1.65; }
+  .circle-desc strong { color: #d8c0f8; }
+  .circle-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .circle-chip { background: #180d38; border: 1px solid #2a1a50; border-radius: 20px; padding: 4px 12px; font-size: 11px; color: #8068b0; }
+
+  /* Stats */
+  .stat-row { display: flex; gap: 20px; margin-top: 14px; flex-wrap: wrap; }
+  .stat-box { background: #0d0820; border: 1px solid #1e1440; border-radius: 6px; padding: 12px 16px; flex: 1; min-width: 100px; }
+  .stat-num { font-size: 26px; font-weight: 900; color: #c084fc; line-height: 1; }
+  .stat-label { font-size: 11px; color: #3a2a60; margin-top: 3px; line-height: 1.4; }
+
+  /* Market */
+  .market-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .market-card { background: #0d0820; border: 1px solid #1e1440; border-radius: 6px; padding: 14px; text-align: center; }
+  .market-name { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #1a1230; margin-bottom: 5px; font-weight: 700; }
+  .market-val { font-size: 22px; font-weight: 800; line-height: 1; }
+  .market-val.purple { color: #c084fc; }
+  .market-val.pink { color: #f9a8d4; }
+  .market-val.mid { color: #6048a0; }
+  .market-lbl { font-size: 11px; color: #3a2a60; margin-top: 4px; line-height: 1.4; }
+
+  /* Business model */
+  .model-row { display: flex; gap: 8px; margin-top: 14px; }
+  .model-col { flex: 1; background: #0d0820; border: 1px solid #1e1440; border-radius: 6px; padding: 14px; }
+  .model-col.purple { border-top: 2px solid #c084fc; }
+  .model-col.pink { border-top: 2px solid #f9a8d4; }
+  .model-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 8px; }
+  .model-label.purple { color: #c084fc; }
+  .model-label.pink { color: #f9a8d4; }
+  .model-item { font-size: 12px; color: #3a2a60; padding: 3px 0; border-bottom: 1px solid #110a28; }
+  .model-item:last-child { border-bottom: none; }
+
+  /* Traction */
+  .traction-list { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .traction-item { display: flex; align-items: flex-start; gap: 10px; background: #0d0820; border: 1px solid #1e1440; border-radius: 6px; padding: 10px 14px; }
+  .traction-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .traction-text { font-size: 12.5px; color: #5040a0; line-height: 1.5; }
+  .traction-text strong { color: #c084fc; }
+
+  /* Ask */
+  .ask-amount { font-size: 46px; font-weight: 900; color: #c084fc; line-height: 1; margin-bottom: 6px; }
+  .ask-sub { font-size: 13px; color: #3a2a60; margin-bottom: 14px; }
+  .ask-list { display: flex; flex-direction: column; gap: 8px; }
+  .ask-item { display: flex; align-items: flex-start; gap: 10px; background: #0d0820; border: 1px solid #1e1440; border-radius: 6px; padding: 10px 12px; }
+  .ask-icon { font-size: 13px; flex-shrink: 0; }
+  .ask-text { font-size: 12px; color: #5040a0; line-height: 1.5; }
+  .ask-text strong { color: #d8c0f8; }
+  .closing { font-size: 13px; color: #4a3870; margin-top: 12px; line-height: 1.65; font-style: italic; }
+  .closing strong { color: #f9a8d4; font-style: normal; }
+
+  /* Nav */
+  .nav-bar { background: #030208; border-top: 1px solid #110a28; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-dots { display: flex; gap: 6px; }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #110a28; cursor: pointer; transition: background 0.2s; }
+  .nav-dot.active { background: #c084fc; }
+  .nav-arrows { display: flex; gap: 8px; }
+  .nav-btn { background: #080514; border: 1px solid #110a28; color: #2a1a50; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; user-select: none; }
+  .nav-btn:hover { background: #110a28; color: #c084fc; border-color: #c084fc; }
+  .slide-counter { font-size: 11px; color: #1a1230; }
+
+  .script-panel { background: #030208; border: 1px solid #110a28; border-top: none; border-radius: 0 0 10px 10px; padding: 20px 24px; }
+  .script-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #1a1230; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .script-label::after { content: ''; flex: 1; height: 1px; background: #080514; }
+  .script-text { font-size: 14px; color: #5040a0; line-height: 1.8; }
+  .script-text strong { color: #c084fc; font-weight: 600; }
+  .script-text em { color: #2a1a50; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="brand-bar">
+    <div class="brand-logo">✦</div>
+    <div>
+      <div class="brand-name">One Day More</div>
+      <div class="brand-sub">Erica Alessandrini · Seneca HELIX Pitch Day · Aug 13, 2026</div>
+    </div>
+  </div>
+
+  <div class="stage-shell">
+    <div class="rail" id="rail">
+      <div class="rail-item active" onclick="goto(0)"><span class="rail-num">01</span>The Why</div>
+      <div class="rail-item" onclick="goto(1)"><span class="rail-num">02</span>The Problem</div>
+      <div class="rail-item" onclick="goto(2)"><span class="rail-num">03</span>The Gap</div>
+      <div class="rail-item" onclick="goto(3)"><span class="rail-num">04</span>The Solution</div>
+      <div class="rail-item" onclick="goto(4)"><span class="rail-num">05</span>Support Circle</div>
+      <div class="rail-item" onclick="goto(5)"><span class="rail-num">06</span>Traction</div>
+      <div class="rail-item" onclick="goto(6)"><span class="rail-num">07</span>Market</div>
+      <div class="rail-item" onclick="goto(7)"><span class="rail-num">08</span>Business Model</div>
+      <div class="rail-item" onclick="goto(8)"><span class="rail-num">09</span>The Founder</div>
+      <div class="rail-item" onclick="goto(9)"><span class="rail-num">10</span>The Ask</div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column;">
+      <div class="slide-area">
+
+        <!-- Slide 1: The Why (Personal Story) -->
+        <div class="slide active">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="hero-tagline">One day more, together.</div>
+          <div class="hero-line">I know what it feels like<br>to struggle <span class="accent">in silence.</span></div>
+          <div class="story-quote">
+            <div class="story-quote-text">
+              My family and I learned together. We educated ourselves, supported one another, and discovered that <strong>healing isn't about finding one perfect solution</strong> — it's about taking small steps, having people who care, and believing that tomorrow can be better than today.
+            </div>
+          </div>
+          <div class="slide-body">
+            My name is <strong>Erica Alessandrini</strong>. One Day More grew out of my own mental health journey — and out of what I watched so many others go through when they reached out for help, only to find the system fragmented, expensive, and overwhelming.
+          </div>
+        </div>
+
+        <!-- Slide 2: The Problem -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Problem</div>
+          <div class="slide-title">Help exists.<br>Finding it is the <span class="accent">hard part.</span></div>
+          <div class="slide-body" style="margin-bottom:12px;">Many youth experience mental health challenges but <strong>struggle to find timely, affordable, and connected support</strong> — and most wait until they're already in crisis.</div>
+          <div class="problem-grid">
+            <div class="problem-card purple">
+              <div class="problem-title purple">Long Waitlists</div>
+              <div class="problem-text">Delays prevent youth from getting support when it's most needed — sometimes <strong>months</strong> on a waitlist</div>
+            </div>
+            <div class="problem-card pink">
+              <div class="problem-title pink">High Therapy Costs</div>
+              <div class="problem-text">Professional mental health services are <strong>not financially accessible</strong> for most young people</div>
+            </div>
+            <div class="problem-card pink">
+              <div class="problem-title pink">Nowhere to Begin</div>
+              <div class="problem-text">Many youth don't know <strong>where to start</strong> or which resources are trustworthy</div>
+            </div>
+            <div class="problem-card purple">
+              <div class="problem-title purple">Stigma & Silence</div>
+              <div class="problem-text">Fear of judgment stops young people from asking for help <strong>before they reach a crisis</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3: The Gap -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">The Gap</div>
+          <div class="slide-title">Existing platforms serve<br>one piece. <span class="accent2">Not the whole person.</span></div>
+          <div class="slide-body" style="margin-bottom:14px;">Today, mental health support is spread across <strong>search engines, websites, crisis lines, social media, and counselling</strong> — all disconnected. Navigating them takes energy someone in distress doesn't have.</div>
+          <div class="stat-row">
+            <div class="stat-box">
+              <div class="stat-num">1 in 5</div>
+              <div class="stat-label">Canadians experience a mental health challenge — highest rates in youth ages 15–24</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num">75%</div>
+              <div class="stat-label">of mental health problems begin before age 24 — early support changes outcomes</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-num">6+ mo.</div>
+              <div class="stat-label">Average wait time for publicly funded mental health services in Ontario</div>
+            </div>
+          </div>
+          <div class="slide-body" style="margin-top:12px;">The gap isn't a lack of resources. It's a lack of <strong>connection between them.</strong></div>
+        </div>
+
+        <!-- Slide 4: The Solution -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="slide-eyebrow">The Solution</div>
+          <div class="slide-title">One platform.<br>The <span class="accent">whole journey.</span></div>
+          <div class="slide-body" style="margin-bottom:12px;">One Day More is a youth-centred digital mental health and wellness platform that brings trusted resources, wellness tools, and supportive connections <strong>together in one place</strong> — designed for early intervention, not crisis response.</div>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <div class="feature-label">Wellness Dashboard</div>
+              <div class="feature-text">Daily mood check-ins, journaling, goal tracking, affirmations — <strong>builds the habit of self-awareness</strong> before crisis</div>
+            </div>
+            <div class="feature-card">
+              <div class="feature-label pink">Support Circle</div>
+              <div class="feature-text">Invite trusted people — family, friends, caregivers — with <strong>full user control</strong> over what they see</div>
+            </div>
+            <div class="feature-card">
+              <div class="feature-label pink">Community Hub</div>
+              <div class="feature-text">Anonymous community space — <strong>you don't have to face this alone</strong>, even if you're not ready to name it</div>
+            </div>
+            <div class="feature-card">
+              <div class="feature-label">Resource Directory</div>
+              <div class="feature-text">Trusted local and national mental health resources — <strong>curated and easy to navigate</strong>, not a Google search</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 5: Support Circle — lead feature -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="slide-eyebrow">Key Feature</div>
+          <div class="slide-title">The <span class="accent2">Support Circle</span> —<br>no other platform has this.</div>
+          <div class="slide-body" style="margin-bottom:12px;">My family and I healed together. That experience showed me that the people around you matter — and that <strong>most platforms don't involve them at all.</strong></div>
+          <div class="circle-center">
+            <div class="circle-label">How It Works</div>
+            <div class="circle-desc">
+              Users invite <strong>trusted people</strong> — a parent, a friend, a counsellor — into their Support Circle. They choose exactly what each person can see. No surprises. <strong>Full control.</strong> The user stays in charge of their story, while the people who care about them can actually help — not just worry from a distance.
+            </div>
+            <div class="circle-row">
+              <div class="circle-chip">User-controlled sharing</div>
+              <div class="circle-chip">Optional collaborative safety plan</div>
+              <div class="circle-chip">Trusted — not public</div>
+              <div class="circle-chip">No existing platform offers this</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 6: Traction -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Traction</div>
+          <div class="slide-title">Not an idea.<br>A <span class="accent">working platform.</span></div>
+          <div class="traction-list">
+            <div class="traction-item"><div class="traction-icon">✅</div><div class="traction-text"><strong>Functional MVP built</strong> — Wellness Dashboard, Support Circle, Community Hub, and Resource Directory are live in prototype</div></div>
+            <div class="traction-item"><div class="traction-icon">✅</div><div class="traction-text"><strong>Customer discovery completed</strong> — surveys with youth, parents, caregivers, and educators; all confirmed accessible mental health support is a priority</div></div>
+            <div class="traction-item"><div class="traction-icon">✅</div><div class="traction-text"><strong>Business registered</strong> as a Sole Proprietorship in Ontario</div></div>
+            <div class="traction-item"><div class="traction-icon">✅</div><div class="traction-text"><strong>onedaymore.ca</strong> domain secured; branding and landing page established</div></div>
+            <div class="traction-item"><div class="traction-icon">✅</div><div class="traction-text"><strong>HELIX EWIL Program</strong> — mentorship, platform refinement, and ongoing validation underway</div></div>
+          </div>
+        </div>
+
+        <!-- Slide 7: Market -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Market</div>
+          <div class="slide-title">A generation that needs<br>this <span class="accent">and expects it digital.</span></div>
+          <div class="market-grid">
+            <div class="market-card">
+              <div class="market-name">TAM</div>
+              <div class="market-val purple">6M+</div>
+              <div class="market-lbl">Canadian youth ages 12–29 experiencing mental health challenges</div>
+            </div>
+            <div class="market-card">
+              <div class="market-name">SAM</div>
+              <div class="market-val pink">1.2M</div>
+              <div class="market-lbl">Ontario youth actively seeking accessible mental health support</div>
+            </div>
+            <div class="market-card">
+              <div class="market-name">SOM (Yr 1–2)</div>
+              <div class="market-val mid">10K</div>
+              <div class="market-lbl">Registered users through beta launch + school partnerships</div>
+            </div>
+          </div>
+          <div class="slide-body" style="margin-top:14px;">The digital mental health market in Canada is growing rapidly. <strong>75% of mental health problems emerge before 24</strong> — the window for early intervention is now, and this generation already lives on their phones.</div>
+        </div>
+
+        <!-- Slide 8: Business Model -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Business Model</div>
+          <div class="slide-title">Free for anyone<br>who needs it. <span class="accent">Sustainable</span> long-term.</div>
+          <div class="slide-body" style="margin-bottom:12px;">Accessibility is the mission — so the core platform is <strong>free</strong>. Sustainability comes from premium features and institutional partnerships, not from gatekeeping support.</div>
+          <div class="model-row">
+            <div class="model-col purple">
+              <div class="model-label purple">Free (Always)</div>
+              <div class="model-item">Mood tracking + journaling</div>
+              <div class="model-item">Goal setting</div>
+              <div class="model-item">Resource Directory</div>
+              <div class="model-item">Community Hub</div>
+              <div class="model-item">Support Circle</div>
+            </div>
+            <div class="model-col pink">
+              <div class="model-label pink">Premium (Future)</div>
+              <div class="model-item">Enhanced personalization</div>
+              <div class="model-item">AI-supported recommendations</div>
+              <div class="model-item">Advanced wellness tools</div>
+              <div class="model-item">Expanded goal tracking</div>
+            </div>
+            <div class="model-col purple">
+              <div class="model-label purple">Institutional (Future)</div>
+              <div class="model-item">School + university licensing</div>
+              <div class="model-item">Healthcare org partnerships</div>
+              <div class="model-item">Community org programs</div>
+              <div class="model-item">Grant funding</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 9: Founder -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="slide-eyebrow">Founder</div>
+          <div class="slide-title">Built from<br><span class="accent2">lived experience</span> and expertise.</div>
+          <div class="slide-body" style="margin-bottom:14px;">I'm <strong>Erica Alessandrini</strong>, founder of One Day More. I didn't build this from the outside looking in.</div>
+          <div class="traction-list">
+            <div class="traction-item"><div class="traction-icon">🎓</div><div class="traction-text"><strong>Honours Bachelor of Mental Health & Addiction</strong> — Seneca Polytechnic (in progress)</div></div>
+            <div class="traction-item"><div class="traction-icon">📞</div><div class="traction-text"><strong>Kids Help Phone Crisis Responder</strong> — trained to support youth in their hardest moments</div></div>
+            <div class="traction-item"><div class="traction-icon">🌱</div><div class="traction-text"><strong>Child & Youth Care education</strong> + community placements + years of youth coaching</div></div>
+            <div class="traction-item"><div class="traction-icon">💜</div><div class="traction-text"><strong>Personal mental health journey</strong> — I navigated fragmented systems. I know what it feels like to not know where to turn. That experience is the foundation of everything I'm building.</div></div>
+          </div>
+        </div>
+
+        <!-- Slide 10: Ask -->
+        <div class="slide">
+          <div class="blob blob1"></div>
+          <div class="blob blob2"></div>
+          <div class="slide-eyebrow">The Ask</div>
+          <div class="ask-amount">$5,500</div>
+          <div class="ask-sub">To move from MVP to beta — reaching the first youth who need this most</div>
+          <div class="ask-list">
+            <div class="ask-item"><div class="ask-icon">🚀</div><div class="ask-text"><strong>Beta launch preparation</strong> — user testing, privacy framework, and platform refinement ahead of first public users</div></div>
+            <div class="ask-item"><div class="ask-icon">🤝</div><div class="ask-text"><strong>First institutional partnerships</strong> — outreach to schools and youth-serving organizations for the initial launch cohort</div></div>
+            <div class="ask-item"><div class="ask-icon">📋</div><div class="ask-text"><strong>Legal + compliance foundation</strong> — privacy, IP, and regulatory requirements for a digital mental health platform</div></div>
+            <div class="ask-item"><div class="ask-icon">🌐</div><div class="ask-text"><strong>Introductions</strong> to mental health organizations, school administrators, and healthcare providers in this room</div></div>
+          </div>
+          <div class="closing">
+            The name One Day More represents the belief that <strong>healing doesn't happen all at once.</strong> Sometimes the bravest thing someone can do is choose one more day. One more conversation. One more step toward support. If One Day More can help even one person make that choice — it will always be worth building. Thank you.
+          </div>
+        </div>
+
+      </div><!-- slide-area -->
+
+      <div class="nav-bar">
+        <div class="nav-dots" id="dots"></div>
+        <div class="slide-counter" id="counter">1 / 10</div>
+        <div class="nav-arrows">
+          <div class="nav-btn" onclick="prev()">←</div>
+          <div class="nav-btn" onclick="next()">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="script-panel">
+    <div class="script-label">Speaker Script</div>
+    <div class="script-text" id="script-text"></div>
+  </div>
+</div>
+
+<script>
+const SCRIPTS = [
+  `Good afternoon. Before I tell you about One Day More, I want to tell you why I built it. <em>[Pause.]</em> Long before I studied mental health — I was navigating my own. Throughout my childhood and adolescence, I learned firsthand what it feels like to struggle, to feel alone, and to navigate a system that was fragmented and hard to find your way through. My family and I learned together. We educated ourselves, supported one another, and discovered that healing isn't about finding one perfect solution. <strong>It's about taking small steps, having people who care, and believing that tomorrow can be better than today.</strong> My name is Erica Alessandrini. And that belief is the foundation of One Day More.`,
+
+  `Many young people experience mental health challenges — but finding timely, affordable, and connected support is the hard part. Long waitlists delay help when it's most needed. Therapy costs put professional support out of reach. Many youth don't know where to begin, which resources to trust, or how to ask without feeling judged. <strong>The result is that most people wait until they're already in crisis to seek help.</strong> One Day More exists to change that — to reach young people before the crisis, not only during it.`,
+
+  `Today, mental health support is scattered. Search engines, websites, crisis lines, social media, counselling — all disconnected. Navigating them takes energy that someone in distress doesn't have. <strong>One in five Canadians will experience a mental health challenge</strong> — with the highest rates in youth ages 15 to 24. Seventy-five percent of all mental health problems emerge before age 24. And in Ontario, the average wait for publicly funded mental health services is six months or more. The resources exist. <strong>The connection between them doesn't.</strong>`,
+
+  `One Day More is a youth-centred digital mental health and wellness platform that brings trusted resources, wellness tools, and supportive connections together in one place. Four things — all in one platform. A <strong>Wellness Dashboard</strong> for daily mood tracking, journaling, and goal setting. A <strong>Support Circle</strong> for involving trusted people in your journey. A <strong>Community Hub</strong> for anonymous connection with others who understand. And a <strong>Resource Directory</strong> — curated, local, and national mental health resources that don't require a Google search to find. <strong>Not replacing professional support. Complementing it — and making it easier to reach.</strong>`,
+
+  `I want to highlight the Support Circle because no other platform has it — and because it came directly from my own experience. My family healed together. The people around me mattered. Most mental health platforms are completely solo experiences. <strong>One Day More lets users invite trusted people</strong> — a parent, a friend, a counsellor — into their Support Circle, with complete control over what each person can see. The user stays in charge of their own story. The people who care about them can actually help — not just worry from a distance. That's the thing I needed when I was younger. That's what One Day More gives back.`,
+
+  `One Day More is not a concept. It's a working platform. A <strong>functional MVP</strong> has been built with the Wellness Dashboard, Support Circle, Community Hub, and Resource Directory. <strong>Customer discovery</strong> is complete — surveys with youth, parents, caregivers, and educators, all confirming that accessible mental health support is a priority. The <strong>business is registered</strong> as a Sole Proprietorship in Ontario. The domain <strong>onedaymore.ca</strong> is secured. And through the Seneca HELIX EWIL Program, I've received mentorship, user feedback, and ongoing validation to strengthen the platform ahead of beta launch.`,
+
+  `The market is large and the timing is right. Our total addressable market is <strong>over 6 million Canadian youth</strong> ages 12 to 29 experiencing mental health challenges. Our serviceable market is <strong>1.2 million Ontario youth</strong> actively seeking accessible support. Our year one to two target is <strong>10,000 registered users</strong> through our beta launch and initial school partnerships. This generation already lives on their phones. They expect digital solutions. The digital mental health market is growing fast — <strong>and the early intervention window is now.</strong>`,
+
+  `Our model is simple: <strong>free for anyone who needs it</strong>, sustainable through premium features and institutional partnerships. The core platform — mood tracking, journaling, goals, community, resources, Support Circle — is always free. That's the mission. Long-term sustainability comes from optional premium features, institutional licensing with schools and healthcare organizations, and grant funding. <strong>Accessibility is not a business decision. It's a founding principle.</strong>`,
+
+  `I'm Erica Alessandrini. I didn't build One Day More from the outside looking in. I am completing my <strong>Honours Bachelor of Mental Health and Addiction</strong> at Seneca Polytechnic. I have served as a <strong>Kids Help Phone Crisis Responder</strong>, trained to support youth in their hardest moments. I have years of coaching, community placement, and Child and Youth Care education. But the most important thing I bring to this is a <strong>personal mental health journey</strong> — I navigated fragmented systems. I know what it feels like to not know where to turn. That experience didn't just shape who I am. <strong>It became the blueprint for what I'm building.</strong>`,
+
+  `I'm asking for <strong>$5,500</strong> — to move One Day More from MVP to beta and reach the first youth who need this most. This funds beta launch preparation, including user testing, the privacy and legal framework, and platform refinement. It funds the first conversations with schools and youth-serving organizations for our initial launch cohort. And I'm asking for introductions — to mental health organizations, school administrators, and healthcare providers in this room. <em>[Pause.]</em> The name One Day More represents the belief that healing doesn't happen all at once. Sometimes the bravest thing someone can do is choose <strong>one more day. One more conversation. One more step toward support.</strong> If One Day More can help even one person make that choice — it will always be worth building. Thank you.`
+];
+
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const railItems = document.querySelectorAll('.rail-item');
+const dotsEl = document.getElementById('dots');
+const counter = document.getElementById('counter');
+const scriptEl = document.getElementById('script-text');
+
+SCRIPTS.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goto(i);
+  dotsEl.appendChild(d);
+});
+
+function goto(n) {
+  slides[cur].classList.remove('active');
+  railItems[cur].classList.remove('active');
+  dotsEl.children[cur].classList.remove('active');
+  cur = (n + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+  railItems[cur].classList.add('active');
+  dotsEl.children[cur].classList.add('active');
+  counter.textContent = (cur + 1) + ' / ' + slides.length;
+  scriptEl.innerHTML = SCRIPTS[cur];
+}
+function next() { goto(cur + 1); }
+function prev() { goto(cur - 1); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+});
+scriptEl.innerHTML = SCRIPTS[0];
+</script>
+</body>
+</html>

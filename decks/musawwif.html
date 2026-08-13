@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Musawwif — Investor Overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,440;9..144,560;9..144,640&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1D15;
+    --bg-2:#0E241A;
+    --panel:#132C20;
+    --panel-2:#173425;
+    --hair:rgba(201,162,75,0.22);
+    --hair-strong:rgba(201,162,75,0.4);
+    --gold:#C9A24B;
+    --gold-bright:#E7CE8F;
+    --ivory:#F4EEDC;
+    --body:#C6D0C4;
+    --muted:#7F9385;
+    --cross:#5E6C60;
+    --serif:'Fraunces', serif;
+    --sans:'Inter', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background:var(--bg);
+    color:var(--body);
+    font-family:var(--sans);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  .pattern{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(201,162,75,0.05), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(201,162,75,0.05), transparent 40%);
+    opacity:1;
+  }
+  .deck{position:relative; width:100vw; height:100vh; z-index:1;}
+
+  .slide{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:clamp(2rem,5vw,5.5rem) clamp(2rem,7vw,7.5rem);
+    opacity:0; pointer-events:none;
+    transform:translateY(14px);
+    transition:opacity .55s ease, transform .55s ease;
+  }
+  .slide.active{opacity:1; pointer-events:auto; transform:none;}
+
+  /* ---- shared type ---- */
+  .eyebrow{
+    display:flex; align-items:center; gap:.85rem;
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--gold);
+    margin-bottom:1.6rem;
+  }
+  .eyebrow .rule{flex:1; height:1px; background:var(--hair); max-width:5rem;}
+  .star{width:14px; height:14px; flex-shrink:0;}
+  .star path{stroke:var(--gold); fill:none; stroke-width:1;}
+
+  h1.headline{
+    font-family:var(--serif); font-weight:560; font-optical-sizing:auto;
+    color:var(--ivory);
+    font-size:clamp(1.9rem, 4vw, 3.4rem);
+    line-height:1.08; letter-spacing:-.01em;
+    max-width:22ch;
+    margin-bottom:1.1rem;
+  }
+  h1.headline .accent{color:var(--gold); font-style:italic; font-weight:440;}
+  .sub{
+    font-size:clamp(.95rem,1.3vw,1.15rem);
+    color:var(--body); max-width:52ch; line-height:1.55;
+    margin-bottom:1.8rem;
+  }
+  .content{max-width:1100px; width:100%;}
+
+  /* ---- cover ---- */
+  #cover{align-items:center; text-align:center;}
+  .badge{
+    width:78px; height:78px; margin:0 auto 1.6rem;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .badge svg{position:absolute; inset:0; width:100%; height:100%;}
+  .badge span{
+    font-family:var(--serif); font-weight:600; font-size:1.4rem; color:var(--gold-bright);
+    position:relative; z-index:1;
+  }
+  .cover-name{
+    font-family:var(--serif); font-weight:560; color:var(--ivory);
+    font-size:clamp(2.4rem,7vw,5rem); letter-spacing:-.01em; margin-bottom:.4rem;
+  }
+  .cover-tag{
+    font-family:var(--mono); font-size:.78rem; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:2.2rem;
+  }
+  .cover-line{
+    font-size:1.15rem; color:var(--body); max-width:34ch; margin:0 auto 2.4rem; line-height:1.5;
+  }
+  .cover-meta{
+    font-family:var(--mono); font-size:.8rem; color:var(--muted); letter-spacing:.03em;
+  }
+  .agenda{
+    margin-top:3rem; display:grid; grid-template-columns:1fr 1fr; gap:.55rem 3.5rem;
+    text-align:left; max-width:640px; margin-left:auto; margin-right:auto;
+  }
+  .agenda .item{
+    display:flex; gap:.75rem; align-items:baseline;
+    font-size:.88rem; color:var(--muted); border-bottom:1px solid var(--hair); padding:.5rem 0;
+  }
+  .agenda .item b{font-family:var(--mono); color:var(--gold); font-weight:500;}
+
+  /* ---- arrow list (problem etc) ---- */
+  .arrows{display:flex; flex-direction:column; gap:1.1rem; margin-top:.5rem;}
+  .arrow-item{display:flex; gap:1rem; align-items:flex-start; font-size:clamp(1rem,1.6vw,1.2rem); color:var(--body); line-height:1.5;}
+  .arrow-item .a{color:var(--gold); font-family:var(--mono); flex-shrink:0; margin-top:.15rem;}
+  .arrow-item b{color:var(--ivory); font-weight:600;}
+  .closing{
+    margin-top:1.8rem; padding-top:1.4rem; border-top:1px solid var(--hair);
+    font-family:var(--serif); font-style:italic; font-size:1.15rem; color:var(--gold-bright);
+  }
+
+  /* ---- card grid (solution) ---- */
+  .cards{display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:.5rem;}
+  .card{
+    background:var(--panel); border:1px solid var(--hair); border-radius:6px;
+    padding:1.4rem 1.2rem; display:flex; flex-direction:column; gap:.6rem;
+  }
+  .card .num{font-family:var(--mono); color:var(--gold); font-size:.8rem;}
+  .card h3{font-family:var(--serif); font-weight:560; color:var(--ivory); font-size:1.05rem;}
+  .card p{font-size:.85rem; color:var(--muted); line-height:1.5;}
+
+  /* ---- steps / journey ---- */
+  .steps{display:flex; flex-direction:column; margin-top:.5rem;}
+  .step{
+    display:grid; grid-template-columns:140px 1fr; gap:1.5rem;
+    padding:1.15rem 0; border-top:1px solid var(--hair);
+  }
+  .step:last-child{border-bottom:1px solid var(--hair);}
+  .step .when{font-family:var(--mono); color:var(--gold); font-size:.82rem; padding-top:.15rem;}
+  .step .what b{color:var(--ivory); font-family:var(--sans); font-weight:600;}
+  .step .what{font-size:.95rem; color:var(--body); line-height:1.5;}
+
+  /* ---- stat grid (market) ---- */
+  .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-top:1rem;}
+  .stat{border-top:1px solid var(--hair-strong); padding-top:1rem;}
+  .stat .tag{font-family:var(--mono); font-size:.7rem; letter-spacing:.14em; color:var(--muted); text-transform:uppercase;}
+  .stat .num{font-family:var(--mono); font-size:clamp(1.8rem,3.4vw,2.6rem); color:var(--gold-bright); margin:.3rem 0;}
+  .stat .desc{font-size:.85rem; color:var(--body); line-height:1.45;}
+  .placeholder-num{color:var(--muted); font-style:italic; font-size:1.1rem;}
+
+  /* ---- business model cards ---- */
+  .biz-cards{display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-top:.5rem;}
+  .biz-card{background:var(--panel); border:1px solid var(--hair); border-radius:6px; padding:1.6rem;}
+  .biz-card h3{font-family:var(--serif); font-weight:560; color:var(--gold-bright); font-size:1.15rem; margin-bottom:.6rem;}
+  .biz-card p{font-size:.92rem; color:var(--body); line-height:1.55;}
+
+  /* ---- table ---- */
+  table.comp{width:100%; border-collapse:collapse; margin-top:.5rem; font-size:.88rem;}
+  table.comp th, table.comp td{padding:.85rem 1rem; text-align:left; border-bottom:1px solid var(--hair);}
+  table.comp th{font-family:var(--mono); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:500;}
+  table.comp td:first-child, table.comp th:first-child{color:var(--ivory); font-weight:500;}
+  table.comp tr.us td{color:var(--gold-bright); font-weight:600;}
+  table.comp tr.us{background:rgba(201,162,75,0.06);}
+  .yes{color:var(--gold);} .no{color:var(--cross);}
+
+  /* ---- founder ---- */
+  .founder-wrap{display:grid; grid-template-columns:220px 1fr; gap:2.5rem; align-items:start; margin-top:.5rem;}
+  .founder-mark{
+    width:150px; height:150px; border:1px solid var(--hair-strong); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .founder-mark svg{position:absolute; inset:14px;}
+  .founder-mark span{font-family:var(--serif); font-size:2.2rem; color:var(--gold-bright); position:relative; z-index:1;}
+  .founder-name{font-family:var(--serif); color:var(--ivory); font-size:1.3rem; margin-top:1rem;}
+  .founder-role{font-family:var(--mono); font-size:.75rem; color:var(--gold); letter-spacing:.08em; text-transform:uppercase;}
+  .founder-quote p{font-size:1.02rem; line-height:1.65; color:var(--body); margin-bottom:1rem;}
+  .founder-quote p:first-child{font-family:var(--serif); font-style:italic; font-size:1.2rem; color:var(--gold-bright); line-height:1.5;}
+
+  /* ---- roadmap ---- */
+  .validation{
+    background:var(--panel); border:1px solid var(--hair); border-radius:6px;
+    padding:1.1rem 1.4rem; margin-bottom:1.6rem; font-size:.9rem; color:var(--body); line-height:1.5;
+  }
+  .validation b{color:var(--gold-bright); font-family:var(--mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:.4rem;}
+  .phases{display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; margin-bottom:1.6rem;}
+  .phase{border-top:1px solid var(--hair-strong); padding-top:.9rem;}
+  .phase .p-tag{font-family:var(--mono); font-size:.7rem; color:var(--gold); letter-spacing:.1em; text-transform:uppercase;}
+  .phase h3{font-family:var(--serif); color:var(--ivory); font-size:1.05rem; margin:.4rem 0 .5rem;}
+  .phase p{font-size:.85rem; color:var(--muted); line-height:1.5;}
+  .legal-note{
+    font-size:.72rem; color:var(--muted); border-top:1px solid var(--hair); padding-top:.9rem; line-height:1.5; max-width:70ch;
+  }
+
+  /* ---- nav ---- */
+  .navbar{
+    position:fixed; bottom:0; left:0; right:0; z-index:5;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1.1rem clamp(1.5rem,5vw,4rem);
+    background:linear-gradient(to top, rgba(11,29,21,0.95), transparent);
+  }
+  .dots{display:flex; gap:.4rem;}
+  .dot{width:6px; height:6px; border-radius:50%; background:var(--cross); transition:background .3s, transform .3s;}
+  .dot.active{background:var(--gold); transform:scale(1.5);}
+  .nav-right{display:flex; align-items:center; gap:1.1rem;}
+  .counter{font-family:var(--mono); font-size:.78rem; color:var(--muted); letter-spacing:.05em;}
+  .nav-btn{
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--hair-strong);
+    background:transparent; color:var(--gold); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:1rem;
+    transition:background .2s, color .2s;
+  }
+  .nav-btn:hover{background:var(--gold); color:var(--bg);}
+  .notes-btn{
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--muted); background:none; border:none; cursor:pointer; padding:.4rem 0;
+    border-bottom:1px solid transparent;
+  }
+  .notes-btn:hover, .notes-btn.on{color:var(--gold); border-color:var(--gold);}
+
+  .notes-panel{
+    position:fixed; left:0; right:0; bottom:0; z-index:10;
+    background:var(--bg-2); border-top:1px solid var(--hair-strong);
+    padding:1.6rem clamp(1.5rem,5vw,4rem) 2.2rem;
+    transform:translateY(100%); transition:transform .35s ease;
+    max-height:38vh; overflow-y:auto;
+  }
+  .notes-panel.open{transform:translateY(0);}
+  .notes-panel .n-label{font-family:var(--mono); font-size:.68rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:.7rem;}
+  .notes-panel p{font-family:var(--serif); font-size:1.05rem; line-height:1.7; color:var(--ivory); max-width:78ch;}
+
+  @media (max-width:820px){
+    .cards{grid-template-columns:1fr 1fr;}
+    .stats{grid-template-columns:1fr;}
+    .biz-cards{grid-template-columns:1fr;}
+    .phases{grid-template-columns:1fr;}
+    .founder-wrap{grid-template-columns:1fr; text-align:left;}
+    .agenda{grid-template-columns:1fr;}
+    .step{grid-template-columns:90px 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="pattern"></div>
+<div class="deck" id="deck">
+
+  <!-- COVER -->
+  <section class="slide active" id="cover">
+    <div class="badge">
+      <svg viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z" stroke-width="1"/></svg>
+      <span>MW</span>
+    </div>
+    <div class="cover-name">Musawwif</div>
+    <div class="cover-tag">Purifying Capital</div>
+    <div class="cover-line">Transitioning Muslim-owned businesses from interest-based debt to Pure Partnerships.</div>
+    <div class="cover-meta">Junaid, Founder · Investor Overview · August 2026</div>
+    <div class="agenda">
+      <div class="item"><b>01</b> Opening Hook</div>
+      <div class="item"><b>02</b> The Problem</div>
+      <div class="item"><b>03</b> Root Cause</div>
+      <div class="item"><b>04</b> The Solution</div>
+      <div class="item"><b>05</b> How It Works</div>
+      <div class="item"><b>06</b> Market Opportunity</div>
+      <div class="item"><b>07</b> Business Model</div>
+      <div class="item"><b>08</b> Competitive Landscape</div>
+      <div class="item"><b>09</b> The Founder</div>
+      <div class="item"><b>10</b> Roadmap &amp; Next Steps</div>
+    </div>
+  </section>
+
+  <!-- 01 OPENING HOOK -->
+  <section class="slide" id="s1">
+    <div class="eyebrow"><svg class="star" viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z"/></svg>01 · Opening Hook<div class="rule"></div></div>
+    <h1 class="headline">What happens when a life<br>runs entirely on <span class="accent">interest?</span></h1>
+    <div class="sub">A single Riba-based mortgage carries real, lasting consequences for a family. Now imagine an entire livelihood — a business, a life's work — immersed in it. My name is Junaid, and I'm the founder of Musawwif.</div>
+    <div class="content">
+      <div class="stats" style="grid-template-columns:1fr; max-width:420px;">
+        <div class="stat">
+          <div class="tag">Global Islamic Finance, 2025</div>
+          <div class="num">$5.2T</div>
+          <div class="desc">in assets, growing ~15% year over year — and almost none of it is built for a Muslim-owned small business trying to leave interest behind.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 THE PROBLEM -->
+  <section class="slide" id="s2">
+    <div class="eyebrow"><svg class="star" viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z"/></svg>02 · The Problem<div class="rule"></div></div>
+    <h1 class="headline">Riba isn't a rate. It's a <span class="accent">condition</span> most Muslim businesses can't opt out of.</h1>
+    <div class="content">
+      <div class="arrows">
+        <div class="arrow-item"><span class="a">→</span><div>Every conventional loan, line of credit, and lease a business takes on is <b>interest-based by default</b></div></div>
+        <div class="arrow-item"><span class="a">→</span><div>Halal alternatives exist for buying a <b>home</b> — almost none exist for running a <b>business</b></div></div>
+        <div class="arrow-item"><span class="a">→</span><div>Owners who want out don't know <b>where to start, or who to trust</b> with the transition</div></div>
+        <div class="arrow-item"><span class="a">→</span><div>Result: sincere business owners stay entangled in Riba for the <b>life of their company</b> — their income, their worship, and their Barakah compromised together</div></div>
+      </div>
+      <div class="closing">This isn't a lack of will. It's a lack of a pure path.</div>
+    </div>
+  </section>
+
+  <!-- 03 ROOT CAUSE -->
+  <section class="slide" id="s3">
+    <div class="eyebrow"><svg class="star" viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z"/></svg>03 · Root Cause<div class="rule"></div></div>
+    <h1 class="headline">The gap isn't awareness.<br>It's <span class="accent">infrastructure.</span></h1>
+    <div class="content">
+      <div class="arrows">
+        <div class="arrow-item"><span class="a">→</span><div><b>Islamic finance was built for individuals, not businesses</b> — halal mortgage and wealth platforms serve homebuyers; almost none serve an existing business restructuring its debt</div></div>
+        <div class="arrow-item"><span class="a">→</span><div><b>Certification is a real barrier</b> — Sharia-compliant contracts require legal, Sharia board, and securities expertise no founder assembles alone</div></div>
+        <div class="arrow-item"><span class="a">→</span><div><b>Education is assumed, not delivered</b> — owners are told to "go halal" with no curriculum on what that actually requires</div></div>
+        <div class="arrow-item"><span class="a">→</span><div><b>Trust has to be earned one relationship at a time</b> — nothing connects Masajid, business owners, and investors into a single system</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 THE SOLUTION -->
+  <section class="slide" id="s4">
+    <div class="eyebrow"><svg class="star" viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z"/></svg>04 · The Solution<div class="rule"></div></div>
+    <h1 class="headline">Musawwif. A path from Riba to a <span class="accent">Pure Partnership.</span></h1>
+    <div class="sub">We don't lend. We restructure — replacing interest-based debt with real equity partnerships between Muslim businesses and values-aligned investors.</div>
+    <div class="content">
+      <div class="cards">
+        <div class="card"><div class="num">01</div><h3>Community Outreach</h3><p>Partner with Masajid to reach business owners ready to transition</p></div>
+        <div class="card"><div class="num">02</div><h3>Mandatory Education</h3><p>A structured curriculum on financial ethics before any capital moves</p></div>
+        <div class="card"><div class="num">03</div><h3>Debt Restructuring</h3><p>Interest-based loans replaced with Musharakah and Murabaha contracts</p></div>
+        <div class="card"><div class="num">04</div><h3>Equity Partnership</h3><p>Investor and business share real ownership, risk, and reward — not a rate</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 HOW IT WORKS -->
+  <section class="slide" id="s5">
+    <div class="eyebrow"><svg class="star" viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z"/></svg>05 · How It Works<div class="rule"></div></div>
+    <h1 class="headline">From first conversation<br>to <span class="accent">Pure Partnership.</span></h1>
+    <div class="content">
+      <div class="steps">
+        <div class="step"><div class="when">Discovery</div><div class="what"><b>Owner is identified</b> through Masjid outreach or direct inquiry — currently financed on interest-based debt</div></div>
+        <div class="step"><div class="when">Education</div><div class="what"><b>Owner completes Musawwif's curriculum</b> on Islamic financial ethics and what a Pure Partnership requires</div></div>
+        <div class="step"><div class="when">Structuring</div><div class="what"><b>Musawwif matches the business with an equity partner</b> and structures the Musharakah or Murabaha contract</div></div>
+        <div class="step"><div class="when">Partnership</div><div class="what"><b>Interest-based debt is retired.</b> Owner and investor share ownership, risk, and return going forward</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 MARKET -->
+  <section class="slide" id="s6">
+    <div class="eyebrow"><svg class="star" viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z"/></svg>06 · Market Opportunity<div class="rule"></div></div>
+    <h1 class="headline">The capital exists.<br>The pathway <span class="accent">doesn't.</span></h1>
+    <div class="content">
+      <div class="stats">
+        <div class="stat">
+          <div class="tag">TAM</div>
+          <div class="num">$5.98T</div>
+          <div class="desc">Global Islamic finance industry assets, on track to cross $6T by end of 2026 (ICD-LSEG)</div>
+        </div>
+        <div class="stat">
+          <div class="tag">SAM</div>
+          <div class="num">1.78M</div>
+          <div class="desc">Muslims in Canada — 4.9% of the population, concentrated in Ontario and the GTA — and their affiliated small businesses</div>
+        </div>
+        <div class="stat">
+          <div class="tag">SOM · Yr 1–3</div>
+          <div class="num placeholder-num">[ pilot target ]</div>
+          <div class="desc">Muslim-owned GTA businesses transitioned to Pure Partnerships — to be sized once the certification-stage pilot scope is set</div>
+        </div>
+      </div>
+      <div class="closing" style="margin-top:2.2rem;">Every incumbent in Canadian Islamic finance is built for the individual. None of them are built for the business.</div>
+    </div>
+  </section>
+
+  <!-- 07 BUSINESS MODEL -->
+  <section class="slide" id="s7">
+    <div class="eyebrow"><svg class="star" viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z"/></svg>07 · Business Model<div class="rule"></div></div>
+    <h1 class="headline">We earn when the partnership works — <span class="accent">not before.</span></h1>
+    <div class="sub">Musawwif doesn't charge interest, and we don't charge upfront. Our revenue is a success fee, structured into the deal itself.</div>
+    <div class="content">
+      <div class="biz-cards">
+        <div class="biz-card"><h3>Investor-Side Fee</h3><p>For some contracts, the success fee is built directly into the investor's return-sharing agreement once the partnership is structured.</p></div>
+        <div class="biz-card"><h3>Business-Side Success Fee</h3><p>For others, the fee is paid by the business partner once the debt restructuring is complete and the Pure Partnership is live.</p></div>
+      </div>
+      <div class="closing">Which side pays depends on the contract and the problem being solved — but Musawwif only earns once Riba is actually replaced.</div>
+    </div>
+  </section>
+
+  <!-- 08 COMPETITIVE LANDSCAPE -->
+  <section class="slide" id="s8">
+    <div class="eyebrow"><svg class="star" viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z"/></svg>08 · Competitive Landscape<div class="rule"></div></div>
+    <h1 class="headline">Everyone else serves the individual.<br>We serve the <span class="accent">business.</span></h1>
+    <div class="content">
+      <table class="comp">
+        <tr><th>Provider</th><th>Interest-Free</th><th>SME Debt Restructuring</th><th>Structured Education</th><th>Equity Partnership</th></tr>
+        <tr><td>Conventional banks</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr><td>Halal mortgage &amp; wealth platforms</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr><td>Islamic housing co-ops</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+        <tr class="us"><td>Musawwif</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+      </table>
+      <div class="closing">The differentiation isn't incremental. No one else combines certification-grade restructuring, mandatory education, and real equity partnership in one relationship.</div>
+    </div>
+  </section>
+
+  <!-- 09 FOUNDER -->
+  <section class="slide" id="s9">
+    <div class="eyebrow"><svg class="star" viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z"/></svg>09 · The Founder<div class="rule"></div></div>
+    <h1 class="headline">Built from what Riba <span class="accent">costs.</span></h1>
+    <div class="content founder-wrap">
+      <div>
+        <div class="founder-mark">
+          <svg viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z" stroke="#C9A24B" stroke-width="1" fill="none"/></svg>
+          <span>J</span>
+        </div>
+        <div class="founder-name">Junaid</div>
+        <div class="founder-role">Founder, Musawwif</div>
+      </div>
+      <div class="founder-quote">
+        <p>"I've been part of Islamic housing organizations since I was sixteen — watching families structure their most important purchase around avoiding interest. My own family did the same, on principle."</p>
+        <p>But I've also seen firsthand what Riba costs the people caught in it. If a single Riba-based mortgage can carry real consequences for a family, imagine an entire livelihood — a business, a life's work — immersed in it.</p>
+        <p>That's what Musawwif exists to fix. Not just belief. Infrastructure.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 ROADMAP -->
+  <section class="slide" id="s10">
+    <div class="eyebrow"><svg class="star" viewBox="0 0 100 100"><path d="M50 4 L61 39 L96 39 L67 60 L78 96 L50 74 L22 96 L33 60 L4 39 L39 39 Z"/></svg>10 · Roadmap &amp; Next Steps<div class="rule"></div></div>
+    <h1 class="headline">From conversation to <span class="accent">certified partnership.</span></h1>
+    <div class="content">
+      <div class="validation"><b>Early Validation</b>Conversations already underway with securities lawyers, CFOs, and Islamic finance leaders — including Manzil's CEO — to pressure-test the model before it's built.</div>
+      <div class="phases">
+        <div class="phase"><div class="p-tag">Phase 1</div><h3>Certification</h3><p>Complete the required registration and securities licensing process to legally operate as a capital-raising platform in Canada</p></div>
+        <div class="phase"><div class="p-tag">Phase 2</div><h3>Pilot Cohort</h3><p>Onboard a first cohort of Muslim-owned businesses and equity partners in the GTA, structure the first Pure Partnerships</p></div>
+        <div class="phase"><div class="p-tag">Phase 3</div><h3>Scale</h3><p>Expand across Canada, then into the U.S. market</p></div>
+      </div>
+      <div class="closing" style="margin-bottom:1.6rem;">This is the plan we're building toward. If it resonates, let's talk.</div>
+      <div class="legal-note">Musawwif is currently in a pre-operational phase. All capital-raising, investment solicitation, and partnership activities are paused pending completion of applicable securities licensing and regulatory registrations. This deck is provided for informational and discussion purposes only and does not constitute an offer to sell, or a solicitation of an offer to buy, any security.</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="navbar">
+  <div class="dots" id="dots"></div>
+  <div class="nav-right">
+    <button class="notes-btn" id="notesToggle">Speaker Script</button>
+    <span class="counter" id="counter">01 / 10</span>
+    <button class="nav-btn" id="prevBtn">&larr;</button>
+    <button class="nav-btn" id="nextBtn">&rarr;</button>
+  </div>
+</div>
+
+<div class="notes-panel" id="notesPanel">
+  <div class="n-label">Speaker Script</div>
+  <p id="notesText"></p>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dotsWrap = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const notesPanel = document.getElementById('notesPanel');
+  const notesText = document.getElementById('notesText');
+  const notesToggle = document.getElementById('notesToggle');
+
+  // index 0 = cover (not counted), 1-10 = content slides
+  const scripts = {
+    0: "Salaam, thank you for the time today. I want to walk you through Musawwif — why it exists, how it works, and where we're headed.",
+    1: "A single Riba-based mortgage carries real consequences for a family. Now imagine an entire livelihood immersed in it. That question is where Musawwif starts.",
+    2: "Today, every conventional financing option a Muslim business owner reaches for is interest-based by default. Halal options exist for buying a home. Almost none exist for running a business.",
+    3: "This isn't about awareness — most owners already know Riba is a problem. It's that no one has built the infrastructure: the certification, the education, the trust layer, to actually get them out.",
+    4: "Musawwif doesn't lend — we restructure. Four pillars: community outreach through Masajid, mandatory education, debt restructuring into Musharakah or Murabaha, and a real equity partnership going forward.",
+    5: "Here's the actual path a business takes with us: discovery, education, structuring, and then partnership — interest-based debt retired, ownership shared going forward.",
+    6: "Global Islamic finance is a nearly six trillion dollar industry. Canada's Muslim population is 1.78 million and growing fast, concentrated right here in the GTA. Almost none of that capital is built for a business trying to leave interest behind.",
+    7: "We don't charge interest, and we don't charge upfront. We earn a success fee — sometimes built into the investor's agreement, sometimes paid by the business — but only once Riba is actually replaced.",
+    8: "Halal mortgage and wealth platforms serve individuals. Housing co-ops serve housing. Nobody else combines SME debt restructuring, mandatory education, and real equity partnership in one relationship.",
+    9: "I've been around Islamic housing since I was sixteen. I've watched families structure their biggest purchase around avoiding interest — and I've seen what it costs the people who don't have that option in their business life. That's personal for me.",
+    10: "We're pre-operational right now — every next step runs through completing our securities certification. We're already in conversation with lawyers, CFOs, and people like Manzil's CEO to pressure-test this. If this resonates, I'd love to keep talking."
+  };
+
+  let current = 0;
+
+  slides.forEach((s, i) => {
+    if (i > 0) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 1 ? ' active' : '');
+      d.addEventListener('click', () => go(i));
+      dotsWrap.appendChild(d);
+    }
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function go(i) {
+    if (i < 0 || i > slides.length - 1) return;
+    slides[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    if (current === 0) {
+      counter.textContent = 'Intro';
+    } else {
+      counter.textContent = String(current).padStart(2,'0') + ' / 10';
+    }
+    dots.forEach((d, idx) => d.classList.toggle('active', idx === current - 1));
+    notesText.textContent = scripts[current] || '';
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', () => go(current + 1));
+  document.getElementById('prevBtn').addEventListener('click', () => go(current - 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(current + 1);
+    if (e.key === 'ArrowLeft') go(current - 1);
+  });
+  notesToggle.addEventListener('click', () => {
+    notesPanel.classList.toggle('open');
+    notesToggle.classList.toggle('on');
+  });
+
+  go(0);
+</script>
+</body>
+</html>
